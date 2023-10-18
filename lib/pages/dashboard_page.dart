@@ -9,27 +9,25 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color(0xFFFFFFF7),
+        color: const Color(0xFFFFFFF7),
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-                const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
+            padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text('Welcome!'),
                         Text(
-                          'Diva Ariani',
+                          'Username',
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.bold),
                         ),
@@ -39,14 +37,14 @@ class _DashboardPageState extends State<DashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ClipOval(
-                          child: Image.asset('assets/diva.jpg',
+                          child: Image.asset('assets/avatar.png',
                               width: 80, height: 80),
                         ),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -66,7 +64,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Color(0xFFE2E3D5),
+                  color: const Color(0xFFE2E3D5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -95,8 +93,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Column(
+                        const Spacer(),
+                        const Column(
                           children: [
                             Icon(
                               Icons.arrow_forward,
@@ -109,13 +107,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Color(0xFFE2E3D5),
+                  color: const Color(0xFFE2E3D5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -126,8 +124,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 width: 50, height: 50),
                           ],
                         ),
-                        SizedBox(width: 16),
-                        Column(
+                        const SizedBox(width: 16),
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -144,8 +142,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Column(
+                        const Spacer(),
+                        const Column(
                           children: [
                             Icon(
                               Icons.arrow_forward,
@@ -158,13 +156,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Color(0xFFE2E3D5),
+                  color: const Color(0xFFE2E3D5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -175,8 +173,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 width: 50, height: 50),
                           ],
                         ),
-                        SizedBox(width: 16),
-                        Column(
+                        const SizedBox(width: 16),
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -193,8 +191,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Column(
+                        const Spacer(),
+                        const Column(
                           children: [
                             Icon(
                               Icons.arrow_forward,
@@ -207,13 +205,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Color(0xFFE2E3D5),
+                  color: const Color(0xFFE2E3D5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -224,8 +222,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 width: 50, height: 50),
                           ],
                         ),
-                        SizedBox(width: 16),
-                        Column(
+                        const SizedBox(width: 16),
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -242,8 +240,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Column(
+                        const Spacer(),
+                        const Column(
                           children: [
                             Icon(
                               Icons.arrow_forward,
@@ -259,6 +257,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-        ));
+        )
+      );
   }
 }
