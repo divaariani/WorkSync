@@ -55,12 +55,12 @@ class _WelcomePageState extends State<WelcomePage> {
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => LoginPage(),
+                              builder: (context) => const LoginPage(),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFA3A397),
+                          primary: const Color(0xFFA3A397),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -86,8 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
                         ),
                         child: const Text("Register",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 118, 118, 92))),
+                            style: TextStyle(color: Color.fromARGB(255, 118, 118, 92))),
                       ),
                     ),
                   ],
