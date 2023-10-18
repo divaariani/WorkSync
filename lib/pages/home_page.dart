@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'dashboard_page.dart';
-// import 'wallet_page.dart';
-// import 'profile_page.dart';
+import 'salary_page.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,9 +15,9 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   final List<Widget> _tabs = [
-    DashboardPage(),
-    SalaryPage(),
-    ProfilePage(),
+    const DashboardPage(),
+    const SalaryPage(),
+    const ProfilePage(),
   ];
 
   @override
@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: MoltenBottomNavigationBar(
         domeCircleColor: const Color(0xFFFFFFF7),
         barColor: const Color(0xFFA3A397),
-        borderColor: const Color(0xFFFFFF7),
         selectedIndex: _currentIndex,
         onTabChange: (clickedIndex) {
           setState(() {
@@ -49,26 +48,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-
-
-class SalaryPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Salary Page'),
-    );
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Profile Page'),
     );
   }
 }
