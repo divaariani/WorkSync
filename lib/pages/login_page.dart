@@ -54,60 +54,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 60),
-                // TextField(
-                //   onChanged: (value) {
-                //     setState(() {
-                //       username = value;
-                //     });
-                //   },
-                //   decoration: InputDecoration(
-                //     filled: true,
-                //     fillColor: Colors.white,
-                //     hintText: 'Enter your username...',
-                //     contentPadding: const EdgeInsets.all(12),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //       borderSide: BorderSide.none,
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(height: 10),
-                // TextField(
-                //   onChanged: (value) {
-                //     setState(() {
-                //       password = value;
-                //     });
-                //   },
-                //   decoration: InputDecoration(
-                //     filled: true,
-                //     fillColor: Colors.white,
-                //     hintText: 'Enter your password...',
-                //     contentPadding: const EdgeInsets.all(12),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //       borderSide: BorderSide.none,
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(height: 10),
-                // GestureDetector(
-                //   onTap: () {
-                //     // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                //     //   return ForgotPasswordPage();
-                //     // }));
-                //   },
-                //   child: const Align(
-                //     alignment: Alignment.centerRight,
-                //     child: Text(
-                //       "Forgot password?",
-                //       style: TextStyle(
-                //         fontSize: 14,
-                //         color: Color.fromARGB(255, 118, 118, 92),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                const SizedBox(height: 20),
                 Form(
                   key: formKey,
                   child: Column(
@@ -218,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Color(0xFFA3A397),
+                                primary: const Color(0xFFA3A397),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -284,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 20)),
+                            padding: const EdgeInsets.symmetric(vertical: 20)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
