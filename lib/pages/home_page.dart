@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
+import 'app_colors.dart';
 import 'dashboard_page.dart';
 import 'salary_page.dart';
 import 'profile_page.dart';
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _tabs = [
     const DashboardPage(),
+    AttendancePage(),
     const SalaryPage(),
     const ProfilePage(),
   ];
@@ -25,8 +27,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _tabs[_currentIndex],
       bottomNavigationBar: MoltenBottomNavigationBar(
-        domeCircleColor: const Color(0xFFFFFFF7),
-        barColor: const Color(0xFFA3A397),
+        domeCircleColor: AppColors.greenOne,
+        barColor: AppColors.greenFour,
         selectedIndex: _currentIndex,
         onTabChange: (clickedIndex) {
           setState(() {
@@ -35,19 +37,28 @@ class _HomePageState extends State<HomePage> {
         },
         tabs: [
           MoltenTab(
-            icon: const Icon(Icons.home,
-                color: Color.fromARGB(255, 118, 118, 92)),
+            icon: const Icon(Icons.home, color: AppColors.greenFour)
           ),
           MoltenTab(
-            icon: const Icon(Icons.wallet,
-                color: Color.fromARGB(255, 118, 118, 92)),
+            icon: const Icon(Icons.calendar_today, color: AppColors.greenFour)
           ),
           MoltenTab(
-            icon: const Icon(Icons.person,
-                color: Color.fromARGB(255, 118, 118, 92)),
+            icon: const Icon(Icons.wallet, color: AppColors.greenFour)
+          ),
+          MoltenTab(
+            icon: const Icon(Icons.person, color: AppColors.greenFour)
           ),
         ],
       ),
+    );
+  }
+}
+
+class AttendancePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Attendance Page'),
     );
   }
 }
