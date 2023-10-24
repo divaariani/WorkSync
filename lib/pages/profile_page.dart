@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'welcome_page.dart';
+import 'app_colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -37,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 150,
                     child: CircularProgressIndicator(
                       value: 0.8,
-                      valueColor: AlwaysStoppedAnimation(Color(0xFFA3A397)),
-                      backgroundColor: Color(0xFFFFFFF7),
+                      valueColor: AlwaysStoppedAnimation(AppColors.mainBrown),
+                      backgroundColor: Colors.grey,
                       strokeWidth: 5,
                     ),
                   ),
@@ -46,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       '80%',
                       style: TextStyle(
-                        color: Color(0xFFA3A397),
+                        color: AppColors.mainBrown,
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
@@ -54,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       'Kehadiran',
                       style: TextStyle(
-                        color: Color(0xFFA3A397),
+                        color: AppColors.mainBrown,
                         fontSize: 12,
                       ),
                     ),
@@ -68,15 +69,15 @@ class _ProfilePageState extends State<ProfilePage> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const WelcomePage()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomePage()));
                 },
                 child: Container(
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFA3A397),
+                    color: AppColors.lightBrown,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -90,10 +91,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       "Log Out",
                       style: TextStyle(
-                        color: Color(0xFFFFFFF7),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -115,7 +115,7 @@ class ProfileCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Color(0xFFA3A397),
+        color: AppColors.mainBrown,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),
           bottomRight: Radius.circular(20),
@@ -128,30 +128,35 @@ class ProfileCard extends StatelessWidget {
           ),
         ],
       ),
-      child: const Padding(
-        padding: EdgeInsets.only(top: 100, bottom: 40, left: 20, right: 20),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 100, bottom: 40, left: 20, right: 20),
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: AssetImage('assets/avatar.jpg'),
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20), 
+              ),
+              child: Image.asset('assets/avatar.png'), 
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Username',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFFFFFF7)),
+                  color: Colors.white),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Full Stack Mobile Developer',
-              style: TextStyle(fontSize: 14, color: Color(0xFFFFFFF7)),
+              style: TextStyle(fontSize: 14, color: Colors.white),
             ),
-            Text(
+            const Text(
               'IT Department',
-              style: TextStyle(fontSize: 14, color: Color(0xFFFFFFF7)),
+              style: TextStyle(fontSize: 14, color: Colors.white),
             ),
           ],
         ),
