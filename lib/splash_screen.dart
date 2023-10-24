@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'pages/welcome_page.dart';
-import 'pages/login_page.dart';
+import 'pages/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const LoginPage(),
+          builder: (context) => const WelcomePage(),
         ),
       );
     });
@@ -30,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFA3A397),
-              Color(0xFFE2E3D5),
+              AppColors.deepBrown,
+              AppColors.lightBrown,
             ],
             stops: [0.1, 1],
             begin: Alignment.topCenter,
