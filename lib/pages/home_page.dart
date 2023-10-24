@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'app_colors.dart';
 import 'dashboard_page.dart';
+import 'attendance_page.dart';
 import 'salary_page.dart';
 import 'profile_page.dart';
 
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _tabs = [
     const DashboardPage(),
-    AttendancePage(),
+    const AttendancePage(),
     const SalaryPage(),
     const ProfilePage(),
   ];
@@ -27,8 +28,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _tabs[_currentIndex],
       bottomNavigationBar: MoltenBottomNavigationBar(
-        domeCircleColor: AppColors.greenOne,
-        barColor: AppColors.greenFour,
+        domeCircleColor: Colors.white,
+        barColor: AppColors.mainBrown,
         selectedIndex: _currentIndex,
         onTabChange: (clickedIndex) {
           setState(() {
@@ -36,29 +37,12 @@ class _HomePageState extends State<HomePage> {
           });
         },
         tabs: [
-          MoltenTab(
-            icon: const Icon(Icons.home, color: AppColors.greenFour)
-          ),
-          MoltenTab(
-            icon: const Icon(Icons.calendar_today, color: AppColors.greenFour)
-          ),
-          MoltenTab(
-            icon: const Icon(Icons.wallet, color: AppColors.greenFour)
-          ),
-          MoltenTab(
-            icon: const Icon(Icons.person, color: AppColors.greenFour)
-          ),
+          MoltenTab(icon: const Icon(Icons.home, color: AppColors.lightBrown)),
+          MoltenTab(icon: const Icon(Icons.calendar_today, color: AppColors.lightBrown)),
+          MoltenTab(icon: const Icon(Icons.wallet, color: AppColors.lightBrown)),
+          MoltenTab(icon: const Icon(Icons.person, color: AppColors.lightBrown)),
         ],
       ),
-    );
-  }
-}
-
-class AttendancePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Attendance Page'),
     );
   }
 }
