@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'splash_screen.dart';
+import 'pages/app_colors.dart';
 
 void main() {
   runApp(const WorkSyncApp());
@@ -15,20 +16,20 @@ class WorkSyncApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WorkSync',
       theme: ThemeData(
-        primaryColor: const Color(0xFFE2E3D5), 
+        primaryColor: AppColors.lightBrown, 
         primarySwatch: const MaterialColor(
-          0xFFE2E3D5,
+          0xFF8D6E63,
           <int, Color>{
-            50: Color(0xFFE2E3D5),
-            100: Color(0xFFE2E3D5),
-            200: Color(0xFFE2E3D5),
-            300: Color(0xFFE2E3D5),
-            400: Color(0xFFE2E3D5),
-            500: Color(0xFFE2E3D5),
-            600: Color(0xFFE2E3D5),
-            700: Color(0xFFE2E3D5),
-            800: Color(0xFFE2E3D5),
-            900: Color(0xFFE2E3D5),
+            50: AppColors.lightBrown,
+            100: AppColors.lightBrown,
+            200: AppColors.lightBrown,
+            300: AppColors.lightBrown,
+            400: AppColors.lightBrown,
+            500: AppColors.lightBrown,
+            600: AppColors.lightBrown,
+            700: AppColors.lightBrown,
+            800: AppColors.lightBrown,
+            900: AppColors.lightBrown,
           },
         ),
         textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme), 
