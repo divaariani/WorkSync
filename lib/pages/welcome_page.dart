@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 import 'login_page.dart';
+import 'register_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -16,8 +18,8 @@ class _WelcomePageState extends State<WelcomePage> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFA3A397),
-              Color(0xFFE2E3D5),
+              AppColors.deepBrown,
+              AppColors.lightBrown,
             ],
             stops: [0.1, 1],
             begin: Alignment.topCenter,
@@ -35,7 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 118, 118, 92),
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -44,7 +46,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color.fromARGB(255, 118, 118, 92),
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -60,13 +62,13 @@ class _WelcomePageState extends State<WelcomePage> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: const Color(0xFFA3A397),
+                          primary: AppColors.lightBrown,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text("Login",
-                            style: TextStyle(color: Color(0xFFE2E3D5))),
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],
@@ -77,16 +79,20 @@ class _WelcomePageState extends State<WelcomePage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle button 2 press
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterPage(),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFE2E3D5),
+                          primary: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text("Register",
-                            style: TextStyle(color: Color.fromARGB(255, 118, 118, 92))),
+                            style: TextStyle(color: AppColors.deepBrown)),
                       ),
                     ),
                   ],
