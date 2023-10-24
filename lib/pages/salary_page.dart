@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
+import 'app_colors.dart';
 
 class SalaryPage extends StatefulWidget {
   const SalaryPage({Key? key}) : super(key: key);
@@ -42,12 +43,12 @@ class Calendar extends StatelessWidget {
         color: Colors.red,
       ),
       weekdayTextStyle: const TextStyle(
-        color: Color(0xFFA3A397),
+        color: AppColors.mainBrown,
       ),
-      thisMonthDayBorderColor: const Color(0xFFA3A397),
-      todayButtonColor: const Color(0xFFA3A397),
-      selectedDayButtonColor: const Color(0xFFA3A397),
-      iconColor: const Color(0xFFA3A397),
+      thisMonthDayBorderColor: AppColors.mainBrown,
+      todayButtonColor: AppColors.mainBrown,
+      selectedDayButtonColor: AppColors.mainBrown,
+      iconColor: AppColors.mainBrown,
       headerTextStyle: const TextStyle(
         color: Colors.black,
         fontSize: 20,
@@ -60,11 +61,11 @@ class MonthList extends StatelessWidget {
   MonthList({Key? key}) : super(key: key);
   
   final List<String> items = [
-    'September',
-    'August',
-    'July',
-    'June',
-    'May',
+    'September 2023',
+    'August 2023',
+    'July 2023',
+    'June 2023',
+    'May 2023',
   ];
 
   @override
@@ -78,10 +79,10 @@ class MonthList extends StatelessWidget {
             ListTile(
               leading: const Icon(
                 Icons.circle,
-                color: Color(0xFFA3A397),
+                color: AppColors.mainBrown,
               ),
               title: Text(items[index]),
-              trailing: const Icon(Icons.arrow_forward, color: Color(0xFFA3A397)),
+              trailing: const Icon(Icons.arrow_forward, color: AppColors.mainBrown),
               onTap: () {
                 // Action when the list item is tapped
               },
