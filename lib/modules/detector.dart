@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import '../pages/app_colors.dart';
 
 class FaceDetectorPainter extends CustomPainter {
   FaceDetectorPainter(this.imageSize, this.results);
@@ -13,7 +14,7 @@ class FaceDetectorPainter extends CustomPainter {
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
-      ..color = Colors.blue;
+      ..color = AppColors.lightBrown;
     for (String label in results.keys) {
       for (Face face in results[label]) {
         // face = results[label];
@@ -28,7 +29,7 @@ class FaceDetectorPainter extends CustomPainter {
                 scaleY: scaleY),
             paint);
         TextSpan span = TextSpan(
-            style: TextStyle(color: Colors.orange[300], fontSize: 15),
+            style: TextStyle(color: AppColors.grey, fontSize: 15),
             text: label);
         TextPainter textPainter = TextPainter(
             text: span,
