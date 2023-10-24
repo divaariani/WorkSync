@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 import 'facerecognition_page.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: const Color(0xFFFFFFF7),
+        color: Colors.white,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
@@ -45,33 +46,176 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                InkWell(
+                GestureDetector(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const FaceRecognitionPage()));
                   },
-                  child: Image.asset('assets/facerecognition.png'),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.mainBrown,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              Container(
+                                width: 40,
+                                height: 40,
+                                child:
+                                    Image.asset('assets/facerecognition.png'),
+                              ),
+                              const Spacer(),
+                              const Text(
+                                'SCAN FOR ATTENDANCE',
+                                style: TextStyle(
+                                    color: AppColors.mainBrown,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Spacer()
+                            ],
+                          ),
+                          const SizedBox(height: 10)
+                        ],
+                      )),
                 ),
-                const SizedBox(height: 40),
-                const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('REQUEST', style: TextStyle(fontSize: 18)),
-                ]),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: AppColors.grey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/checkin.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    'Check In',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.mainBrown,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                '08:00',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mainBrown,
+                                ),
+                              ),
+                              const Text(
+                                'on time',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.mainBrown,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: AppColors.grey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/checkout.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    'Check Out',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.mainBrown,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                '17:00',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mainBrown,
+                                ),
+                              ),
+                              const Text(
+                                'on time',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.mainBrown,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('REQUEST', style: TextStyle(fontSize: 18)),
+                  ]
+                ),
                 const SizedBox(height: 10),
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: const Color(0xFFE2E3D5),
+                  color: AppColors.mainBrown,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
                         Column(
                           children: [
-                            Image.asset('assets/request.png',
+                            Image.asset('assets/onduty.png',
                                 width: 50, height: 50),
                           ],
                         ),
@@ -80,16 +224,16 @@ class _DashboardPageState extends State<DashboardPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Request',
+                              'On Duty',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF76745C)),
+                                  color: Colors.white),
                             ),
                             Text(
-                              'Tambahkan request anda',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFF76745C)),
+                              'Add your activities',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ),
                           ],
                         ),
@@ -98,7 +242,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Icon(
                               Icons.arrow_forward,
-                              color: Color(0xFF76745C),
+                              color: Colors.white,
                               size: 20,
                             ),
                           ],
@@ -113,7 +257,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: const Color(0xFFE2E3D5),
+                  color: AppColors.mainBrown,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -129,16 +273,16 @@ class _DashboardPageState extends State<DashboardPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Lembur',
+                              'Overtime',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF76745C)),
+                                  color: Colors.white),
                             ),
                             Text(
-                              'Tambahkan lembur anda',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFF76745C)),
+                              'Add your overtime activity',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ),
                           ],
                         ),
@@ -147,7 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Icon(
                               Icons.arrow_forward,
-                              color: Color(0xFF76745C),
+                              color: Colors.white,
                               size: 20,
                             ),
                           ],
@@ -162,7 +306,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: const Color(0xFFE2E3D5),
+                  color: AppColors.mainBrown,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -178,16 +322,16 @@ class _DashboardPageState extends State<DashboardPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Cuti',
+                              'Off Work',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF76745C)),
+                                  color: Colors.white),
                             ),
                             Text(
-                              'Tambahkan cuti anda',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFF76745C)),
+                              'Add your off work type',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ),
                           ],
                         ),
@@ -196,7 +340,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Icon(
                               Icons.arrow_forward,
-                              color: Color(0xFF76745C),
+                              color: Colors.white,
                               size: 20,
                             ),
                           ],
@@ -211,14 +355,14 @@ class _DashboardPageState extends State<DashboardPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: const Color(0xFFE2E3D5),
+                  color: AppColors.mainBrown,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
                         Column(
                           children: [
-                            Image.asset('assets/sick.png',
+                            Image.asset('assets/leave.png',
                                 width: 50, height: 50),
                           ],
                         ),
@@ -227,16 +371,16 @@ class _DashboardPageState extends State<DashboardPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Izin',
+                              'Leave',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF76745C)),
+                                  color: Colors.white),
                             ),
                             Text(
-                              'Tambahkan izin anda',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFF76745C)),
+                              'Add your activities',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ),
                           ],
                         ),
@@ -245,7 +389,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Icon(
                               Icons.arrow_forward,
-                              color: Color(0xFF76745C),
+                              color: Colors.white,
                               size: 20,
                             ),
                           ],
@@ -253,7 +397,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
