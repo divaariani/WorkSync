@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'app_colors.dart';
 import 'home_page.dart';
+import 'welcome_page.dart';
+import 'register_page.dart';
 import '../controllers/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFA3A397), Color(0xFFE2E3D5)],
+            colors: [AppColors.deepBrown, AppColors.lightBrown],
           ),
         ),
         child: SingleChildScrollView(
@@ -39,10 +42,17 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/back.png',
-                  width: 40,
-                  height: 40,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return const WelcomePage();
+                    }));
+                  },
+                  child: Image.asset(
+                    'assets/back.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -50,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFE2E3D5),
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 60),
@@ -107,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                             "Forgot password?",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color.fromARGB(255, 118, 118, 92),
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -164,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: const Color(0xFFA3A397),
+                                primary: AppColors.lightBrown,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -173,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: const Text(
                                 "Login",
                                 style: TextStyle(
-                                    color: Color(0xFFE2E3D5), fontSize: 16),
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                           ),
@@ -189,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                     "or Login with",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Color.fromARGB(255, 118, 118, 92),
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -253,22 +263,22 @@ class _LoginPageState extends State<LoginPage> {
                       "Don't have an account?",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black,
+                        color: AppColors.deepBrown,
                       ),
                     ),
                     TextButton(
                       onPressed: () {
-                        // Navigator.of(context).pushReplacement(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => RegisterPage(),
-                        //   ),
-                        // );
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Register",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color.fromARGB(255, 118, 118, 92),
+                          color: Colors.white,
                         ),
                       ),
                     )
