@@ -14,146 +14,209 @@ class _AttendancePageState extends State<AttendancePage> {
     return Container(
         color: Colors.white,
         child: SingleChildScrollView(
-            child: Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 60),
-          child: Column(children: [
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
+            child: Column(children: [
+              const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('REQUEST', style: TextStyle(fontSize: 18)),
+              ]),
+              const SizedBox(height: 10),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.zero,
+                color: AppColors.mainBrown,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset('assets/onduty.png', width: 50, height: 50),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'On Duty',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'Add your activities',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              color: AppColors.mainBrown,
-              child: const Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Spacer(),
-                    Text(
-                      'Attendance List',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    SizedBox(width: 20)
-                  ],
+              const SizedBox(height: 5),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.zero,
+                color: AppColors.mainBrown,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset('assets/overtime.png',
+                              width: 50, height: 50),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Overtime',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'Add your overtime activity',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/paidleave.png',
-                            width: 120,
-                            height: 120,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Text('Off Work', style: TextStyle(color: AppColors.mainBrown, fontWeight: FontWeight.bold))
-                  ]
+              const SizedBox(height: 5),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(width: 10),
-                Column(
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                margin: EdgeInsets.zero,
+                color: AppColors.mainBrown,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset('assets/paidleave.png',
+                              width: 50, height: 50),
+                        ],
                       ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/overtime.png',
-                            width: 120,
-                            height: 120,
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Off Work',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                        ),
-                      ),
-                    ),
-                    const Text('Overtime', style: TextStyle(color: AppColors.mainBrown, fontWeight: FontWeight.bold))
-                  ]
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/onduty.png',
-                            width: 120,
-                            height: 120,
+                          Text(
+                            'Add your off work type',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                    const Text('On Duty', style: TextStyle(color: AppColors.mainBrown, fontWeight: FontWeight.bold))
-                  ]
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/leave.png',
-                            width: 120,
-                            height: 120,
+                      const Spacer(),
+                      const Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 20,
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                    const Text('Leave', style: TextStyle(color: AppColors.mainBrown, fontWeight: FontWeight.bold))
-                  ]
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ]),
-        )));
+              ),
+              const SizedBox(height: 5),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.zero,
+                color: AppColors.mainBrown,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset('assets/leave.png', width: 50, height: 50),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Leave',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'Add your activities',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+          )
+        )
+      );
   }
 }
