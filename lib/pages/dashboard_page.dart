@@ -16,7 +16,8 @@ class _DashboardPageState extends State<DashboardPage> {
         color: Colors.white,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
+            padding:
+                const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
             child: Column(
               children: [
                 Row(
@@ -199,202 +200,178 @@ class _DashboardPageState extends State<DashboardPage> {
                 const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('REQUEST', style: TextStyle(fontSize: 18)),
+                    Text('ATTENDANCE', style: TextStyle(fontSize: 18)),
                   ]
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  elevation: 4,
+                  color: const Color(0xFFBC5757),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: AppColors.mainBrown,
+                  margin: EdgeInsets.zero,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Image.asset('assets/onduty.png',
-                                width: 50, height: 50),
-                          ],
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      color: AppColors.grey,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
                         ),
-                        const SizedBox(width: 16),
-                        const Column(
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'On Duty',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Add your activities',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 20,
+                          children: <Widget>[
+                            const Text("16 October 2023"),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: <Widget>[
+                                Image.asset("assets/checkin.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("08:04"),
+                                const Spacer(),
+                                Image.asset("assets/checkout.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("17:00"),
+                                const SizedBox(width: 20),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 Card(
-                  elevation: 4,
+                  color: AppColors.lightBrown,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: AppColors.mainBrown,
+                  margin: EdgeInsets.zero,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Image.asset('assets/overtime.png',
-                                width: 50, height: 50),
-                          ],
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      color: AppColors.grey,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
                         ),
-                        const SizedBox(width: 16),
-                        const Column(
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Overtime',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Add your overtime activity',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 20,
+                          children: <Widget>[
+                            const Text("13 October 2023"),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: <Widget>[
+                                Image.asset("assets/checkin.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("07:54"),
+                                const Spacer(),
+                                Image.asset("assets/checkout.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("17:00"),
+                                const SizedBox(width: 20),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 Card(
-                  elevation: 4,
+                  color: AppColors.lightBrown,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: AppColors.mainBrown,
+                  margin: EdgeInsets.zero,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Image.asset('assets/paidleave.png',
-                                width: 50, height: 50),
-                          ],
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      color: AppColors.grey,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
                         ),
-                        const SizedBox(width: 16),
-                        const Column(
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Off Work',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Add your off work type',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 20,
+                          children: <Widget>[
+                            const Text("12 October 2023"),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: <Widget>[
+                                Image.asset("assets/checkin.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("07:04"),
+                                const Spacer(),
+                                Image.asset("assets/checkout.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("17:00"),
+                                const SizedBox(width: 20),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 Card(
-                  elevation: 4,
+                  color: AppColors.lightBrown,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: AppColors.mainBrown,
+                  margin: EdgeInsets.zero,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Image.asset('assets/leave.png',
-                                width: 50, height: 50),
-                          ],
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      color: AppColors.grey,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
                         ),
-                        const SizedBox(width: 16),
-                        const Column(
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Leave',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Add your activities',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 20,
+                          children: <Widget>[
+                            const Text("11 October 2023"),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: <Widget>[
+                                Image.asset("assets/checkin.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("07:04"),
+                                const Spacer(),
+                                Image.asset("assets/checkout.png", width: 24, height: 24),
+                                const SizedBox(width: 10),
+                                const Text("17:00"),
+                                const SizedBox(width: 20),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
