@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       body: _tabs[_currentIndex],
       bottomNavigationBar: MoltenBottomNavigationBar(
         domeCircleColor: Colors.white,
-        barColor: AppColors.mainBrown,
+        barColor: AppColors.deepGreen,
         selectedIndex: _currentIndex,
         onTabChange: (clickedIndex) {
           setState(() {
@@ -37,10 +37,10 @@ class _HomePageState extends State<HomePage> {
           });
         },
         tabs: [
-          MoltenTab(icon: const Icon(Icons.home, color: AppColors.lightBrown)),
-          MoltenTab(icon: const Icon(Icons.calendar_today, color: AppColors.lightBrown)),
-          MoltenTab(icon: const Icon(Icons.wallet, color: AppColors.lightBrown)),
-          MoltenTab(icon: const Icon(Icons.person, color: AppColors.lightBrown)),
+          MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
+          MoltenTab(icon: const Icon(Icons.calendar_today, color: AppColors.mainGreen)),
+          MoltenTab(icon: const Icon(Icons.wallet, color: AppColors.mainGreen)),
+          MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
         ],
       ),
     );
