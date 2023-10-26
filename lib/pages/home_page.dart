@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'app_colors.dart';
 import 'dashboard_page.dart';
-import 'attendance_page.dart';
+import 'request_page.dart';
 import 'salary_page.dart';
 import 'profile_page.dart';
 
@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _tabs = [
     const DashboardPage(),
-    const AttendancePage(),
+    const RequestPage(),
     const SalaryPage(),
     const ProfilePage(),
   ];
