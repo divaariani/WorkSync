@@ -38,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 150,
                     child: CircularProgressIndicator(
                       value: 0.8,
-                      valueColor: AlwaysStoppedAnimation(AppColors.mainBrown),
-                      backgroundColor: Colors.grey,
+                      valueColor: AlwaysStoppedAnimation(AppColors.deepGreen),
+                      backgroundColor: AppColors.grey,
                       strokeWidth: 5,
                     ),
                   ),
@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       '80%',
                       style: TextStyle(
-                        color: AppColors.mainBrown,
+                        color: AppColors.deepGreen,
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       'Kehadiran',
                       style: TextStyle(
-                        color: AppColors.mainBrown,
+                        color: AppColors.deepGreen,
                         fontSize: 12,
                       ),
                     ),
@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.lightBrown,
+                    color: AppColors.lightGreen,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -115,7 +115,7 @@ class ProfileCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: AppColors.mainBrown,
+        color: AppColors.deepGreen,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),
           bottomRight: Radius.circular(20),
