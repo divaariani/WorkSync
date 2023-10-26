@@ -18,8 +18,8 @@ class _WelcomePageState extends State<WelcomePage> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppColors.deepBrown,
-              AppColors.lightBrown,
+              AppColors.deepGreen,
+              AppColors.lightGreen,
             ],
             stops: [0.1, 1],
             begin: Alignment.topCenter,
@@ -62,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: AppColors.lightBrown,
+                          primary: AppColors.deepGreen,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -92,7 +92,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
                         ),
                         child: const Text("Register",
-                            style: TextStyle(color: AppColors.deepBrown)),
+                            style: TextStyle(color: AppColors.deepGreen)),
                       ),
                     ),
                   ],
