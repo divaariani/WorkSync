@@ -43,12 +43,12 @@ class Calendar extends StatelessWidget {
         color: Colors.red,
       ),
       weekdayTextStyle: const TextStyle(
-        color: AppColors.mainBrown,
+        color: AppColors.deepGreen,
       ),
-      thisMonthDayBorderColor: AppColors.mainBrown,
-      todayButtonColor: AppColors.mainBrown,
-      selectedDayButtonColor: AppColors.mainBrown,
-      iconColor: AppColors.mainBrown,
+      thisMonthDayBorderColor: AppColors.deepGreen,
+      todayButtonColor: AppColors.deepGreen,
+      selectedDayButtonColor: AppColors.deepGreen,
+      iconColor: AppColors.deepGreen,
       headerTextStyle: const TextStyle(
         color: Colors.black,
         fontSize: 20,
@@ -79,10 +79,10 @@ class MonthList extends StatelessWidget {
             ListTile(
               leading: const Icon(
                 Icons.circle,
-                color: AppColors.mainBrown,
+                color: AppColors.deepGreen,
               ),
               title: Text(items[index]),
-              trailing: const Icon(Icons.arrow_forward, color: AppColors.mainBrown),
+              trailing: const Icon(Icons.arrow_forward, color: AppColors.deepGreen),
               onTap: () {
                 // Action when the list item is tapped
               },
