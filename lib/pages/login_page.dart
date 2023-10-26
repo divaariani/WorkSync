@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.deepBrown, AppColors.lightBrown],
+            colors: [AppColors.deepGreen, AppColors.lightGreen],
           ),
         ),
         child: SingleChildScrollView(
@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: AppColors.lightBrown,
+                                primary: AppColors.deepGreen,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -263,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                       "Don't have an account?",
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.deepBrown,
+                        color: AppColors.deepGreen,
                       ),
                     ),
                     TextButton(
