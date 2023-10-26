@@ -1,5 +1,5 @@
 name: worksync
-description: Attendance list with face recognition app. Copyright by Vocational School of IPB University.
+description: Attendance list with face recognition app. Copyright by Vocational School of IPB University and PT Sutrakabel Intimandiri.
 publish_to: 'none' 
 version: 1.0.0+1
 
@@ -23,6 +23,9 @@ dependencies:
   path_provider: ^2.0.15
   image: ^3.0.2
   quiver: ^3.2.1
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  webview_flutter: ^2.0.12
 
 dev_dependencies:
   flutter_test:
