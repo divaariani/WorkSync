@@ -57,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: AppColors.mainBrown,
+                          color: AppColors.mainGreen,
                           width: 3,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -78,7 +78,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               const Text(
                                 'SCAN FOR ATTENDANCE',
                                 style: TextStyle(
-                                    color: AppColors.mainBrown,
+                                    color: AppColors.mainGreen,
                                     fontWeight: FontWeight.bold),
                               ),
                               const Spacer()
@@ -116,7 +116,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.mainBrown,
+                                      color: AppColors.mainGreen,
                                     ),
                                   ),
                                 ],
@@ -127,14 +127,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.mainBrown,
+                                  color: AppColors.mainGreen,
                                 ),
                               ),
                               const Text(
                                 'on time',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: AppColors.mainBrown,
+                                  color: AppColors.mainGreen,
                                 ),
                               ),
                             ],
@@ -168,7 +168,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.mainBrown,
+                                      color: AppColors.mainGreen,
                                     ),
                                   ),
                                 ],
@@ -179,14 +179,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.mainBrown,
+                                  color: AppColors.mainGreen,
                                 ),
                               ),
                               const Text(
                                 'on time',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: AppColors.mainBrown,
+                                  color: AppColors.mainGreen,
                                 ),
                               ),
                             ],
@@ -248,7 +248,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color: AppColors.lightBrown,
+                  color: AppColors.mainGreen,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -291,7 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color: AppColors.lightBrown,
+                  color: AppColors.mainGreen,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -334,7 +334,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color: AppColors.lightBrown,
+                  color: AppColors.mainGreen,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
