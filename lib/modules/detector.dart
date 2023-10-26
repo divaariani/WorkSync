@@ -14,7 +14,7 @@ class FaceDetectorPainter extends CustomPainter {
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
-      ..color = AppColors.lightBrown;
+      ..color = AppColors.lightGreen;
     for (String label in results.keys) {
       for (Face face in results[label]) {
         // face = results[label];
