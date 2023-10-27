@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
+import 'attendance_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -197,10 +198,28 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                const Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('ATTENDANCE', style: TextStyle(fontSize: 18)),
+                    const Text('ATTENDANCE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Spacer(),
+                    InkWell(
+                      child: const Text(
+                        'See All', 
+                        style: TextStyle(
+                          fontSize: 12, 
+                          color: AppColors.deepGreen, 
+                          shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
+                        )
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AttendancePage(),
+                          ),
+                        );
+                      },
+                    ),
                   ]
                 ),
                 const SizedBox(height: 10),
