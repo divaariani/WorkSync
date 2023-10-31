@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import '../utils/globals.dart';
+import 'package:intl/intl.dart';
 import 'app_colors.dart';
 
 class AttendanceCorrectionPage extends StatefulWidget {
@@ -11,30 +10,23 @@ class AttendanceCorrectionPage extends StatefulWidget {
 }
 
 class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
-  String selectedType = 'Check In';
-  String inOrOut = '';
-  String imageAsset = '';
+  String currentDate = "";
+
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    final formatter = DateFormat('dd MMMM yyyy');
+    currentDate = formatter.format(now);
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (selectedType == 'Check Out') {
-      inOrOut = 'Out';
-    } else {
-      inOrOut = 'In';
-    }
-
-    if (selectedType == 'Check Out') {
-      imageAsset = 'assets/out.png';
-    } else {
-      imageAsset = 'assets/in.png';
-    }
-
     return Scaffold(
         appBar: AppBar(
           title: const Text(
             'Correction',
-            style: TextStyle(
-                color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -73,14 +65,13 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/useradd.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             const Text(
                               'Username',
@@ -103,22 +94,21 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(0),
                         child: Row(
                           children: [
                             Image.asset('assets/calendar.png', width: 47.12, height: 46),
-                            const SizedBox(width: 10),
-                            const Flexible(
-                              child: Text(
-                                '16 October 2023',
-                                style: TextStyle(color: AppColors.deepGreen),
+                            const Spacer(),
+                            Text(
+                                currentDate,
+                                style: const TextStyle(color: AppColors.deepGreen),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
-                            ),
+                            const Spacer(),
                           ],
                         ),
                       ),
@@ -136,7 +126,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -165,7 +155,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -218,6 +208,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
               ),
             ),
           ],
-        ));
+        )
+      );
   }
 }
