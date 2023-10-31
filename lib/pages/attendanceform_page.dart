@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../utils/globals.dart';
 import 'app_colors.dart';
+import '../utils/globals.dart';
 
 class AttendanceFormPage extends StatefulWidget {
   const AttendanceFormPage({Key? key}) : super(key: key);
@@ -73,14 +73,13 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/useradd.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             const Text(
                               'Username',
@@ -103,20 +102,18 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/map.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/map.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Flexible(
                               child: Text(
                                 globalLocationName,
-                                style:
-                                    const TextStyle(color: AppColors.deepGreen),
+                                style: const TextStyle(color: AppColors.deepGreen),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
@@ -129,7 +126,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                     Container(
                       height: 200,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                         child: WebView(
                           initialUrl:
                               'https://www.google.com/maps/search/?api=1&query=$globalLat,$globalLong',
@@ -150,7 +147,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -196,7 +193,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       margin: EdgeInsets.zero,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -220,7 +217,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                     ),
                     const SizedBox(height: 20),
                     Center(
-                        child: Container(
+                      child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         gradient: const LinearGradient(
@@ -253,6 +250,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
               ),
             ),
           ],
-        ));
+        )
+      );
   }
 }
