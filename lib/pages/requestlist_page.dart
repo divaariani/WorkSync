@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
-import 'attendancecorrect_page.dart';
+import 'requestform_page.dart';
 
 class RequestListPage extends StatefulWidget {
   const RequestListPage({Key? key}) : super(key: key);
@@ -101,7 +101,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -110,7 +112,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
                               ],
                             ),
@@ -119,11 +123,20 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text('Leave'),
+                                const SizedBox(height: 5),
                                 const Text('LV-2023'),
+                                const SizedBox(height: 5),
                                 Text('$currentDate - $currentDate'),
                               ],
                             ),
                           ],
+                        ),
+                        const SizedBox(height:10),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            Text('Izin sakit pergi ke dokter', style: TextStyle(fontWeight: FontWeight.bold))
+                          ]
                         )
                       ],
                     ),
@@ -173,7 +186,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -182,7 +197,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
                               ],
                             ),
@@ -191,11 +208,20 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text('Leave'),
+                                const SizedBox(height: 5),
                                 const Text('LV-2023'),
+                                const SizedBox(height: 5),
                                 Text('$currentDate - $currentDate'),
                               ],
                             ),
                           ],
+                        ),
+                        const SizedBox(height:10),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Izin sakit pergi ke dokter', style: TextStyle(fontWeight: FontWeight.bold))
+                          ]
                         )
                       ],
                     ),
@@ -245,7 +271,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
                                 Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -254,7 +282,9 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
+                                SizedBox(height: 5),
                                 Text(':'),
                               ],
                             ),
@@ -263,11 +293,20 @@ class _RequestListPageState extends State<RequestListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text('Leave'),
+                                const SizedBox(height: 5),
                                 const Text('LV-2023'),
+                                const SizedBox(height: 5),
                                 Text('$currentDate - $currentDate'),
                               ],
                             ),
                           ],
+                        ),
+                        const SizedBox(height:10),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            Text('Izin sakit pergi kedokter', style: TextStyle(fontWeight: FontWeight.bold))
+                          ]
                         )
                       ],
                     ),
@@ -278,8 +317,8 @@ class _RequestListPageState extends State<RequestListPage> {
           ),
           Positioned(
             bottom: 16,
-            left: 100,
-            right: 100,
+            left: 80,
+            right: 80,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -301,7 +340,7 @@ class _RequestListPageState extends State<RequestListPage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const AttendanceCorrectionPage(),
+                      builder: (context) => const RequestFormPage(),
                     ),
                   );
                 },
