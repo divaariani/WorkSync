@@ -10,14 +10,21 @@ class AttendanceCorrectionPage extends StatefulWidget {
 }
 
 class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
-  String currentDate = "";
+  String currentDate = "Select a Date";
 
-  @override
-  void initState() {
-    super.initState();
-    final now = DateTime.now();
-    final formatter = DateFormat('dd MMMM yyyy');
-    currentDate = formatter.format(now);
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      final formattedDate = DateFormat('dd MMMM yyyy').format(picked);
+      setState(() {
+        currentDate = formattedDate;
+      });
+    }
   }
 
   @override
@@ -96,20 +103,25 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/calendar.png', width: 47.12, height: 46),
-                            const Spacer(),
-                            Text(
+                      child: InkWell(
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Row(
+                            children: [
+                              Image.asset('assets/calendar.png', width: 47.12, height: 46),
+                              const Spacer(),
+                              Text(
                                 currentDate,
                                 style: const TextStyle(color: AppColors.deepGreen),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
-                            const Spacer(),
-                          ],
+                              const Spacer(),
+                            ],
+                          ),
                         ),
                       ),
                     ),
