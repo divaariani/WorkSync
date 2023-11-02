@@ -212,8 +212,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     double latitude = double.parse(globalLat);
     double longitude = double.parse(globalLong);
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
 
     if (placemarks.isNotEmpty) {
       Placemark placemark = placemarks[0];
@@ -225,8 +224,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
       String country = placemark.country ?? "";
       String postalCode = placemark.postalCode ?? "";
 
-      String address =
-          "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
+      String address = "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
 
       globalLocationName = address;
       return address;
@@ -254,100 +252,134 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text('Face Recognition'),
-        ),
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Column(children: [
-                        TextField(
-                          controller: _name,
-                        ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              await Future.delayed(
-                                  const Duration(milliseconds: 400));
-                              data[_name.text] = e1;
-                              jsonFile.writeAsStringSync(json.encode(data));
-
-                              if (_camera != null) {
-                                await _camera!.stopImageStream();
-                                await Future.delayed(
-                                    const Duration(milliseconds: 400));
-                                await _camera!.dispose();
-                                await Future.delayed(
-                                    const Duration(milliseconds: 400));
-                                _camera = null;
-                              }
-
-                              initialCamera();
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Save'))
-                      ]),
-                    );
-                  });
-            },
-            child: const Icon(Icons.add)),
-        body: Builder(builder: (context) {
-          if ((_camera == null || !_camera!.value.isInitialized) || loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return Container(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Container(
             constraints: const BoxConstraints.expand(),
             padding: EdgeInsets.only(top: 0, bottom: 0),
-            child: _camera == null
-                ? const Center(child: SizedBox())
-                : Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      CameraPreview(_camera!),
-                      _buildResults(),
-                      Positioned(
-                        bottom: 20,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            _getCurrentLocation().then((value) {
-                              globalLat = '${value.latitude}';
-                              globalLong = '${value.longitude}';
-                              getLocationName();
-                              setState(() {
-                                message = 'Latitude $globalLat, Longitude: $globalLong';
+            child: Builder(builder: (context) {
+              if ((_camera == null || !_camera!.value.isInitialized) || loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return _camera == null
+                  ? const Center(child: SizedBox())
+                  : Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        CameraPreview(_camera!),
+                        _buildResults(),
+                        Positioned(
+                          bottom: 20,
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              _getCurrentLocation().then((value) {
+                                globalLat = '${value.latitude}';
+                                globalLong = '${value.longitude}';
+                                getLocationName();
+                                setState(() {
+                                  message =
+                                      'Latitude $globalLat, Longitude: $globalLong';
+                                });
+                                _liveLocation();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AttendanceFormPage(),
+                                  ),
+                                );
                               });
-                              _liveLocation();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AttendanceFormPage(),
-                                ),
-                              );
-                            });
-                          },
-                          shape: CircleBorder(
-                            side: BorderSide(color: Colors.white, width: 2.0),
-                          ),
-                          elevation: 2.0,
-                          fillColor: Colors.transparent,
-                          padding: EdgeInsets.all(1),
-                          child: Icon(
-                            Icons.circle,
-                            color: AppColors.mainGreen,
-                            size: 60,
+                            },
+                            shape: const CircleBorder(
+                              side: BorderSide(color: Colors.white, width: 2.0),
+                            ),
+                            elevation: 2.0,
+                            fillColor: Colors.transparent,
+                            padding: const EdgeInsets.all(1),
+                            child: const Icon(
+                              Icons.circle,
+                              color: AppColors.mainGreen,
+                              size: 60,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+            }),
+          ),
+          Positioned(
+            top: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.cameraswitch, color: Colors.white),
+                  onPressed: () {
+                    // Camera switch
+                  },
+                ),
+                const Text('Face Recognition', style: TextStyle(fontSize: 24, color: Colors.white)),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Column(
+                  children: [
+                    TextField(
+                      controller: _name,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await Future.delayed(
+                          const Duration(milliseconds: 400),
+                        );
+                        data[_name.text] = e1;
+                        jsonFile.writeAsStringSync(json.encode(data));
+
+                        if (_camera != null) {
+                          await _camera!.stopImageStream();
+                          await Future.delayed(
+                            const Duration(milliseconds: 400),
+                          );
+                          await _camera!.dispose();
+                          await Future.delayed(
+                            const Duration(milliseconds: 400),
+                          );
+                          _camera = null;
+                        }
+
+                        initialCamera();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Save'),
+                    )
+                  ],
+                ),
+              );
+            },
           );
-        }));
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   Widget _buildResults() {
