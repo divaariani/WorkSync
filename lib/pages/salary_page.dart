@@ -17,10 +17,12 @@ class _SalaryPageState extends State<SalaryPage> {
         padding: const EdgeInsets.only(top: 50, bottom: 20),
         child: Column(
           children: [
-            const Flexible(
+            const Expanded(
+              flex: 6,
               child: Calendar(),
             ),
             Expanded(
+              flex: 4,
               child: MonthList(),
             ),
           ],
@@ -46,7 +48,7 @@ class Calendar extends StatelessWidget {
         color: AppColors.deepGreen,
       ),
       thisMonthDayBorderColor: AppColors.deepGreen,
-      todayButtonColor: AppColors.deepGreen,
+      todayButtonColor: AppColors.mainGreen,
       selectedDayButtonColor: AppColors.deepGreen,
       iconColor: AppColors.deepGreen,
       headerTextStyle: const TextStyle(
@@ -79,7 +81,7 @@ class MonthList extends StatelessWidget {
             ListTile(
               leading: const Icon(
                 Icons.circle,
-                color: AppColors.deepGreen,
+                color: AppColors.mainGreen,
               ),
               title: Text(items[index]),
               trailing: const Icon(Icons.arrow_forward, color: AppColors.deepGreen),
