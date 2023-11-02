@@ -254,9 +254,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
+                child: const Text(
                     'Add Correction',
                     style: TextStyle(
                       color: AppColors.deepGreen,
@@ -264,7 +262,6 @@ class _AttendancePageState extends State<AttendancePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
               ),
             ),
           ),
