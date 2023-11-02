@@ -29,7 +29,7 @@ class FaceDetectorPainter extends CustomPainter {
                 scaleY: scaleY),
             paint);
         TextSpan span = TextSpan(
-            style: TextStyle(color: AppColors.grey, fontSize: 15),
+            style: const TextStyle(color: AppColors.deepGreen, fontSize: 15),
             text: label);
         TextPainter textPainter = TextPainter(
             text: span,
