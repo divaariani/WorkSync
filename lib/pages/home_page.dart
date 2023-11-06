@@ -3,7 +3,7 @@ import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'app_colors.dart';
 import 'dashboard_page.dart';
 import 'request_page.dart';
-import 'salary_page.dart';
+import 'features_page.dart';
 import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _tabs = [
     const DashboardPage(),
     const RequestPage(),
-    const SalaryPage(),
+    const FeaturesPage(),
     const ProfilePage(),
   ];
 
@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         },
         tabs: [
           MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
-          MoltenTab(icon: const Icon(Icons.calendar_today, color: AppColors.mainGreen)),
-          MoltenTab(icon: const Icon(Icons.wallet, color: AppColors.mainGreen)),
+          MoltenTab(icon: const Icon(Icons.add_to_drive, color: AppColors.mainGreen)),
+          MoltenTab(icon: const Icon(Icons.folder_copy, color: AppColors.mainGreen)),
           MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
         ],
       ),
