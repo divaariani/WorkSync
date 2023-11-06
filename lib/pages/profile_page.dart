@@ -38,16 +38,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 150,
                     child: CircularProgressIndicator(
                       value: 0.8,
-                      valueColor: AlwaysStoppedAnimation(AppColors.deepGreen),
+                      valueColor: AlwaysStoppedAnimation(AppColors.mainGreen),
                       backgroundColor: AppColors.grey,
-                      strokeWidth: 5,
+                      strokeWidth: 10,
                     ),
                   ),
                   const Column(children: [
                     Text(
                       '80%',
                       style: TextStyle(
-                        color: AppColors.deepGreen,
+                        color: AppColors.mainGreen,
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       'Kehadiran',
                       style: TextStyle(
-                        color: AppColors.deepGreen,
+                        color: AppColors.mainGreen,
                         fontSize: 12,
                       ),
                     ),
@@ -77,11 +77,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.lightGreen,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white, AppColors.lightGreen],
+                    ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black,
+                        color: Colors.grey,
                         blurRadius: 5,
                         offset: Offset(0, 3),
                       ),
@@ -91,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       "Log Out",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.deepGreen,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
@@ -123,8 +127,8 @@ class ProfileCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black,
-            blurRadius: 8,
-            offset: Offset(0, 3),
+            blurRadius: 3,
+            offset: Offset(0, 1),
           ),
         ],
       ),
