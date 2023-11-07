@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'salary_page.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({Key? key}) : super(key: key);
@@ -17,28 +18,10 @@ class _FeaturesPageState extends State<FeaturesPage> {
           child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
           child: Column(children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('FEATURES', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              InkWell(
-                child: const Text('See All',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.deepGreen,
-                        shadows: [
-                          Shadow(
-                              color: Colors.black,
-                              offset: Offset(1, 1),
-                              blurRadius: 3)
-                        ])),
-                onTap: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const FeatureListPage(),
-                  //   ),
-                  // );
-                },
-              ),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start, 
+              children: [
+              Text('FEATURES', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 10),
             Row(
@@ -49,10 +32,10 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/payslip.png',
                   title: 'Payslip',
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => PayslipPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SalaryPage()),
+                    );
                   },
                 ),
                 CardItem(
@@ -108,11 +91,11 @@ class CardItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 100,
+            width: 0.275 * MediaQuery.of(context).size.width,
             height: 100, 
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
               child: Container(
