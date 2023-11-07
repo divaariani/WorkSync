@@ -18,7 +18,7 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
         loading.value = false; 
-        Get.snackbar('Login Successful', 'Congratulations');
+        print('Login Successful');
         final responseData = jsonDecode(response.body);
         final token = responseData['data']['token'];
         final userId = responseData['data']['user_id'];
