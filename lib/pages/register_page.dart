@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
 import 'login_page.dart';
@@ -8,7 +7,7 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -139,31 +138,41 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                if (formKey.currentState!.validate()) {
-
-                                  
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors.deepGreen,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                minimumSize: const Size(double.infinity, 60),
-                              ),
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            // REGISTER LOGIC
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                          primary: Colors.transparent,
+                        ),
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Colors.white,
+                                AppColors.lightGreen,
+                              ],
+                              begin: Alignment(0.00, -1.00),
+                              end: Alignment(0, 1),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 50, minWidth: 88),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Register",
+                              style: TextStyle(color: AppColors.deepGreen),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
