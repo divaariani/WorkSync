@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -44,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
                       return const WelcomePage();
                     }));
                   },
@@ -123,71 +124,79 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                if (formKey.currentState!.validate()) {
-                                  final success = await controller.login(
-                                      username, password);
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final success = await controller.login(username, password);
 
-                                  if (success) {
-                                    final snackBar = SnackBar(
-                                      elevation: 0,
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.transparent,
-                                      content: AwesomeSnackbarContent(
-                                        title: 'Login Successful!',
-                                        message:
-                                            'Welcome to the WorkSync App ^^',
-                                        contentType: ContentType.success,
-                                      ),
-                                    );
-
-                                    ScaffoldMessenger.of(context)
-                                      ..hideCurrentSnackBar()
-                                      ..showSnackBar(snackBar);
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()),
-                                    );
-                                  } else {
-                                    final snackBar = SnackBar(
-                                      elevation: 0,
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.transparent,
-                                      content: AwesomeSnackbarContent(
-                                        title: 'Login Failed!',
-                                        message:
-                                            'Try again with your correct account',
-                                        contentType: ContentType.failure,
-                                      ),
-                                    );
-
-                                    ScaffoldMessenger.of(context)
-                                      ..hideCurrentSnackBar()
-                                      ..showSnackBar(snackBar);
-                                  }
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors.deepGreen,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                            if (success) {
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Login Successful!',
+                                  message: 'Welcome to the WorkSync App ^^',
+                                  contentType: ContentType.success,
                                 ),
-                                minimumSize: const Size(double.infinity, 60),
-                              ),
-                              child: const Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            } else {
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Login Failed!',
+                                  message: 'Try again with your correct account',
+                                  contentType: ContentType.failure,
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                          primary: Colors.transparent,
+                        ),
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Colors.white,
+                                AppColors.lightGreen,
+                              ],
+                              begin: Alignment(0.00, -1.00),
+                              end: Alignment(0, 1),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 50, minWidth: 88),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(color: AppColors.deepGreen),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
