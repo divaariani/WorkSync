@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'splash_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'pages/app_colors.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const WorkSyncApp());
@@ -13,6 +14,15 @@ class WorkSyncApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('id', 'ID'),
+        Locale('ko', 'KR'),
+      ],
       debugShowCheckedModeBanner: false,
       title: 'WorkSync',
       theme: ThemeData(
