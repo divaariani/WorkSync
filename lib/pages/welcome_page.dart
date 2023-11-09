@@ -2,25 +2,43 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'login_page.dart';
 import 'register_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
-class WelcomePage extends StatefulWidget {
+class WelcomePage extends StatefulWidget{
   const WelcomePage({Key? key}) : super(key: key);
 
   @override
-  _WelcomePageState createState() => _WelcomePageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomePageState extends State<WelcomePage>{
+  Locale _currentLocale = const Locale('en', 'US');
+
+  void _changeLanguage(Locale? newLocale) {
+    if (newLocale != null) {
+      setState(() {
+        _currentLocale = newLocale;
+        globalLanguage = newLocale; 
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations(_currentLocale).translate("choose"), style: const TextStyle(color: Colors.white)),
+        backgroundColor: AppColors.deepGreen,
+        actions: <Widget>[
+          _buildLanguageDropdown(),
+        ],
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.deepGreen,
-              AppColors.lightGreen,
-            ],
+            colors: [AppColors.deepGreen, AppColors.lightGreen],
             stops: [0.1, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -32,19 +50,19 @@ class _WelcomePageState extends State<WelcomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              const Text(
-                "Hello !",
-                style: TextStyle(
+              Text(
+                AppLocalizations(_currentLocale).translate("hello"),
+                style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
               const SizedBox(height: 5),
-              const Text(
-                "Welcome to the app to monitor your work activity",
+              Text(
+                AppLocalizations(_currentLocale).translate("helloDesc"),
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                 ),
@@ -63,16 +81,13 @@ class _WelcomePageState extends State<WelcomePage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  elevation: 0, 
-                  primary: Colors.transparent, 
+                  elevation: 0,
+                  primary: Colors.transparent,
                 ),
                 child: Ink(
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Colors.white,
-                        AppColors.lightGreen, 
-                      ],
+                      colors: [Colors.white, AppColors.lightGreen],
                       begin: Alignment(0.00, -1.00),
                       end: Alignment(0, 1),
                     ),
@@ -81,9 +96,9 @@ class _WelcomePageState extends State<WelcomePage> {
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 36, minWidth: 88),
                     alignment: Alignment.center,
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: AppColors.deepGreen),
+                    child: Text(
+                      AppLocalizations(_currentLocale).translate("login"),
+                      style: const TextStyle(color: AppColors.deepGreen),
                     ),
                   ),
                 ),
@@ -106,7 +121,10 @@ class _WelcomePageState extends State<WelcomePage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text("Register", style: TextStyle(color: AppColors.deepGreen)),
+                      child: Text(
+                        AppLocalizations(_currentLocale).translate("register"),
+                        style: const TextStyle(color: AppColors.deepGreen),
+                      ),
                     ),
                   ),
                 ],
@@ -116,6 +134,27 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLanguageDropdown() {
+    return DropdownButton<Locale>(
+      value: _currentLocale,
+      items: <DropdownMenuItem<Locale>>[
+        DropdownMenuItem(
+          value: const Locale('en', 'US'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageEn"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+        DropdownMenuItem(
+          value: const Locale('id', 'ID'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageId"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+        DropdownMenuItem(
+          value: const Locale('ko', 'KR'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageKr"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+      ],
+      onChanged: _changeLanguage, 
     );
   }
 }
