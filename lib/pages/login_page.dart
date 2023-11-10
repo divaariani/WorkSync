@@ -5,6 +5,8 @@ import 'home_page.dart';
 import 'welcome_page.dart';
 import 'register_page.dart';
 import '../controllers/login_controller.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,16 +38,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(
-                top: 100, bottom: 20, left: 20, right: 20),
+            margin: const EdgeInsets.only(top: 100, bottom: 20, left: 20, right: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
+                    setState(() {
+                      globalLanguage = const Locale('en', ''); 
+                    });
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return const WelcomePage();
                     }));
                   },
@@ -56,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "Welcome !",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations(globalLanguage).translate("welcome"),
+                  style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -79,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your username...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterUsername"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -97,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your password...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterPassword"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -112,11 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                           //   return ForgotPasswordPage();
                           // }));
                         },
-                        child: const Align(
+                        child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            "Forgot password?",
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("forgotPassword"),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
                             ),
@@ -135,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Login Successful!',
-                                  message: 'Welcome to the WorkSync App ^^',
+                                  title: AppLocalizations(globalLanguage).translate("loginSuccess"),
+                                  message: AppLocalizations(globalLanguage).translate("loginSuccessMessage"),
                                   contentType: ContentType.success,
                                 ),
                               );
@@ -156,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Login Failed!',
-                                  message: 'Try again with your correct account',
+                                  title: AppLocalizations(globalLanguage).translate("loginFailed"),
+                                  message: AppLocalizations(globalLanguage).translate("loginFailedMessage"),
                                   contentType: ContentType.failure,
                                 ),
                               );
@@ -191,9 +194,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: Container(
                             constraints: const BoxConstraints(minHeight: 50, minWidth: 88),
                             alignment: Alignment.center,
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(color: AppColors.deepGreen),
+                            child: Text(
+                              AppLocalizations(globalLanguage).translate("login"),
+                              style:
+                                  const TextStyle(color: AppColors.deepGreen),
                             ),
                           ),
                         ),
@@ -202,11 +206,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                const Align(
+                Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "or Login with",
-                    style: TextStyle(
+                    AppLocalizations(globalLanguage).translate("anotherLogin"),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,
                     ),
@@ -221,11 +225,12 @@ class _LoginPageState extends State<LoginPage> {
                           // Handle Google button press
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 20)),
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 20)
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -245,11 +250,12 @@ class _LoginPageState extends State<LoginPage> {
                           // Handle Apple button press
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 20)),
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 20)
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -268,9 +274,9 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("dontHaveAccount"),
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.deepGreen,
                       ),
@@ -283,9 +289,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Register",
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations(globalLanguage).translate("register"),
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white,
                         ),
