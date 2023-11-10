@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'welcome_page.dart';
 import 'app_colors.dart';
+import '../utils/globals.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -68,10 +69,15 @@ class _ProfilePageState extends State<ProfilePage> {
               margin: EdgeInsets.symmetric(horizontal: widthSize),
               child: GestureDetector(
                 onTap: () {
+                  setState(() {
+                    globalLanguage = const Locale('en', ''); 
+                  });
                   Navigator.push(
-                      context,
+                    context,
                       MaterialPageRoute(
-                          builder: (context) => const WelcomePage()));
+                        builder: (context) => const WelcomePage()
+                      )
+                  );
                 },
                 child: Container(
                   width: double.infinity,
