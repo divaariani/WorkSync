@@ -140,18 +140,19 @@ class _WelcomePageState extends State<WelcomePage>{
   Widget _buildLanguageDropdown() {
     return DropdownButton<Locale>(
       value: _currentLocale,
+      style: const TextStyle(color: Colors.white, backgroundColor: AppColors.deepGreen), 
       items: <DropdownMenuItem<Locale>>[
         DropdownMenuItem(
           value: const Locale('en', 'US'),
-          child: Text(AppLocalizations(_currentLocale).translate("languageEn"), style: const TextStyle(color: AppColors.mainGreen)),
+          child: Text(AppLocalizations(_currentLocale).translate("languageEn"), style: const TextStyle(color: Colors.white)),
         ),
         DropdownMenuItem(
           value: const Locale('id', 'ID'),
-          child: Text(AppLocalizations(_currentLocale).translate("languageId"), style: const TextStyle(color: AppColors.mainGreen)),
+          child: Text(AppLocalizations(_currentLocale).translate("languageId"), style: const TextStyle(color: Colors.white)),
         ),
         DropdownMenuItem(
           value: const Locale('ko', 'KR'),
-          child: Text(AppLocalizations(_currentLocale).translate("languageKr"), style: const TextStyle(color: AppColors.mainGreen)),
+          child: Text(AppLocalizations(_currentLocale).translate("languageKr"), style: const TextStyle(color: Colors.white)),
         ),
       ],
       onChanged: _changeLanguage, 
