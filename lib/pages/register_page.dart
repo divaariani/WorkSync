@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
 import 'login_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -41,6 +43,9 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    setState(() {
+                      globalLanguage = const Locale('en', ''); 
+                    });
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return const WelcomePage();
                     }));
@@ -52,9 +57,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "Register to get started !",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations(globalLanguage).translate("registerDesc"),
+                  style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -75,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your username...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterUsername"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -93,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your email...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterEmail"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -111,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your password...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterPassword"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -129,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Enter your confirm password...',
+                          hintText: AppLocalizations(globalLanguage).translate("enterConfirmPassword"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -167,9 +172,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Container(
                             constraints: const BoxConstraints(minHeight: 50, minWidth: 88),
                             alignment: Alignment.center,
-                            child: const Text(
-                              "Register",
-                              style: TextStyle(color: AppColors.deepGreen),
+                            child: Text(
+                              AppLocalizations(globalLanguage).translate("register"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ),
                         ),
@@ -178,11 +183,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                const Align(
+                Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "or Register with",
-                    style: TextStyle(
+                    AppLocalizations(globalLanguage).translate("anotherRegister"),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,
                     ),
@@ -244,9 +249,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Already have an account?",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("alreadyHaveAccount"),
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.deepGreen,
                       ),
@@ -259,9 +264,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations(globalLanguage).translate("login"),
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white,
                         ),
