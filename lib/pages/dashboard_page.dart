@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
 import 'attendance_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -17,22 +19,29 @@ class _DashboardPageState extends State<DashboardPage> {
         color: Colors.white,
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-                const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
+            padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Welcome!'),
+                      children: [
                         Text(
+                          AppLocalizations(globalLanguage).translate("welcome"),
+                          style: const TextStyle(
+                            fontSize: 14, 
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
                           'Username',
                           style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                            fontSize: 14, 
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -76,9 +85,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                     Image.asset('assets/facerecognition.png'),
                               ),
                               const Spacer(),
-                              const Text(
-                                'SCAN FOR ATTENDANCE',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations(globalLanguage).translate("scanAttendance"),
+                                style: const TextStyle(
                                     color: AppColors.mainGreen,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -112,9 +121,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                     height: 20,
                                   ),
                                   const SizedBox(width: 10),
-                                  const Text(
-                                    'Check In',
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("checkIn"),
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.mainGreen,
@@ -131,9 +140,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                   color: AppColors.mainGreen,
                                 ),
                               ),
-                              const Text(
-                                'on time',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations(globalLanguage).translate("onTime"),
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: AppColors.mainGreen,
                                 ),
@@ -164,9 +173,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                     height: 20,
                                   ),
                                   const SizedBox(width: 10),
-                                  const Text(
-                                    'Check Out',
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("checkOut"),
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.mainGreen,
@@ -183,9 +192,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                   color: AppColors.mainGreen,
                                 ),
                               ),
-                              const Text(
-                                'on time',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations(globalLanguage).translate("onTime"),
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: AppColors.mainGreen,
                                 ),
@@ -201,12 +210,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('ATTENDANCE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations(globalLanguage).translate("attendance"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const Spacer(),
                     InkWell(
-                      child: const Text(
-                        'See All', 
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations(globalLanguage).translate("seeAll"), 
+                        style: const TextStyle(
                           fontSize: 12, 
                           color: AppColors.deepGreen, 
                           shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
