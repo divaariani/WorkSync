@@ -17,6 +17,7 @@ import '../modules/detector.dart';
 import '../modules/utils.dart';
 import '../modules/model.dart';
 import '../utils/globals.dart';
+import '../utils/localizations.dart';
 
 class FaceRecognitionPage extends StatefulWidget {
   const FaceRecognitionPage({Key? key}) : super(key: key);
@@ -100,7 +101,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
         detect(image, getDetectionMethod()).then((dynamic result) async {
           if (result.length == 0 || result == null) {
             _faceFound = false;
-            _predRes = 'not recognised';
+            _predRes = AppLocalizations(globalLanguage).translate("notRecognized");
           } else {
             _faceFound = true;
           }
@@ -158,7 +159,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   String compare(List currEmb) {
     double minDist = 999;
     double currDist = 0.0;
-    _predRes = "not recognised";
+    _predRes = AppLocalizations(globalLanguage).translate("notRecognized");
     for (String label in data.keys) {
       currDist = euclideanDistance(data[label], currEmb);
       if (currDist <= threshold && currDist < minDist) {
@@ -322,7 +323,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                     // Camera switch
                   },
                 ),
-                const Text('Face Recognition', style: TextStyle(fontSize: 24, color: Colors.white)),
+                Text(AppLocalizations(globalLanguage).translate("faceRecognition"), style: const TextStyle(fontSize: 24, color: Colors.white)),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
                   onPressed: () {
@@ -369,7 +370,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                         initialCamera();
                         Navigator.pop(context);
                       },
-                      child: const Text('Save'),
+                      child: Text(AppLocalizations(globalLanguage).translate("save")),
                     )
                   ],
                 ),
