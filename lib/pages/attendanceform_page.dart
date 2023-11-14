@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'app_colors.dart';
+import '../utils/localizations.dart';
 import '../utils/globals.dart';
 
 class AttendanceFormPage extends StatefulWidget {
@@ -11,19 +12,26 @@ class AttendanceFormPage extends StatefulWidget {
 }
 
 class _AttendanceFormPageState extends State<AttendanceFormPage> {
-  String selectedType = 'Check In';
+  String selectedType = AppLocalizations(globalLanguage).translate("checkIn");
   String inOrOut = '';
+  String inOrOutButton= '';
   String imageAsset = '';
 
   @override
   Widget build(BuildContext context) {
-    if (selectedType == 'Check Out') {
-      inOrOut = 'Out';
+    if (selectedType == AppLocalizations(globalLanguage).translate("checkOut")) {
+      inOrOut = AppLocalizations(globalLanguage).translate("outTime");
     } else {
-      inOrOut = 'In';
+      inOrOut = AppLocalizations(globalLanguage).translate("inTime");
     }
 
-    if (selectedType == 'Check Out') {
+    if (selectedType == AppLocalizations(globalLanguage).translate("checkOut")) {
+      inOrOutButton = AppLocalizations(globalLanguage).translate("out");
+    } else {
+      inOrOutButton = AppLocalizations(globalLanguage).translate("in");
+    }
+
+    if (selectedType == AppLocalizations(globalLanguage).translate("checkOut")) {
       imageAsset = 'assets/out.png';
     } else {
       imageAsset = 'assets/in.png';
@@ -31,10 +39,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Attendance Form',
-            style: TextStyle(
-                color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations(globalLanguage).translate("attendanceForm"),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -61,9 +68,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Attendance For',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attendanceFor"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -90,9 +97,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Location',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("location"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -135,9 +142,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Attendance Type',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attendanceType"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -166,7 +173,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                   });
                                 }
                               },
-                              items: <String>['Check In', 'Check Out']
+                              items: <String>[AppLocalizations(globalLanguage).translate("checkIn"), AppLocalizations(globalLanguage).translate("checkOut")]
                                   .map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
@@ -182,7 +189,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '$inOrOut Time',
+                      '$inOrOut',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -205,9 +212,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                               '17:04',
                               style: TextStyle(color: AppColors.deepGreen),
                             ),
-                            const Text(
-                              " (You're on time)",
-                              style: TextStyle(
+                            Text(
+                              " ("+AppLocalizations(globalLanguage).translate('late')+")",
+                              style: const TextStyle(
                                   color: AppColors.deepGreen,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -237,7 +244,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                         child: Text(
-                          inOrOut,
+                          inOrOutButton,
                           style: const TextStyle(
                               color: AppColors.deepGreen,
                               fontSize: 16,
