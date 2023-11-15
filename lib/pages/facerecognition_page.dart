@@ -11,6 +11,7 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'attendanceform_page.dart';
 import '../modules/detector.dart';
@@ -27,14 +28,12 @@ class FaceRecognitionPage extends StatefulWidget {
 }
 
 class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsBindingObserver {
-
   // FACE DETECTION
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _start();
   }
 
@@ -109,8 +108,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
           String res;
           Face _face;
 
-          imglib.Image convertedImage =
-              convertCameraImage(image, CameraLensDirection.front);
+          imglib.Image convertedImage = convertCameraImage(image, CameraLensDirection.front);
 
           for (_face in result) {
             double x, y, w, h;
@@ -118,8 +116,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
             y = (_face.boundingBox.top - 10);
             w = (_face.boundingBox.width + 10);
             h = (_face.boundingBox.height + 10);
-            imglib.Image croppedImage = imglib.copyCrop(
-                convertedImage, x.round(), y.round(), w.round(), h.round());
+            imglib.Image croppedImage = imglib.copyCrop(convertedImage, x.round(), y.round(), w.round(), h.round());
             croppedImage = imglib.copyResizeCropSquare(croppedImage, 112);
             res = recog(croppedImage);
             finalResult.add(res, _face);
@@ -177,14 +174,12 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   String message = 'Location';
 
   Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled =
-        await geolocator.Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error('Location services are disabled.');
     }
 
-    geolocator.LocationPermission permission =
-        await geolocator.Geolocator.checkPermission();
+    geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
     if (permission == geolocator.LocationPermission.denied) {
       permission = await geolocator.Geolocator.requestPermission();
       if (permission == geolocator.LocationPermission.denied) {
@@ -236,11 +231,9 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   }
 
   void _liveLocation() {
-    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
-        accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
+    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
 
-    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((geolocator.Position position) {
+    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings).listen((geolocator.Position position) {
       globalLat = position.latitude.toString();
       globalLong = position.longitude.toString();
 
@@ -258,9 +251,10 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
         children: [
           Container(
             constraints: const BoxConstraints.expand(),
-            padding: EdgeInsets.only(top: 0, bottom: 0),
+            padding: const EdgeInsets.only(top: 0, bottom: 0),
             child: Builder(builder: (context) {
-              if ((_camera == null || !_camera!.value.isInitialized) || loading) {
+              if ((_camera == null || !_camera!.value.isInitialized) ||
+                  loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -288,7 +282,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                                 _liveLocation();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => const AttendanceFormPage(),
+                                    builder: (context) =>
+                                        const AttendanceFormPage(),
                                   ),
                                 );
                               });
@@ -323,7 +318,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                     // Camera switch
                   },
                 ),
-                Text(AppLocalizations(globalLanguage).translate("faceRecognition"), style: const TextStyle(fontSize: 24, color: Colors.white)),
+                Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
+                    style: const TextStyle(fontSize: 24, color: Colors.white)),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
                   onPressed: () {
@@ -348,27 +344,40 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        Navigator.pop(context);
-                        await Future.delayed(
-                          const Duration(milliseconds: 400),
-                        );
-                        data[_name.text] = e1;
-                        jsonFile.writeAsStringSync(json.encode(data));
+                        if (_name.text.isNotEmpty) {
+                          Navigator.pop(context);
+                          await Future.delayed(const Duration(milliseconds: 400));
+                          data[_name.text] = e1;
+                          jsonFile.writeAsStringSync(json.encode(data));
 
-                        if (_camera != null) {
-                          await _camera!.stopImageStream();
-                          await Future.delayed(
-                            const Duration(milliseconds: 400),
+                          if (_camera != null) {
+                            await _camera!.stopImageStream();
+                            await Future.delayed(const Duration(milliseconds: 400));
+                            await _camera!.dispose();
+                            await Future.delayed(const Duration(milliseconds: 400));
+                            _camera = null;
+                          }
+
+                          initialCamera();
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                          print("Name cannot be empty!");
+                          final snackBar = SnackBar(
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            content: AwesomeSnackbarContent(
+                              title: AppLocalizations(globalLanguage).translate("nameFailed"),
+                              message: AppLocalizations(globalLanguage).translate("nameFailedMessage"),
+                              contentType: ContentType.failure,
+                            ),
                           );
-                          await _camera!.dispose();
-                          await Future.delayed(
-                            const Duration(milliseconds: 400),
-                          );
-                          _camera = null;
+
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
                         }
-
-                        initialCamera();
-                        Navigator.pop(context);
                       },
                       child: Text(AppLocalizations(globalLanguage).translate("save")),
                     )
