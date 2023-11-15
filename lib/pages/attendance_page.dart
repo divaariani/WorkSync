@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'attendancecorrect_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({Key? key}) : super(key: key);
@@ -14,9 +16,9 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Attendance List',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations(globalLanguage).translate("attendanceList"),
+          style: const TextStyle(
             color: AppColors.deepGreen,
             fontWeight: FontWeight.bold,
           ),
@@ -254,9 +256,9 @@ class _AttendancePageState extends State<AttendancePage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text(
-                    'Add Correction',
-                    style: TextStyle(
+                child: Text(
+                    AppLocalizations(globalLanguage).translate("addCorrection"),
+                    style: const TextStyle(
                       color: AppColors.deepGreen,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
