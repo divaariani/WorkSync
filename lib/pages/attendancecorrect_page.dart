@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class AttendanceCorrectionPage extends StatefulWidget {
   const AttendanceCorrectionPage({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class AttendanceCorrectionPage extends StatefulWidget {
 }
 
 class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
-  String currentDate = "Select a Date";
+  String currentDate = AppLocalizations(globalLanguage).translate("selectDate");
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -31,9 +33,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Correction',
-            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations(globalLanguage).translate("correction"),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -60,9 +62,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Correction For',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("correctionFor"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -89,9 +91,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Date',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("date"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -126,9 +128,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Remark',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -144,9 +146,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            const Text(
-                              'Remark.....',
-                              style: TextStyle(color: Colors.grey),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("remark") + "...",
+                              style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
                             Image.asset('assets/fill.png', height: 24, width: 24),
@@ -155,9 +157,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Attachment',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attachment"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -175,9 +177,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                           children: [
                             Image.asset('assets/file.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Add File',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("addFile"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                             const Spacer(),
                             Image.asset('assets/add.png', height: 24, width: 24),
@@ -187,7 +189,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                     ),
                     const SizedBox(height: 20),
                     Center(
-                        child: Container(
+                      child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         gradient: const LinearGradient(
@@ -204,11 +206,11 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                           ),
                         ],
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                         child: Text(
-                          'Submit',
-                          style: TextStyle(
+                          AppLocalizations(globalLanguage).translate("submit"),
+                          style: const TextStyle(
                               color: AppColors.deepGreen,
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
