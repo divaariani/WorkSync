@@ -13,19 +13,42 @@ class _SalaryPageState extends State<SalaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50, bottom: 20),
-        child: Column(
-          children: [
-            const Expanded(
-              flex: 6,
-              child: Calendar(),
-            ),
-            Expanded(
-              flex: 4,
-              child: MonthList(),
-            ),
-          ],
+      appBar: AppBar(
+          title: const Text(
+            'Payslip',
+            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white,
+          //centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              const Expanded(
+                flex: 6,
+                child: Calendar(),
+              ),
+              Expanded(
+                flex: 4,
+                child: MonthList(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -45,14 +68,15 @@ class Calendar extends StatelessWidget {
         color: Colors.red,
       ),
       weekdayTextStyle: const TextStyle(
-        color: AppColors.deepGreen,
+        color: Colors.white,
       ),
-      thisMonthDayBorderColor: AppColors.deepGreen,
-      todayButtonColor: AppColors.mainGreen,
+      thisMonthDayBorderColor: Colors.white,
+      todayButtonColor: Colors.white,
+      todayTextStyle: const TextStyle(color: AppColors.deepGreen),
       selectedDayButtonColor: AppColors.deepGreen,
-      iconColor: AppColors.deepGreen,
+      iconColor: Colors.white,
       headerTextStyle: const TextStyle(
-        color: Colors.black,
+        color: Colors.white,
         fontSize: 20,
       ),
     );
@@ -63,6 +87,7 @@ class MonthList extends StatelessWidget {
   MonthList({Key? key}) : super(key: key);
   
   final List<String> items = [
+    'October 2023',
     'September 2023',
     'August 2023',
     'July 2023',
@@ -81,10 +106,10 @@ class MonthList extends StatelessWidget {
             ListTile(
               leading: const Icon(
                 Icons.circle,
-                color: AppColors.mainGreen,
+                color: AppColors.grey,
               ),
-              title: Text(items[index]),
-              trailing: const Icon(Icons.arrow_forward, color: AppColors.deepGreen),
+              title: Text(items[index], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              trailing: const Icon(Icons.arrow_forward, color: Colors.white),
               onTap: () {
                 // Action when the list item is tapped
               },
