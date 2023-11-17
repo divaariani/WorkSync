@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class RequestFormPage extends StatefulWidget {
   const RequestFormPage({Key? key}) : super(key: key);
@@ -10,9 +12,9 @@ class RequestFormPage extends StatefulWidget {
 }
 
 class _RequestFormPageState extends State<RequestFormPage> {
-  String selectedType = 'On Duty';
-  String startDate = "Select Start Date";
-  String endDate = "Select End Date";
+  String selectedType = AppLocalizations(globalLanguage).translate("onDuty");
+  String startDate = AppLocalizations(globalLanguage).translate("startTime");
+  String endDate = AppLocalizations(globalLanguage).translate("endTime");
 
   Future<void> _selectDate(BuildContext context, String variableName) async {
     final DateTime? picked = await showDatePicker(
@@ -37,9 +39,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Request Form',
-            style: TextStyle(
+          title: Text(
+            AppLocalizations(globalLanguage).translate("request"),
+            style: const TextStyle(
                 color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
@@ -67,9 +69,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Requested For',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("requestFor"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -85,8 +87,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/useradd.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             const Text(
                               'Username',
@@ -97,9 +98,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Request Type',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("requestType"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -112,12 +113,10 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
-                            Image.asset('assets/attendancetype.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/attendancetype.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             DropdownButton<String>(
                               value: selectedType,
@@ -129,16 +128,14 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 }
                               },
                               items: <String>[
-                                'On Duty',
-                                'Overtime',
-                                'Off Work',
-                                'Leave'
+                                AppLocalizations(globalLanguage).translate("onDuty"),
+                                AppLocalizations(globalLanguage).translate("overtime"),
+                                AppLocalizations(globalLanguage).translate("offWork"),
+                                AppLocalizations(globalLanguage).translate("leave")
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          color: AppColors.deepGreen)),
+                                  child: Text(value, style: const TextStyle(color: AppColors.deepGreen)),
                                 );
                               }).toList(),
                             ),
@@ -147,9 +144,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Remark',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -165,21 +162,20 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            const Text(
-                              'Remark.....',
-                              style: TextStyle(color: Colors.grey),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("remark") + '...',
+                              style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
-                            Image.asset('assets/fill.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/fill.png', height: 24, width: 24),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Attachment',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attachment"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -195,12 +191,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/file.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/file.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Add File',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("addFile"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                             const Spacer(),
                             Image.asset('assets/add.png',
@@ -210,9 +205,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Destination',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("destination"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -228,24 +223,22 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/world.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/world.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Search',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("search"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                             const Spacer(),
-                            Image.asset('assets/search.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/search.png', height: 24, width: 24),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Time start-end',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("time"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -268,13 +261,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 padding: const EdgeInsets.all(0),
                                 child: Row(
                                   children: [
-                                    Image.asset('assets/calendar.png',
-                                        width: 47.12, height: 46),
+                                    Image.asset('assets/calendar.png', width: 47.12, height: 46),
                                     const Spacer(),
                                     Text(
                                       startDate,
-                                      style: const TextStyle(
-                                          color: AppColors.deepGreen),
+                                      style: const TextStyle(color: AppColors.deepGreen),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                     ),
@@ -285,8 +276,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                            width: 10), // Add spacing between the two cards
+                        const SizedBox( width: 10),
                         Expanded(
                           child: Card(
                             margin: EdgeInsets.zero,
@@ -302,13 +292,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 padding: const EdgeInsets.all(0),
                                 child: Row(
                                   children: [
-                                    Image.asset('assets/calendar.png',
-                                        width: 47.12, height: 46),
+                                    Image.asset('assets/calendar.png', width: 47.12, height: 46),
                                     const Spacer(),
                                     Text(
                                       endDate,
-                                      style: const TextStyle(
-                                          color: AppColors.deepGreen),
+                                      style: const TextStyle(color: AppColors.deepGreen),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                     ),
@@ -340,12 +328,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           ),
                         ],
                       ),
-                      child: const Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                         child: Text(
-                          'Submit',
-                          style: TextStyle(
+                          AppLocalizations(globalLanguage).translate("submit"),
+                          style: const TextStyle(
                               color: AppColors.deepGreen,
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
@@ -357,6 +344,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
               ),
             ),
           ],
-        ));
+        )
+      );
   }
 }
