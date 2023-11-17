@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class OffWorkFormPage extends StatefulWidget {
   const OffWorkFormPage({Key? key}) : super(key: key);
@@ -11,8 +13,8 @@ class OffWorkFormPage extends StatefulWidget {
 
 class _OffWorkFormPageState extends State<OffWorkFormPage> {
   String selectedType = 'Christmas and New Year';
-  String startDate = "Select Start Date";
-  String endDate = "Select End Date";
+  String startDate = AppLocalizations(globalLanguage).translate("startTime");
+  String endDate = AppLocalizations(globalLanguage).translate("endTime");
 
   Future<void> _selectDate(BuildContext context, String variableName) async {
     final DateTime? picked = await showDatePicker(
@@ -37,9 +39,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Off Work Form',
-            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations(globalLanguage).translate("offWork"),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -66,9 +68,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Requested For',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("requestFor"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -95,9 +97,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Off Work Type',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("offWorkType"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -110,8 +112,7 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
                             Image.asset('assets/attendancetype.png', height: 24, width: 24),
@@ -141,9 +142,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Remark',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -159,9 +160,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            const Text(
-                              'Remark.....',
-                              style: TextStyle(color: Colors.grey),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("remark") + '...',
+                              style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
                             Image.asset('assets/fill.png', height: 24, width: 24),
@@ -170,9 +171,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Attachment',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attachment"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -190,9 +191,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                           children: [
                             Image.asset('assets/file.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Add File',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("addFile"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                             const Spacer(),
                             Image.asset('assets/add.png', height: 24, width: 24),
@@ -201,9 +202,9 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Time start-end',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("time"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -226,8 +227,7 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                                 padding: const EdgeInsets.all(0),
                                 child: Row(
                                   children: [
-                                    Image.asset('assets/calendar.png',
-                                        width: 47.12, height: 46),
+                                    Image.asset('assets/calendar.png', width: 47.12, height: 46),
                                     const Spacer(),
                                     Text(
                                       startDate,
@@ -294,11 +294,11 @@ class _OffWorkFormPageState extends State<OffWorkFormPage> {
                           ),
                         ],
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                         child: Text(
-                          'Submit',
-                          style: TextStyle(
+                          AppLocalizations(globalLanguage).translate("submit"),
+                          style: const TextStyle(
                             color: AppColors.deepGreen,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
