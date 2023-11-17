@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class OvertimeFormPage extends StatefulWidget {
   const OvertimeFormPage({Key? key}) : super(key: key);
@@ -11,8 +13,8 @@ class OvertimeFormPage extends StatefulWidget {
 
 class _OvertimeFormPageState extends State<OvertimeFormPage> {
   String selectedType = 'Overtime Hours';
-  String startDate = "Select Start Date";
-  String endDate = "Select End Date";
+  String startDate = AppLocalizations(globalLanguage).translate("startTime");
+  String endDate = AppLocalizations(globalLanguage).translate("endTime");
 
   Future<void> _selectDate(BuildContext context, String variableName) async {
     final DateTime? picked = await showDatePicker(
@@ -37,9 +39,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Overtime Form',
-            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations(globalLanguage).translate("overtime"),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -66,9 +68,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Requested For',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("requestFor"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -95,9 +97,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Overtime Type',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("overtimeType"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -110,8 +112,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
                             Image.asset('assets/attendancetype.png', height: 24, width: 24),
@@ -140,9 +141,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Remark',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -158,9 +159,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            const Text(
-                              'Remark.....',
-                              style: TextStyle(color: Colors.grey),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("remark") + '...',
+                              style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
                             Image.asset('assets/fill.png', height: 24, width: 24),
@@ -169,9 +170,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Attachment',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attachment"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -189,9 +190,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                           children: [
                             Image.asset('assets/file.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Add File',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("addFile"),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                             const Spacer(),
                             Image.asset('assets/add.png', height: 24, width: 24),
@@ -200,9 +201,9 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Time start-end',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("time"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -293,11 +294,11 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                           ),
                         ],
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                         child: Text(
-                          'Submit',
-                          style: TextStyle(
+                          AppLocalizations(globalLanguage).translate("submit"),
+                          style: const TextStyle(
                             color: AppColors.deepGreen,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
