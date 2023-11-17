@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'requestform_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class RequestListPage extends StatefulWidget {
   const RequestListPage({Key? key}) : super(key: key);
@@ -27,9 +29,9 @@ class _RequestListPageState extends State<RequestListPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          'Request List',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations(globalLanguage).translate("requestList"),
+          style: const TextStyle(
             color: AppColors.deepGreen,
             fontWeight: FontWeight.bold,
           ),
@@ -81,11 +83,11 @@ class _RequestListPageState extends State<RequestListPage> {
                                   width: 1,
                                 ),
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(5),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
                                 child: Text(
-                                  'Approved Request',
-                                  style: TextStyle(
+                                  AppLocalizations(globalLanguage).translate("approved"),
+                                  style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -97,14 +99,14 @@ class _RequestListPageState extends State<RequestListPage> {
                         const SizedBox(height:10),
                         Row(
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text(AppLocalizations(globalLanguage).translate("requestType"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("requestNo"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("from"), style: const TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -122,7 +124,7 @@ class _RequestListPageState extends State<RequestListPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Leave'),
+                                Text(AppLocalizations(globalLanguage).translate("leave")),
                                 const SizedBox(height: 5),
                                 const Text('LV-2023'),
                                 const SizedBox(height: 5),
@@ -166,11 +168,11 @@ class _RequestListPageState extends State<RequestListPage> {
                                   width: 1,
                                 ),
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(5),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
                                 child: Text(
-                                  'Approved Request',
-                                  style: TextStyle(
+                                  AppLocalizations(globalLanguage).translate("approved"),
+                                  style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -182,14 +184,14 @@ class _RequestListPageState extends State<RequestListPage> {
                         const SizedBox(height:10),
                         Row(
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text(AppLocalizations(globalLanguage).translate("requestType"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("requestNo"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("from"), style: const TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -207,7 +209,7 @@ class _RequestListPageState extends State<RequestListPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Leave'),
+                                Text(AppLocalizations(globalLanguage).translate("leave")),
                                 const SizedBox(height: 5),
                                 const Text('LV-2023'),
                                 const SizedBox(height: 5),
@@ -251,11 +253,11 @@ class _RequestListPageState extends State<RequestListPage> {
                                   width: 1,
                                 ),
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(5),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
                                 child: Text(
-                                  'Approved Request',
-                                  style: TextStyle(
+                                  AppLocalizations(globalLanguage).translate("approved"),
+                                  style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -267,14 +269,14 @@ class _RequestListPageState extends State<RequestListPage> {
                         const SizedBox(height:10),
                         Row(
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Request Type', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('Request No', style: TextStyle(fontWeight: FontWeight.bold)),
-                                SizedBox(height: 5),
-                                Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text(AppLocalizations(globalLanguage).translate("requestType"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("requestNo"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(AppLocalizations(globalLanguage).translate("from"), style: const TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -292,7 +294,7 @@ class _RequestListPageState extends State<RequestListPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Leave'),
+                                Text(AppLocalizations(globalLanguage).translate("leave")),
                                 const SizedBox(height: 5),
                                 const Text('LV-2023'),
                                 const SizedBox(height: 5),
@@ -351,9 +353,9 @@ class _RequestListPageState extends State<RequestListPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text(
-                  'Add New Request',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations(globalLanguage).translate("addRequest"),
+                  style: const TextStyle(
                     color: AppColors.deepGreen,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
