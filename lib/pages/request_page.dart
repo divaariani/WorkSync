@@ -5,6 +5,8 @@ import 'ondutyform_page.dart';
 import 'overtimeform_page.dart';
 import 'offworkform_page.dart';
 import 'leaveform_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class RequestPage extends StatefulWidget {
   const RequestPage({Key? key}) : super(key: key);
@@ -23,12 +25,12 @@ class _RequestPageState extends State<RequestPage> {
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
           child: Column(children: [
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('REQUEST', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations(globalLanguage).translate("request"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const Spacer(),
               InkWell(
-                child: const Text(
-                  'See All',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations(globalLanguage).translate("seeAll"),
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.deepGreen,
                     shadows: [
@@ -72,20 +74,20 @@ class _RequestPageState extends State<RequestPage> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'On Duty',
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("onDuty"),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Add your activities',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            AppLocalizations(globalLanguage).translate("activitiesDesc"),
+                            style: const TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -128,20 +130,20 @@ class _RequestPageState extends State<RequestPage> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Overtime',
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("overtime"),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Add your overtime activities',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            AppLocalizations(globalLanguage).translate("activitiesDesc"),
+                            style: const TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -184,20 +186,20 @@ class _RequestPageState extends State<RequestPage> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Off Work',
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("offWork"),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Add your off work remark',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            AppLocalizations(globalLanguage).translate("activitiesDesc"),
+                            style: const TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -240,20 +242,20 @@ class _RequestPageState extends State<RequestPage> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Leave',
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("leave"),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Add your leave remark',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            AppLocalizations(globalLanguage).translate("activitiesDesc"),
+                            style: const TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
