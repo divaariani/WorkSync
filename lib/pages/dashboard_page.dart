@@ -49,8 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ClipOval(
-                          child: Image.asset('assets/avatar.png',
-                              width: 80, height: 80),
+                          child: Image.asset('assets/avatar.jpg', width: 50, height: 50),
                         ),
                       ],
                     ),
@@ -81,8 +80,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               Container(
                                 width: 40,
                                 height: 40,
-                                child:
-                                    Image.asset('assets/facerecognition.png'),
+                                child: Image.asset('assets/facerecognition.png'),
                               ),
                               const Spacer(),
                               Text(
