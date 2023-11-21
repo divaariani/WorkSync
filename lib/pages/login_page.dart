@@ -7,6 +7,7 @@ import 'register_page.dart';
 import '../controllers/login_controller.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,7 +19,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final controller = LoginController();
   final formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   String username = '';
   String password = '';
@@ -92,11 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: _passwordController,
                         onChanged: (value) {
                           setState(() {
                             password = value;
                           });
                         },
+                        obscureText: _obscurePassword,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -105,6 +109,17 @@ class _LoginPageState extends State<LoginPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                            child: Icon(
+                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -130,9 +145,20 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
+                            setState(() {
+                              controller.isLoading = true;
+                            });
                             final success = await controller.login(username, password);
 
+                            setState(() {
+                              controller.isLoading = false;
+                            });
+
                             if (success) {
+                              if (controller.userData != null) {
+                                SessionManager().saveUserInfo(controller.userData!);
+                              }
+
                               final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
@@ -179,7 +205,11 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 0,
                           primary: Colors.transparent,
                         ),
-                        child: Ink(
+                        child: controller.isLoading
+                          ? const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.grey),
+                            )
+                          : Ink(
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [
