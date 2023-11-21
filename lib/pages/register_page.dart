@@ -14,8 +14,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
-
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   String username = '';
   String email = '';
   String password = '';
@@ -35,8 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         child: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(
-                top: 100, bottom: 20, left: 20, right: 20),
+            margin: const EdgeInsets.only(top: 100, bottom: 20, left: 20, right: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,11 +109,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: _passwordController,
                         onChanged: (value) {
                           setState(() {
                             password = value;
                           });
                         },
+                        obscureText: _obscurePassword,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -122,15 +125,28 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                            child: Icon(
+                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: _confirmPasswordController,
                         onChanged: (value) {
                           setState(() {
                             password = value;
                           });
                         },
+                        obscureText: _obscureConfirmPassword,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -139,6 +155,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                              });
+                            },
+                            child: Icon(
+                              _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
