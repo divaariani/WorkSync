@@ -4,6 +4,7 @@ import 'facerecognition_page.dart';
 import 'attendance_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -33,12 +34,11 @@ class _DashboardPageState extends State<DashboardPage> {
                           AppLocalizations(globalLanguage).translate("welcome"),
                           style: const TextStyle(
                             fontSize: 14, 
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Text(
-                          'Username',
-                          style: TextStyle(
+                        Text(
+                          SessionManager().namaUser ?? 'Unknown',
+                          style: const TextStyle(
                             fontSize: 14, 
                             fontWeight: FontWeight.bold,
                           ),
