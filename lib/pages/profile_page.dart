@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -47,11 +48,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 backgroundImage: AssetImage('assets/avatar.jpg'),
                               ),
                               const SizedBox(width: 10),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Username', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                  Text('Mobile Developer', style: TextStyle(color: Colors.white)),
+                                  Text(SessionManager().namaUser ?? 'Unknown', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                  Text(SessionManager().deptFullName ?? 'Unknown', style: TextStyle(color: Colors.white)),
                                 ],
                               ),
                               const Spacer(),
@@ -83,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppColors.grey,
                     child: Column(
                       children: [
-                        buildRow('assets/department.png', 'Department', 'IT Department'),
+                        buildRow('assets/department.png', 'Department', '${SessionManager().deptInisial ?? 'Unknown'} Department'),
                         buildDivider(),
                         buildRow('assets/attendance.png', 'Attendance', 'Performance: 80%'),
                         buildDivider(),
@@ -99,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 25),
                     child: GestureDetector(
                       onTap: () {
+                        SessionManager().logout();
                         setState(() {
                           globalLanguage = const Locale('en', ''); 
                         });
