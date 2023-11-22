@@ -18,38 +18,45 @@ class RequestPage extends StatefulWidget {
 class _RequestPageState extends State<RequestPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Stack(children: [
+      Container(
         color: Colors.white,
-        child: SingleChildScrollView(
-          child: Padding(
+      ),
+      SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
-          child: Column(children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(AppLocalizations(globalLanguage).translate("request"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              InkWell(
-                child: Text(
-                  AppLocalizations(globalLanguage).translate("seeAll"),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.deepGreen,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black,
-                        offset: Offset(1, 1),
-                        blurRadius: 3)
-                      ]
-                    )
-                  ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const RequestListPage(),
+          child: Column(
+            children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start, 
+              children: [
+                Text(AppLocalizations(globalLanguage).translate("request"),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Spacer(),
+                InkWell(
+                  child: 
+                    Text(AppLocalizations(globalLanguage).translate("seeAll"),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.deepGreen,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black,
+                            offset: Offset(1, 1),
+                            blurRadius: 3)
+                        ]
+                      )
                     ),
-                  );
-                },
-              ),
-            ]),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const RequestListPage(),
+                      ),
+                    );
+                  },
+                ),
+              ]
+            ),
             const SizedBox(height: 10),
             InkWell(
               onTap: () {
@@ -86,8 +93,10 @@ class _RequestPageState extends State<RequestPage> {
                             ),
                           ),
                           Text(
-                            AppLocalizations(globalLanguage).translate("activitiesDesc"),
-                            style: const TextStyle(fontSize: 12, color: Colors.white),
+                            AppLocalizations(globalLanguage)
+                                .translate("activitiesDesc"),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -110,7 +119,8 @@ class _RequestPageState extends State<RequestPage> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const OvertimeFormPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const OvertimeFormPage()),
                 );
               },
               child: Card(
@@ -126,7 +136,8 @@ class _RequestPageState extends State<RequestPage> {
                     children: [
                       Column(
                         children: [
-                          Image.asset('assets/overtime.png', width: 50, height: 50),
+                          Image.asset('assets/overtime.png',
+                              width: 50, height: 50),
                         ],
                       ),
                       const SizedBox(width: 16),
@@ -143,7 +154,8 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                           Text(
                             AppLocalizations(globalLanguage).translate("activitiesDesc"),
-                            style: const TextStyle(fontSize: 12, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -166,7 +178,8 @@ class _RequestPageState extends State<RequestPage> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const OffWorkFormPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const OffWorkFormPage()),
                 );
               },
               child: Card(
@@ -199,7 +212,8 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                           Text(
                             AppLocalizations(globalLanguage).translate("activitiesDesc"),
-                            style: const TextStyle(fontSize: 12, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white),
                           ),
                         ],
                       ),
@@ -277,6 +291,6 @@ class _RequestPageState extends State<RequestPage> {
           ]),
         )
       )
-    );
+    ]);
   }
 }
