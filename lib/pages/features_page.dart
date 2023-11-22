@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'salary_page.dart';
+import '../utils/localizations.dart';
+import '../utils/globals.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({Key? key}) : super(key: key);
@@ -12,16 +14,19 @@ class FeaturesPage extends StatefulWidget {
 class _FeaturesPageState extends State<FeaturesPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white
+        ),
+        SingleChildScrollView(
           child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
           child: Column(children: [
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start, 
               children: [
-              Text('FEATURES', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations(globalLanguage).translate("features"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 10),
             Row(
@@ -30,7 +35,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: AppColors.mainGreen,
                   imagePath: 'assets/payslip.png',
-                  title: 'Payslip',
+                  title: AppLocalizations(globalLanguage).translate("payslip"),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -41,7 +46,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: AppColors.mainGreen,
                   imagePath: 'assets/checkpoint.png', 
-                  title: 'Checkpoint Tour',
+                  title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
                   onTap: () {
                     // Navigator.push(
                     //   context,
@@ -52,7 +57,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: AppColors.mainGreen,
                   imagePath: 'assets/ticketing.png', 
-                  title: 'Ticketing',
+                  title: AppLocalizations(globalLanguage).translate("ticketing"),
                   onTap: () {
                     // Navigator.push(
                     //   context,
@@ -63,7 +68,9 @@ class _FeaturesPageState extends State<FeaturesPage> {
               ],
             ),
           ]),
-        )));
+        ))
+      ],
+    );
   }
 }
 
