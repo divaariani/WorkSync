@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'app_colors.dart';
+import '../utils/globals.dart';
+import '../utils/localizations.dart';
 
 class SalaryPage extends StatefulWidget {
   const SalaryPage({Key? key}) : super(key: key);
@@ -14,19 +16,19 @@ class _SalaryPageState extends State<SalaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            'Payslip',
-            style: TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations(globalLanguage).translate("payslip"),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.white,
-          //centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+        backgroundColor: Colors.white,
+        //centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
