@@ -5,6 +5,7 @@ import 'attendance_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
+import '../controllers/attendance_controller.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -14,11 +15,22 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  late AttendanceController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AttendanceController();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
+        ),
+        SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
             child: Column(
@@ -206,205 +218,109 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 30),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppLocalizations(globalLanguage).translate("attendance"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const Spacer(),
-                    InkWell(
-                      child: Text(
-                        AppLocalizations(globalLanguage).translate("seeAll"), 
-                        style: const TextStyle(
-                          fontSize: 12, 
-                          color: AppColors.deepGreen, 
-                          shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
-                        )
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const AttendancePage(),
-                          ),
-                        );
-                      },
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(AppLocalizations(globalLanguage).translate("attendance"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  InkWell(
+                    child: Text(
+                      AppLocalizations(globalLanguage).translate("seeAll"), 
+                      style: const TextStyle(
+                        fontSize: 12, 
+                        color: AppColors.deepGreen, 
+                        shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
+                      )
                     ),
-                  ]
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  color: const Color(0xFFBC5757),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      color: AppColors.grey,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AttendancePage(),
                         ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text("16 October 2023"),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Image.asset("assets/checkin.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("08:04"),
-                                const Spacer(),
-                                Image.asset("assets/checkout.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("17:00"),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  color: AppColors.mainGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      color: AppColors.grey,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text("13 October 2023"),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Image.asset("assets/checkin.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("07:54"),
-                                const Spacer(),
-                                Image.asset("assets/checkout.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("17:00"),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  color: AppColors.mainGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      color: AppColors.grey,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text("12 October 2023"),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Image.asset("assets/checkin.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("07:04"),
-                                const Spacer(),
-                                Image.asset("assets/checkout.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("17:00"),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  color: AppColors.mainGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      color: AppColors.grey,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text("11 October 2023"),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Image.asset("assets/checkin.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("07:04"),
-                                const Spacer(),
-                                Image.asset("assets/checkout.png", width: 24, height: 24),
-                                const SizedBox(width: 10),
-                                const Text("17:00"),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                ],
+              ),
+              FutureBuilder<List<AttendanceData>>(
+                future: controller.futureData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('No data available');
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          buildAttendanceCard(snapshot.data![index]),
+                          const SizedBox(height: 8),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
               ],
             ),
           ),
         )
-      );
+      ],
+    );
+  }
+
+  Widget buildAttendanceCard(AttendanceData data) {
+    bool hasTimeData = data.jamMasuk != null && data.jamPulang != null;
+
+    Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
+
+    return Card(
+      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Card(
+          color: AppColors.grey,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
+          ),
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(data.tglAbsen),
+                const SizedBox(height: 10),
+                Row(
+                  children: <Widget>[
+                    Image.asset("assets/checkin.png", width: 24, height: 24),
+                    const SizedBox(width: 10),
+                    Text(data.jamMasuk ?? 'N/A⠀'),
+                    const Spacer(),
+                    Image.asset("assets/checkout.png", width: 24, height: 24),
+                    const SizedBox(width: 10),
+                    Text(data.jamPulang ?? 'N/A⠀'),
+                    const SizedBox(width: 20),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
