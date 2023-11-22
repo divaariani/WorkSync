@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
 import '../utils/globals.dart';
+import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -14,17 +15,20 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
+        ),
+        SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
           child: Column(
             children: [
-              const Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('PROFILE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations(globalLanguage).translate("profile"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(height: 10),
@@ -51,8 +55,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(SessionManager().namaUser ?? 'Unknown', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                  Text(SessionManager().deptFullName ?? 'Unknown', style: TextStyle(color: Colors.white)),
+                                  Text(SessionManager().namaUser ?? 'Unknown', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                  Text(SessionManager().deptFullName ?? 'Unknown', style: const TextStyle(color: Colors.white)),
                                 ],
                               ),
                               const Spacer(),
@@ -84,13 +88,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppColors.grey,
                     child: Column(
                       children: [
-                        buildRow('assets/department.png', 'Department', '${SessionManager().deptInisial ?? 'Unknown'} Department'),
+                        buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"), '${SessionManager().deptInisial ?? 'Unknown'} Department'),
                         buildDivider(),
-                        buildRow('assets/attendance.png', 'Attendance', 'Performance: 80%'),
+                        buildRow('assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"), AppLocalizations(globalLanguage).translate("performance") + ': 80%'),
                         buildDivider(),
-                        buildRow('assets/theme.png', 'Swicth Theme', 'Current: Light Mode'),
+                        buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), AppLocalizations(globalLanguage).translate("current")+': Light Mode'),
                         buildDivider(),
-                        buildRow('assets/language.png', 'Language', 'Current: English'),
+                        buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"), AppLocalizations(globalLanguage).translate("current")+': English'),
                         // buildDivider(),
                         // buildRow('assets/logout.png', 'Log Out', 'Log out from your account'),
                       ],
@@ -129,10 +133,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            "Log Out",
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage).translate("logout"),
+                            style: const TextStyle(
                                 color: AppColors.mainGreen,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
@@ -147,6 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+      ]
     );
   }
 
