@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'app_colors.dart';
-import 'salary_page.dart';
+import 'requestlist_page.dart';
+import 'overtimeform_page.dart';
+import 'offworkform_page.dart';
+import 'attendanceform_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 
@@ -12,21 +18,106 @@ class FeaturesPage extends StatefulWidget {
 }
 
 class _FeaturesPageState extends State<FeaturesPage> {
+  // LOCATION DETECT
+  String message = 'Location';
+
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
+    if (permission == geolocator.LocationPermission.denied) {
+      permission = await geolocator.Geolocator.requestPermission();
+      if (permission == geolocator.LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == geolocator.LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied, we cant request');
+    }
+
+    final position = await geolocator.Geolocator.getCurrentPosition();
+    globalLat = position.latitude.toString();
+    globalLong = position.longitude.toString();
+    await getLocationName();
+
+    setState(() {
+      message = 'Latitude $globalLat, Longitude: $globalLong';
+    });
+
+    return await geolocator.Geolocator.getCurrentPosition();
+  }
+
+  Future<String> getLocationName() async {
+    double latitude = double.parse(globalLat);
+    double longitude = double.parse(globalLong);
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks[0];
+      String locationName = placemark.name ?? "";
+      String thoroughfare = placemark.thoroughfare ?? "";
+      String subLocality = placemark.subLocality ?? "";
+      String locality = placemark.locality ?? "";
+      String administrativeArea = placemark.administrativeArea ?? "";
+      String country = placemark.country ?? "";
+      String postalCode = placemark.postalCode ?? "";
+
+      String address = "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
+
+      globalLocationName = address;
+      return address;
+    } else {
+      globalLocationName = "Location not found";
+      return "Location not found";
+    }
+  }
+
+  void _liveLocation() {
+    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
+        accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
+
+    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((geolocator.Position position) {
+      double targetLatitude = -6.520107;
+      double targetLongitude = 106.830266;
+      double distance = geolocator.Geolocator.distanceBetween(
+        position.latitude, position.longitude, targetLatitude, targetLongitude);
+
+      if (distance <= 500) {
+        globalLat = position.latitude.toString();
+        globalLong = position.longitude.toString();
+
+        setState(() {
+          message = 'Latitude $globalLat, Longitude: $globalLong';
+        });
+      } else {
+        setState(() {
+          message = 'Outside the allowed area';
+        });
+        globalLat = '';
+        globalLong = '';
+        globalLocationName = 'Outside the allowed area';
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          color: Colors.white
-        ),
+        Container(color: Colors.white),
         SingleChildScrollView(
           child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
-          child: Column(children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start, 
-              children: [
-              Text(AppLocalizations(globalLanguage).translate("features"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
+            child: Column(children: [
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(AppLocalizations(globalLanguage).translate("features"),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 10),
             Row(
@@ -34,18 +125,70 @@ class _FeaturesPageState extends State<FeaturesPage> {
               children: <Widget>[
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/payslip.png',
-                  title: AppLocalizations(globalLanguage).translate("payslip"),
+                  imagePath: 'assets/attendancefeature.png',
+                  title: AppLocalizations(globalLanguage).translate("attendanceForm"),
+                  onTap: () {
+                    _getCurrentLocation().then((value) {
+                      globalLat = '${value.latitude}';
+                      globalLong = '${value.longitude}';
+                      getLocationName();
+                      setState(() {
+                        message = 'Latitude $globalLat, Longitude: $globalLong, Name: $globalLocationName';
+                      });
+                      _liveLocation();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AttendanceFormPage(),
+                        ),
+                      );
+                    });
+                  },
+                ),
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/overtime.png',
+                  title: AppLocalizations(globalLanguage).translate("overtime"),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SalaryPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const OvertimeFormPage()),
                     );
                   },
                 ),
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/checkpoint.png', 
+                  imagePath: 'assets/paidleave.png',
+                  title: AppLocalizations(globalLanguage).translate("offWork"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OffWorkFormPage()),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/leave.png',
+                  title: AppLocalizations(globalLanguage).translate("leave"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RequestListPage()),
+                    );
+                  },
+                ),
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/checkpoint.png',
                   title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
                   onTap: () {
                     // Navigator.push(
@@ -56,8 +199,9 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 ),
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/ticketing.png', 
-                  title: AppLocalizations(globalLanguage).translate("ticketing"),
+                  imagePath: 'assets/ticketing.png',
+                  title:
+                      AppLocalizations(globalLanguage).translate("ticketing"),
                   onTap: () {
                     // Navigator.push(
                     //   context,
@@ -99,7 +243,7 @@ class CardItem extends StatelessWidget {
         children: [
           Container(
             width: 0.275 * MediaQuery.of(context).size.width,
-            height: 100, 
+            height: 100,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10),
@@ -117,7 +261,7 @@ class CardItem extends StatelessWidget {
             title,
             style: const TextStyle(
               fontSize: 12,
-              color: AppColors.deepGreen, 
+              color: AppColors.deepGreen,
             ),
           ),
         ],
