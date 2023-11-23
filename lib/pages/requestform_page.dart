@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class RequestFormPage extends StatefulWidget {
   const RequestFormPage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class RequestFormPage extends StatefulWidget {
 }
 
 class _RequestFormPageState extends State<RequestFormPage> {
-  String selectedType = AppLocalizations(globalLanguage).translate("onDuty");
+  String selectedType = AppLocalizations(globalLanguage).translate("leave");
   String startDate = AppLocalizations(globalLanguage).translate("startTime");
   String endDate = AppLocalizations(globalLanguage).translate("endTime");
 
@@ -41,8 +42,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
         appBar: AppBar(
           title: Text(
             AppLocalizations(globalLanguage).translate("request"),
-            style: const TextStyle(
-                color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -89,9 +89,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           children: [
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Username',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              SessionManager().namaUser ?? 'Unknown',
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
                         ),
@@ -128,10 +128,10 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 }
                               },
                               items: <String>[
-                                AppLocalizations(globalLanguage).translate("onDuty"),
+                                AppLocalizations(globalLanguage).translate("leave"),
                                 AppLocalizations(globalLanguage).translate("overtime"),
                                 AppLocalizations(globalLanguage).translate("offWork"),
-                                AppLocalizations(globalLanguage).translate("leave")
+                                AppLocalizations(globalLanguage).translate("onDuty")
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
