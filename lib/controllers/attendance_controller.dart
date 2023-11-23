@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -29,6 +30,36 @@ class AttendanceController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error fetching data: $error');
+      throw error;
+    }
+  }
+
+  Future<void> postAttendance(String noAbsen, DateTime tglAbsen, String tap) async {
+    try {
+      final Uri url = Uri.parse('$apiBaseUrl?function=post_absensi');
+      
+      final response = await http.post(
+        url,
+        body: {
+          'noabsen': noAbsen,
+          'tglabsen': DateFormat('yyyy-MM-dd HH:mm:ss').format(tglAbsen),
+          'tap': tap,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        
+        if (responseData['status'] == 1) {
+          print('Attendance posted successfully');
+        } else {
+          throw Exception('Failed to post attendance: ${responseData['message']}');
+        }
+      } else {
+        throw Exception('Failed to post attendance');
+      }
+    } catch (error) {
+      print('Error posting attendance: $error');
       throw error;
     }
   }
