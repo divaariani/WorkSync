@@ -234,12 +234,25 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     geolocator.LocationSettings locationSettings = geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
 
     geolocator.Geolocator.getPositionStream(locationSettings: locationSettings).listen((geolocator.Position position) {
-      globalLat = position.latitude.toString();
-      globalLong = position.longitude.toString();
+      double targetLatitude = -6.520107;
+      double targetLongitude = 106.830266;
+      double distance = geolocator.Geolocator.distanceBetween(position.latitude, position.longitude, targetLatitude, targetLongitude);
 
-      setState(() {
-        message = 'Latitude $globalLat, Longitude: $globalLong';
-      });
+      if (distance <= 500) {
+        globalLat = position.latitude.toString();
+        globalLong = position.longitude.toString();
+
+        setState(() {
+          message = 'Latitude $globalLat, Longitude: $globalLong';
+        });
+      } else {
+        setState(() {
+          message = 'Outside the allowed area';
+        });
+        globalLat = '';
+        globalLong = '';
+        globalLocationName = 'Outside the allowed area';
+      }
     });
   }
 
@@ -253,8 +266,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
             constraints: const BoxConstraints.expand(),
             padding: const EdgeInsets.only(top: 0, bottom: 0),
             child: Builder(builder: (context) {
-              if ((_camera == null || !_camera!.value.isInitialized) ||
-                  loading) {
+              if ((_camera == null || !_camera!.value.isInitialized) || loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -282,8 +294,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                                 _liveLocation();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AttendanceFormPage(),
+                                    builder: (context) => const AttendanceFormPage(),
                                   ),
                                 );
                               });
