@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:intl/intl.dart';
 import 'app_colors.dart';
+import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
+import '../controllers/attendance_controller.dart';
 
 class AttendanceFormPage extends StatefulWidget {
   const AttendanceFormPage({Key? key}) : super(key: key);
@@ -16,6 +21,10 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
   String inOrOut = '';
   String inOrOutButton= '';
   String imageAsset = '';
+
+  static String currentDateTime() {
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +97,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                           children: [
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Username',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              SessionManager().namaUser ?? 'Unknown',
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
                         ),
@@ -161,8 +170,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                             horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
-                            Image.asset('assets/attendancetype.png',
-                                height: 24, width: 24),
+                            Image.asset('assets/attendancetype.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             DropdownButton<String>(
                               value: selectedType,
@@ -173,8 +181,8 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                   });
                                 }
                               },
-                              items: <String>[AppLocalizations(globalLanguage).translate("checkIn"), AppLocalizations(globalLanguage).translate("checkOut")]
-                                  .map((String value) {
+                              items: <String>[AppLocalizations(globalLanguage).translate("checkIn"), 
+                              AppLocalizations(globalLanguage).translate("checkOut")].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(value,
@@ -189,7 +197,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '$inOrOut',
+                      inOrOut,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -208,50 +216,108 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                           children: [
                             Image.asset(imageAsset, height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              '17:04',
-                              style: TextStyle(color: AppColors.deepGreen),
-                            ),
                             Text(
-                              " ("+AppLocalizations(globalLanguage).translate('late')+")",
-                              style: const TextStyle(
-                                  color: AppColors.deepGreen,
-                                  fontWeight: FontWeight.bold),
+                              DateFormat('HH:mm').format(DateTime.now()),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
+                            // Text(
+                            //   " ("+AppLocalizations(globalLanguage).translate('late')+")",
+                            //   style: const TextStyle(
+                            //       color: AppColors.deepGreen,
+                            //       fontWeight: FontWeight.bold),
+                            // ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
                     Center(
-                      child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
+                      child: Visibility(
+                        visible: globalLat != null && globalLong != null,
+                        child: GestureDetector(
+                          onTap: () async {
+                            String tap = selectedType == AppLocalizations(globalLanguage).translate("checkOut") ? 'P' : 'M';
+                            String tglAbsen = currentDateTime();
+                            String noAbsen = SessionManager().noAbsen ?? '0';
+                            
+                            try {
+                              await AttendanceController().postAttendance(noAbsen, DateTime.parse(tglAbsen), tap);
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Attendance Success',
+                                  message: 'You are successfully attendance',
+                                  contentType: ContentType.success,
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+
+                            } catch (error) {
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Attendance Failed',
+                                  message: 'Something went wrong',
+                                  contentType: ContentType.failure,
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+                              
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, AppColors.lightGreen],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                              child: Text(
+                                inOrOutButton,
+                                style: const TextStyle(
+                                  color: AppColors.deepGreen,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
-                        child: Text(
-                          inOrOutButton,
-                          style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ))
+                    )
                   ],
                 ),
               ),
