@@ -109,112 +109,123 @@ class _DashboardPageState extends State<DashboardPage> {
                       )),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Card(
-                        elevation: 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        color: AppColors.grey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                FutureBuilder<List<AttendanceData>>(
+                  future: controller.futureData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return const Text('Error');
+                    } 
+
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: AppColors.grey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    'assets/checkin.png',
-                                    width: 20,
-                                    height: 20,
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/checkin.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        AppLocalizations(globalLanguage).translate("checkIn"),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.mainGreen,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 10),
+                                  const SizedBox(height: 10),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("checkIn"),
+                                    controller.getTodayIn(snapshot.data!), 
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.mainGreen,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                '08:00',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.mainGreen,
-                                ),
-                              ),
-                              Text(
-                                AppLocalizations(globalLanguage).translate("onTime"),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.mainGreen,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Card(
-                        elevation: 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        color: AppColors.grey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: AppColors.grey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    'assets/checkout.png',
-                                    width: 20,
-                                    height: 20,
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/checkout.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        AppLocalizations(globalLanguage).translate("checkOut"),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.mainGreen,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 10),
+                                  const SizedBox(height: 10),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("checkOut"),
+                                    controller.getTodayOut(snapshot.data!), 
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.mainGreen,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                '17:00',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.mainGreen,
-                                ),
-                              ),
-                              Text(
-                                AppLocalizations(globalLanguage).translate("onTime"),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.mainGreen,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 30),
                 Row(
@@ -243,30 +254,32 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               FutureBuilder<List<AttendanceData>>(
                 future: controller.futureData,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return const Text('Error');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('No data available');
-                  }
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return const Text('Error');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('No data available');
+                    }
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          buildAttendanceCard(snapshot.data![index]),
-                          const SizedBox(height: 8),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
+                    int itemCount = snapshot.data!.length > 5 ? 5 : snapshot.data!.length;
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: itemCount,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            buildAttendanceCard(snapshot.data![index]),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),
