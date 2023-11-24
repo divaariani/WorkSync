@@ -34,7 +34,45 @@ class AttendanceController extends ChangeNotifier {
     }
   }
 
-  Future<void> postAttendance(String noAbsen, DateTime tglAbsen, String tap) async {
+  String getTodayIn(List<AttendanceData> data) {
+    final todayData = data.firstWhere(
+      (element) => element.tglAbsen == DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      orElse: () => AttendanceData(
+        jamMasuk: 'N/A',
+        jamPulang: 'N/A',
+        namaPegawai: '',
+        batasTgl: '',
+        tglAbsen: '',
+        statusAbsen: '',
+        latitude: '',
+        longitude: '',
+        attendancePhoto: '',
+      ),
+    );
+
+    return todayData.jamMasuk ?? 'N/A';
+  }
+
+  String getTodayOut(List<AttendanceData> data) {
+    final todayData = data.firstWhere(
+      (element) => element.tglAbsen == DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      orElse: () => AttendanceData(
+        jamMasuk: 'N/A',
+        jamPulang: 'N/A',
+        namaPegawai: '',
+        batasTgl: '',
+        tglAbsen: '',
+        statusAbsen: '',
+        latitude: '',
+        longitude: '',
+        attendancePhoto: '',
+      ),
+    );
+
+    return todayData.jamPulang ?? 'N/A';
+  }
+
+  Future<void> postAttendance(String noAbsen, DateTime tglAbsen, String tap, String latitude, String longitude, String linkPhoto) async {
     try {
       final Uri url = Uri.parse('$apiBaseUrl?function=post_absensi');
       
@@ -44,6 +82,9 @@ class AttendanceController extends ChangeNotifier {
           'noabsen': noAbsen,
           'tglabsen': DateFormat('yyyy-MM-dd HH:mm:ss').format(tglAbsen),
           'tap': tap,
+          'lintang': globalLat,
+          'bujur': globalLong,
+          'linkphoto': ''
         },
       );
 
@@ -73,6 +114,9 @@ class AttendanceData {
   final String statusAbsen;
   final String? jamMasuk;
   final String? jamPulang;
+  final String? latitude;
+  final String? longitude;
+  final String? attendancePhoto;
 
   AttendanceData({
     required this.namaPegawai,
@@ -81,6 +125,9 @@ class AttendanceData {
     required this.statusAbsen,
     this.jamMasuk,
     this.jamPulang,
+    this.latitude,
+    this.longitude,
+    this.attendancePhoto
   });
 
   factory AttendanceData.fromJson(Map<String, dynamic> json) {
@@ -94,6 +141,9 @@ class AttendanceData {
       statusAbsen: json['StatusAbsen'],
       jamMasuk: jamMasuk,
       jamPulang: jamPulang,
+      latitude: json['lintang'],
+      longitude: json['bujur'],
+      attendancePhoto: json['linkphoto'],
     );
   }
 }
