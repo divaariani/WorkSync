@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
 import '../utils/localizations.dart';
-import '../utils/globals.dart';
 import '../utils/session_manager.dart';
+import '../utils/globals.dart';
 import '../controllers/attendance_controller.dart';
 
 class AttendanceFormPage extends StatefulWidget {
@@ -239,9 +239,12 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                             String tap = selectedType == AppLocalizations(globalLanguage).translate("checkOut") ? 'P' : 'M';
                             String tglAbsen = currentDateTime();
                             String noAbsen = SessionManager().noAbsen ?? '0';
+                            String latitude = globalLat;
+                            String longitude = globalLong;
+                            String linkphoto = '';
                             
                             try {
-                              await AttendanceController().postAttendance(noAbsen, DateTime.parse(tglAbsen), tap);
+                              await AttendanceController().postAttendance(noAbsen, DateTime.parse(tglAbsen), tap, latitude, longitude, linkphoto);
                               final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
