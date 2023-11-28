@@ -3,9 +3,8 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'app_colors.dart';
-import 'requestlist_page.dart';
-import 'overtimeform_page.dart';
-import 'offworkform_page.dart';
+import 'approvals_page.dart';
+import 'overtimelist_page.dart';
 import 'attendanceform_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
@@ -98,10 +97,10 @@ class _FeaturesPageState extends State<FeaturesPage> {
       } else {
         setState(() {
           message = 'Outside the allowed area';
+          globalLat = '';
+          globalLong = '';
+          globalLocationName = 'Outside the allowed area';
         });
-        globalLat = '';
-        globalLong = '';
-        globalLocationName = 'Outside the allowed area';
       }
     });
   }
@@ -129,12 +128,6 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   title: AppLocalizations(globalLanguage).translate("attendanceForm"),
                   onTap: () {
                     _getCurrentLocation().then((value) {
-                      globalLat = '${value.latitude}';
-                      globalLong = '${value.longitude}';
-                      getLocationName();
-                      setState(() {
-                        message = 'Latitude $globalLat, Longitude: $globalLong, Name: $globalLocationName';
-                      });
                       _liveLocation();
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -152,20 +145,20 @@ class _FeaturesPageState extends State<FeaturesPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const OvertimeFormPage()),
+                          builder: (context) => const OvertimeListPage()),
                     );
                   },
                 ),
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/paidleave.png',
-                  title: AppLocalizations(globalLanguage).translate("offWork"),
+                  imagePath: 'assets/leave.png',
+                  title: AppLocalizations(globalLanguage).translate("leave"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OffWorkFormPage()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const LeaveListPage()),
+                    // );
                   },
                 ),
               ],
@@ -176,13 +169,13 @@ class _FeaturesPageState extends State<FeaturesPage> {
               children: <Widget>[
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/leave.png',
-                  title: AppLocalizations(globalLanguage).translate("leave"),
+                  imagePath: 'assets/approval.png',
+                  title: AppLocalizations(globalLanguage).translate("approvals"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RequestListPage()),
+                          builder: (context) => const ApprovalsPage()),
                     );
                   },
                 ),
@@ -193,7 +186,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   onTap: () {
                     // Navigator.push(
                     //   context,
-                    //   MaterialPageRoute(builder: (context) => CheckpointPage()),
+                    //   MaterialPageRoute(builder: (context) => const CheckPointPage()),
                     // );
                   },
                 ),
@@ -242,7 +235,7 @@ class CardItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 0.275 * MediaQuery.of(context).size.width,
+            width: 0.27 * MediaQuery.of(context).size.width,
             height: 100,
             decoration: BoxDecoration(
               color: color,
