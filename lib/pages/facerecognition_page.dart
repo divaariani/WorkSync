@@ -248,10 +248,10 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
       } else {
         setState(() {
           message = 'Outside the allowed area';
+          globalLat = '';
+          globalLong = '';
+          globalLocationName = 'Outside the allowed area';
         });
-        globalLat = '';
-        globalLong = '';
-        globalLocationName = 'Outside the allowed area';
       }
     });
   }
