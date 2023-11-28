@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class OvertimeFormPage extends StatefulWidget {
   const OvertimeFormPage({Key? key}) : super(key: key);
@@ -12,7 +13,6 @@ class OvertimeFormPage extends StatefulWidget {
 }
 
 class _OvertimeFormPageState extends State<OvertimeFormPage> {
-  String selectedType = 'Overtime Hours';
   String startDate = AppLocalizations(globalLanguage).translate("startTime");
   String endDate = AppLocalizations(globalLanguage).translate("endTime");
 
@@ -88,114 +88,10 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                           children: [
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Username',
-                              style: TextStyle(color: AppColors.deepGreen),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("overtimeType"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/attendancetype.png', height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            DropdownButton<String>(
-                              value: selectedType,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    selectedType = newValue;
-                                  });
-                                }
-                              },
-                              items: <String>[
-                                'Overtime Hours',
-                                'Extra Leave',
-                              ].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value, style: const TextStyle( color: AppColors.deepGreen)),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("remark"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
                             Text(
-                              AppLocalizations(globalLanguage).translate("remark") + '...',
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            const Spacer(),
-                            Image.asset('assets/fill.png', height: 24, width: 24),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("attachment"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/file.png', height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            Text(
-                              AppLocalizations(globalLanguage).translate("addFile"),
+                              SessionManager().namaUser ?? 'Unknown',
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
-                            const Spacer(),
-                            Image.asset('assets/add.png', height: 24, width: 24),
                           ],
                         ),
                       ),
@@ -274,6 +170,35 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Card(
+                      margin: EdgeInsets.zero,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Text(
+                              '${AppLocalizations(globalLanguage).translate("remark")}...',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            const Spacer(),
+                            Image.asset('assets/fill.png', height: 24, width: 24),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Center(
