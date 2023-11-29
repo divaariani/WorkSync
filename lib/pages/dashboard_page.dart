@@ -289,7 +289,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget buildAttendanceCard(AttendanceData data) {
-    bool hasTimeData = data.jamMasuk != null && data.jamPulang != null;
+    bool hasTimeData = data.jamMasuk != null || data.jamPulang != null;
 
     Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
