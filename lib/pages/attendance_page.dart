@@ -133,7 +133,7 @@ class _AttendancePageState extends State<AttendancePage> {
   }
 
   Widget buildAttendanceCard(AttendanceData data) {
-    bool hasTimeData = data.jamMasuk != null && data.jamPulang != null;
+    bool hasTimeData = data.jamMasuk != null || data.jamPulang != null;
 
     Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
