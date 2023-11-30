@@ -74,7 +74,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
           title: Text(
             AppLocalizations(globalLanguage).translate("overtime"),
             style: const TextStyle(
-                color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+              color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -131,7 +131,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("time"),
+                      AppLocalizations(globalLanguage).translate("Start"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -168,7 +168,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("time"),
+                      AppLocalizations(globalLanguage).translate("End"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
