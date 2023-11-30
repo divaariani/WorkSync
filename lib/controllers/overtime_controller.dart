@@ -109,6 +109,46 @@ class OvertimeController extends ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> postOvertimeEdit(String ovtid, String noAbsen, DateTime tglDari, DateTime tglSampai, String note) async {
+    try {
+      final Uri url = Uri.parse('$apiBaseUrl?function=post_overtime');
+
+      final response = await http.post(
+        url,
+        body: {
+          'lineuid': ovtid,
+          'noabsen': noAbsen,
+          'tgldari': DateFormat('yyyy-MM-dd HH:mm:ss').format(tglDari),
+          'tglsampai': DateFormat('yyyy-MM-dd HH:mm:ss').format(tglSampai),
+          'overtimenote': note,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+          throw Exception('Invalid content type: ${response.headers['content-type']}');
+        }
+
+        final dynamic responseData = json.decode(response.body);
+
+        if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
+          if (responseData['status'] == 1) {
+            print('Overtime posted successfully');
+          } else {
+            throw Exception('Failed to post overtime: ${responseData['message']}');
+          }
+        } else {
+          throw Exception('Invalid response format');
+        }
+      } else {
+        throw Exception('Failed to post overtime. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error posting overtime: $error');
+      throw error;
+    }
+  }
 }
 
 class OvertimeData {
