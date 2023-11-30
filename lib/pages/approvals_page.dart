@@ -175,9 +175,9 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                           children: [
                                             Text(data.employeeName),
                                             const SizedBox(height: 5),
-                                            Text(data.ovtDateStart),
+                                            Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(data.ovtDateStart))),
                                             const SizedBox(height: 5),
-                                            Text(data.ovtDateEnd),
+                                            Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(data.ovtDateEnd))),
                                             const SizedBox(height: 5),
                                             Wrap(
                                               spacing: 8, 
