@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'overtimeform_page.dart';
+import 'overtimeformedit_page.dart';
+import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../controllers/overtime_controller.dart';
@@ -20,6 +23,16 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+          },
+        ),
         centerTitle: true,
         title: Text(
           AppLocalizations(globalLanguage).translate("overtimeList"),
@@ -75,48 +88,51 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
                           padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 16),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    overtime['Ovt_Prop_Date'].substring(0, 10),
-                                    style: const TextStyle(color: AppColors.lightGreen),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: overtime['Status'] == 'Add' ? Colors.orange : Colors.green,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child:  Text(
-                                        overtime['Status'] == 'Add'
-                                            ? AppLocalizations(globalLanguage).translate("requested")
-                                            : 'Approved Request', 
-                                        style: const TextStyle(
-                                          color: AppColors.deepGreen,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                              Row(children: [
+                                Text(
+                                  DateFormat('d MMMM y', 'en_US').format(DateTime.parse(overtime['Ovt_Prop_Date'])),
+                                  style: const TextStyle(
+                                      color: AppColors.lightGreen),
+                                ),
+                                const Spacer(),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: overtime['Status'] == 'Add'
+                                          ? Colors.orange
+                                          : Colors.green,
+                                      width: 1,
                                     ),
                                   ),
-                                  if (overtime['Status'] == 'Add') 
-                                    const SizedBox(width: 10),
-                                    InkWell(
-                                      onTap: () {
-                                        // Navigator.of(context).push(
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => OvertimeEditPage(overtimeId: overtime['Ovt_Id']),
-                                        //   ),
-                                        // );
-                                      },
-                                      child: Image.asset('assets/fill.png', height: 24, width: 24),
-                                    ), 
-                                ]
-                              ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Text(
+                                      overtime['Status'] == 'Add'
+                                          ? AppLocalizations(globalLanguage).translate("requested")
+                                          : 'Approved Request',
+                                      style: const TextStyle(
+                                        color: AppColors.deepGreen,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                if (overtime['Status'] == 'Add')
+                                  const SizedBox(width: 10),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OvertimeEditFormPage(
+                                                overtimeData: overtime),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.asset('assets/fill.png', height: 24, width: 24),
+                                ),
+                              ]),
                               const SizedBox(height: 10),
                               Row(
                                 children: [
@@ -144,24 +160,23 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(overtime['Ovt_Date_Start'].substring(0, 16)),
-                                        const SizedBox(height: 5),
-                                        Text(overtime['Ovt_Date_End'].substring(0, 16)),
-                                        const SizedBox(height: 5),
-                                        Wrap(
-                                          spacing: 8, 
-                                          children: [
-                                            Text(
-                                              overtime['Ovt_Noted'],
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  )
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(overtime['Ovt_Date_Start']))),
+                                      const SizedBox(height: 5),
+                                      Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(overtime['Ovt_Date_End']))),
+                                      const SizedBox(height: 5),
+                                      Wrap(
+                                        spacing: 8,
+                                        children: [
+                                          Text(
+                                            overtime['Ovt_Noted'],
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ))
                                 ],
                               ),
                             ],
@@ -170,15 +185,14 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
                       );
                     },
                   );
-                  
                 }
               },
             ),
           ),
           Positioned(
             bottom: 16,
-            left: 80,
-            right: 80,
+            left: 100,
+            right: 100,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
