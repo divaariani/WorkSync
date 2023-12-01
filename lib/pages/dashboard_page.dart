@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
 import 'attendance_page.dart';
@@ -115,7 +116,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return const Text('Error');
+                      return const Text('No Data');
                     } 
 
                     return Row(
@@ -258,7 +259,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return const Text('Error');
+                      return const Text('No data');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No data available');
                     }
@@ -290,6 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget buildAttendanceCard(AttendanceData data) {
     bool hasTimeData = data.jamMasuk != null || data.jamPulang != null;
+    
 
     Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
@@ -315,7 +317,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(data.tglAbsen),
+                Text(formatLanguageDate(data.tglAbsen)),
                 const SizedBox(height: 10),
                 Row(
                   children: <Widget>[
@@ -335,5 +337,11 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
       ),
     );
+  }
+
+  String formatLanguageDate(String dateString) {
+    final DateTime dateTime = DateTime.parse(dateString);
+    final String formattedDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
+    return formattedDate;
   }
 }
