@@ -149,6 +149,42 @@ class OvertimeController extends ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> postApproveOvertime(String ovtId) async {
+    try {
+      final Uri url = Uri.parse('$apiBaseUrl?function=post_approve_overtime');
+
+      final response = await http.post(
+        url,
+        body: {
+          'lineuid': ovtId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+          throw Exception('Invalid content type: ${response.headers['content-type']}');
+        }
+
+        final dynamic responseData = json.decode(response.body);
+
+        if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
+          if (responseData['status'] == 1) {
+            print('Overtime posted successfully');
+          } else {
+            throw Exception('Failed to approve overtime: ${responseData['message']}');
+          }
+        } else {
+          throw Exception('Invalid response format');
+        }
+      } else {
+        throw Exception('Failed to approve overtime. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error posting approve: $error');
+      throw error;
+    }
+  }
 }
 
 class OvertimeData {
