@@ -8,12 +8,9 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
-import 'attendanceform_page.dart';
+import 'refresh_page.dart';
 import '../modules/detector.dart';
 import '../modules/utils.dart';
 import '../modules/model.dart';
@@ -28,7 +25,6 @@ class FaceRecognitionPage extends StatefulWidget {
 }
 
 class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsBindingObserver {
-  // FACE DETECTION
   @override
   void initState() {
     super.initState();
@@ -170,92 +166,6 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     return _predRes;
   }
 
-  // LOCATION DETECT
-  String message = 'Location';
-
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
-    if (permission == geolocator.LocationPermission.denied) {
-      permission = await geolocator.Geolocator.requestPermission();
-      if (permission == geolocator.LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == geolocator.LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cant request');
-    }
-
-    final position = await geolocator.Geolocator.getCurrentPosition();
-    globalLat = position.latitude.toString();
-    globalLong = position.longitude.toString();
-    await getLocationName();
-
-    setState(() {
-      message = 'Latitude $globalLat, Longitude: $globalLong';
-    });
-
-    return await geolocator.Geolocator.getCurrentPosition();
-  }
-
-  Future<String> getLocationName() async {
-    double latitude = double.parse(globalLat);
-    double longitude = double.parse(globalLong);
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-
-    if (placemarks.isNotEmpty) {
-      Placemark placemark = placemarks[0];
-      String locationName = placemark.name ?? "";
-      String thoroughfare = placemark.thoroughfare ?? "";
-      String subLocality = placemark.subLocality ?? "";
-      String locality = placemark.locality ?? "";
-      String administrativeArea = placemark.administrativeArea ?? "";
-      String country = placemark.country ?? "";
-      String postalCode = placemark.postalCode ?? "";
-
-      String address = "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
-
-      globalLocationName = address;
-      return address;
-    } else {
-      globalLocationName = "Location not found";
-      return "Location not found";
-    }
-  }
-
-  void _liveLocation() {
-    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
-
-    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings).listen((geolocator.Position position) {
-      double targetLatitude = -6.520107;
-      double targetLongitude = 106.830266;
-      double distance = geolocator.Geolocator.distanceBetween(position.latitude, position.longitude, targetLatitude, targetLongitude);
-
-      if (distance <= 500) {
-        globalLat = position.latitude.toString();
-        globalLong = position.longitude.toString();
-
-        setState(() {
-          message = 'Latitude $globalLat, Longitude: $globalLong';
-        });
-      } else {
-        setState(() {
-          message = 'Outside the allowed area';
-          globalLat = '';
-          globalLong = '';
-          globalLocationName = 'Outside the allowed area';
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -283,21 +193,11 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                           bottom: 20,
                           child: RawMaterialButton(
                             onPressed: () {
-                              _getCurrentLocation().then((value) {
-                                globalLat = '${value.latitude}';
-                                globalLong = '${value.longitude}';
-                                getLocationName();
-                                setState(() {
-                                  message =
-                                      'Latitude $globalLat, Longitude: $globalLong';
-                                });
-                                _liveLocation();
-                                Navigator.of(context).push(
+                              Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => const AttendanceFormPage(),
+                                    builder: (context) => const RefreshAttendance(),
                                   ),
                                 );
-                              });
                             },
                             shape: const CircleBorder(
                               side: BorderSide(color: Colors.white, width: 2.0),
@@ -370,6 +270,9 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                           }
 
                           initialCamera();
+                          print("e1: $e1");
+                          print("name: $_predRes");
+                          print("verify state: $_verify");
                           Navigator.pop(context);
                         } else {
                           Navigator.pop(context);
