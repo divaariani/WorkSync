@@ -61,8 +61,9 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
               ),
             ),
           ),
+          const SizedBox(height: 80),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: FutureBuilder<List<Map<String, dynamic>>>(
               future: controller.fetchOvertimeUser(),
               builder: (context, snapshot) {
@@ -78,110 +79,114 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
                     itemBuilder: (context, index) {
                       final overtime = overtimeList[index];
 
-                      return Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 16),
-                          child: Column(
-                            children: [
-                              Row(children: [
-                                Text(
-                                  DateFormat('d MMMM y', 'en_US').format(DateTime.parse(overtime['Ovt_Prop_Date'])),
-                                  style: const TextStyle(
-                                      color: AppColors.lightGreen),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: overtime['Status'] == 'Add'
-                                          ? Colors.orange
-                                          : Colors.green,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      overtime['Status'] == 'Add'
-                                          ? AppLocalizations(globalLanguage).translate("requested")
-                                          : 'Approved Request',
-                                      style: const TextStyle(
-                                        color: AppColors.deepGreen,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (overtime['Status'] == 'Add')
-                                  const SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OvertimeEditFormPage(
-                                                overtimeData: overtime),
-                                      ),
-                                    );
-                                  },
-                                  child: Image.asset('assets/fill.png', height: 24, width: 24),
-                                ),
-                              ]),
-                              const SizedBox(height: 10),
-                              Row(
+                      return Column(
+                        children: [
+                          if (index == 0) const SizedBox(height: 16),
+                          Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 16),
+                              child: Column(
                                 children: [
-                                  const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('From', style: TextStyle(fontWeight: FontWeight.bold)),
-                                      SizedBox(height: 5),
-                                      Text('Until', style: TextStyle(fontWeight: FontWeight.bold)),
-                                      SizedBox(height: 5),
-                                      Text('Remark', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 10),
-                                  const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(':'),
-                                      SizedBox(height: 5),
-                                      Text(':'),
-                                      SizedBox(height: 5),
-                                      Text(':'),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(overtime['Ovt_Date_Start']))),
-                                      const SizedBox(height: 5),
-                                      Text(DateFormat('dd MMM yyyy [HH:mm]', 'en_US').format(DateTime.parse(overtime['Ovt_Date_End']))),
-                                      const SizedBox(height: 5),
-                                      Wrap(
-                                        spacing: 8,
-                                        children: [
-                                          Text(
-                                            overtime['Ovt_Noted'],
-                                            overflow: TextOverflow.ellipsis,
+                                  Row(children: [
+                                    Text(
+                                      formatLanguageDate(overtime['Ovt_Prop_Date']),
+                                      style: const TextStyle(color: AppColors.mainGreen),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: overtime['Status'] == 'Open/Draft'
+                                              ? Colors.orange
+                                              : Colors.green,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Text(
+                                          overtime['Status'] == 'Open/Draft'
+                                              ? AppLocalizations(globalLanguage).translate("requested")
+                                              : AppLocalizations(globalLanguage).translate("approved"),
+                                          style: const TextStyle(
+                                            color: AppColors.deepGreen,
+                                            fontWeight: FontWeight.bold,
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (overtime['Status'] == 'Open/Draft') const SizedBox(width: 10),
+                                    if (overtime['Status'] == 'Open/Draft') InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OvertimeEditFormPage(
+                                                    overtimeData: overtime),
+                                          ),
+                                        );
+                                      },
+                                      child: Image.asset('assets/fill.png', height: 24, width: 24),
+                                    ),
+                                  ]),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(AppLocalizations(globalLanguage).translate("from"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 5),
+                                          Text(AppLocalizations(globalLanguage).translate("until"), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 5),
+                                          Text(AppLocalizations(globalLanguage).translate("remark"), style: const TextStyle(fontWeight: FontWeight.bold)),
                                         ],
                                       ),
+                                      const SizedBox(width: 10),
+                                      const Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(':'),
+                                          SizedBox(height: 5),
+                                          Text(':'),
+                                          SizedBox(height: 5),
+                                          Text(':'),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(formatLanguageFullDate(overtime['Ovt_Date_Start'])),
+                                          const SizedBox(height: 5),
+                                          Text(formatLanguageFullDate(overtime['Ovt_Date_End']),),
+                                          const SizedBox(height: 5),
+                                          Wrap(
+                                            spacing: 8,
+                                            children: [
+                                              Text(
+                                                overtime['Ovt_Noted'],
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ))
                                     ],
-                                  ))
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          if (index == overtimeList.length - 1) const SizedBox(height: 76),
+                        ],
                       );
                     },
                   );
@@ -239,5 +244,17 @@ class _OvertimeListPageState extends State<OvertimeListPage> {
         ],
       ),
     );
+  }
+
+  String formatLanguageDate(String dateString) {
+    final DateTime dateTime = DateTime.parse(dateString);
+    final String formattedDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
+    return formattedDate;
+  }
+
+  String formatLanguageFullDate(String dateString) {
+    final DateTime dateTime = DateTime.parse(dateString);
+    final String formattedDate = DateFormat('dd MMM yyyy [HH:mm]', globalLanguage.toLanguageTag()).format(dateTime);
+    return formattedDate;
   }
 }
