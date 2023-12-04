@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
-import 'attendanceform_page.dart';
+import 'leave_list_page.dart';
+import 'checkpoint_page.dart';
+import 'refresh_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 
@@ -17,93 +16,6 @@ class FeaturesPage extends StatefulWidget {
 }
 
 class _FeaturesPageState extends State<FeaturesPage> {
-  // LOCATION DETECT
-  String message = 'Location';
-
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
-    if (permission == geolocator.LocationPermission.denied) {
-      permission = await geolocator.Geolocator.requestPermission();
-      if (permission == geolocator.LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == geolocator.LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cant request');
-    }
-
-    final position = await geolocator.Geolocator.getCurrentPosition();
-    globalLat = position.latitude.toString();
-    globalLong = position.longitude.toString();
-    await getLocationName();
-
-    setState(() {
-      message = 'Latitude $globalLat, Longitude: $globalLong';
-    });
-
-    return await geolocator.Geolocator.getCurrentPosition();
-  }
-
-  Future<String> getLocationName() async {
-    double latitude = double.parse(globalLat);
-    double longitude = double.parse(globalLong);
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-
-    if (placemarks.isNotEmpty) {
-      Placemark placemark = placemarks[0];
-      String locationName = placemark.name ?? "";
-      String thoroughfare = placemark.thoroughfare ?? "";
-      String subLocality = placemark.subLocality ?? "";
-      String locality = placemark.locality ?? "";
-      String administrativeArea = placemark.administrativeArea ?? "";
-      String country = placemark.country ?? "";
-      String postalCode = placemark.postalCode ?? "";
-
-      String address = "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
-
-      globalLocationName = address;
-      return address;
-    } else {
-      globalLocationName = "Location not found";
-      return "Location not found";
-    }
-  }
-
-  void _liveLocation() {
-    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
-        accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
-
-    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((geolocator.Position position) {
-      double targetLatitude = -6.520107;
-      double targetLongitude = 106.830266;
-      double distance = geolocator.Geolocator.distanceBetween(
-        position.latitude, position.longitude, targetLatitude, targetLongitude);
-
-      if (distance <= 500) {
-        globalLat = position.latitude.toString();
-        globalLong = position.longitude.toString();
-
-        setState(() {
-          message = 'Latitude $globalLat, Longitude: $globalLong';
-        });
-      } else {
-        setState(() {
-          message = 'Outside the allowed area';
-          globalLat = '';
-          globalLong = '';
-          globalLocationName = 'Outside the allowed area';
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,14 +39,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/attendancefeature.png',
                   title: AppLocalizations(globalLanguage).translate("attendanceForm"),
                   onTap: () {
-                    _getCurrentLocation().then((value) {
-                      _liveLocation();
-                      Navigator.of(context).push(
+                    Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AttendanceFormPage(),
+                          builder: (context) => const RefreshAttendance(),
                         ),
                       );
-                    });
                   },
                 ),
                 CardItem(
@@ -154,11 +63,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/leave.png',
                   title: AppLocalizations(globalLanguage).translate("leave"),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const LeaveListPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LeaveListPage()),
+                    );
                   },
                 ),
               ],
@@ -184,17 +93,16 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/checkpoint.png',
                   title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => const CheckPointPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CheckPointPage()),
+                    );
                   },
                 ),
                 CardItem(
                   color: AppColors.mainGreen,
                   imagePath: 'assets/ticketing.png',
-                  title:
-                      AppLocalizations(globalLanguage).translate("ticketing"),
+                  title: AppLocalizations(globalLanguage).translate("ticketing"),
                   onTap: () {
                     // Navigator.push(
                     //   context,
