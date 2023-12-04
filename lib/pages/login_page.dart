@@ -155,8 +155,8 @@ class _LoginPageState extends State<LoginPage> {
                             });
 
                             if (success) {
-                              if (controller.userData != null) {
-                                SessionManager().saveUserInfo(controller.userData!);
+                              if (controller.userData.isNotEmpty) {
+                                SessionManager().saveUserInfo(controller.userData);
                               }
 
                               final snackBar = SnackBar(
