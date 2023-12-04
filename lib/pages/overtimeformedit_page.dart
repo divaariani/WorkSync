@@ -68,7 +68,7 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      AppLocalizations(globalLanguage).translate("Start Overtime"),
+                      AppLocalizations(globalLanguage).translate("from"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -98,7 +98,7 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("End Overtime"),
+                      AppLocalizations(globalLanguage).translate("until"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -182,7 +182,7 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                             child: Text(
-                              AppLocalizations(globalLanguage).translate("Save"),
+                              AppLocalizations(globalLanguage).translate("save"),
                               style: const TextStyle(
                                 color: AppColors.deepGreen,
                                 fontSize: 16,
