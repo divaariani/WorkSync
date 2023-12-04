@@ -80,7 +80,12 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OvertimeListPage()
+                ),
+              );
             },
           ),
         ),
@@ -131,7 +136,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("Start"),
+                      AppLocalizations(globalLanguage).translate("start"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -168,7 +173,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("End"),
+                      AppLocalizations(globalLanguage).translate("end"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
