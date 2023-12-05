@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'welcome_page.dart';
+import 'editprofile_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
@@ -22,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (globalLanguage == const Locale('en', 'US')) {
       language = 'English';
     } else if (globalLanguage == const Locale('id', 'ID')) {
-      language = 'Indonesia';
+      language = 'Bahasa Indonesia';
     } else if (globalLanguage == const Locale('ko', 'KR')) {
       language = '한국';
     } else {
@@ -79,10 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => EditProfilePage()),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const EditProfilePage()),
+                                    );
                                   },
                                   child: Image.asset(
                                     'assets/edit.png',
