@@ -27,6 +27,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           AppLocalizations(globalLanguage).translate("attendanceList"),
           style: const TextStyle(
