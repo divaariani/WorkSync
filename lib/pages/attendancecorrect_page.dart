@@ -35,6 +35,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("correction"),
             style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
@@ -154,7 +155,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                         child: Row(
                           children: [
                             Text(
-                              AppLocalizations(globalLanguage).translate("remark") + "...",
+                              '${AppLocalizations(globalLanguage).translate("remark")}...',
                               style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),
