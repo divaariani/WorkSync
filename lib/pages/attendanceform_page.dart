@@ -48,6 +48,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
 
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("attendanceForm"),
             style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
