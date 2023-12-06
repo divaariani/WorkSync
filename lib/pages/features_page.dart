@@ -5,8 +5,11 @@ import 'overtimelist_page.dart';
 import 'leave_list_page.dart';
 import 'checkpoint_page.dart';
 import 'refresh_page.dart';
+import 'ticketing_page.dart';
+import 'monitoringcheckpoint_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../controllers/overtime_controller.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({Key? key}) : super(key: key);
@@ -16,6 +19,13 @@ class FeaturesPage extends StatefulWidget {
 }
 
 class _FeaturesPageState extends State<FeaturesPage> {
+  late OvertimeController overtimeController;
+
+  @override
+  void initState() {
+    super.initState();
+    overtimeController = OvertimeController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,15 +86,24 @@ class _FeaturesPageState extends State<FeaturesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                CardItem(
-                  color: AppColors.mainGreen,
-                  imagePath: 'assets/approval.png',
-                  title: AppLocalizations(globalLanguage).translate("approvals"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ApprovalsPage()),
+                FutureBuilder<List<OvertimeData>>(
+                  future: overtimeController.futureData,
+                  builder: (context, snapshot) {
+                    int overtimeCount = snapshot.hasData ? snapshot.data!.length : 0;
+
+                    return CardItem(
+                      color: AppColors.mainGreen,
+                      imagePath: 'assets/approval.png',
+                      title: AppLocalizations(globalLanguage).translate("approvals"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ApprovalsPage(),
+                          ),
+                        );
+                      },
+                      notificationCount: overtimeCount,
                     );
                   },
                 ),
@@ -95,7 +114,9 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CheckPointPage()),
+                      MaterialPageRoute(builder: (context) => CheckPointPage(
+                         result: '', resultCheckpoint: globalBarcodeCheckpointResults
+                      )),
                     );
                   },
                 ),
@@ -104,10 +125,28 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/ticketing.png',
                   title: AppLocalizations(globalLanguage).translate("ticketing"),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => TicketingPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const TicketingPage()),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/monitoring.png',
+                  title: AppLocalizations(globalLanguage).translate("Monitoring"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MonitoringCpPage()),
+                    );
                   },
                 ),
               ],
@@ -125,6 +164,7 @@ class CardItem extends StatelessWidget {
   final String title;
   final double imageWidth;
   final double imageHeight;
+  final int notificationCount; 
   final VoidCallback onTap;
 
   CardItem({
@@ -133,6 +173,7 @@ class CardItem extends StatelessWidget {
     this.title = '',
     this.imageWidth = 70,
     this.imageHeight = 70,
+    this.notificationCount = 0, 
     required this.onTap,
   });
 
@@ -142,20 +183,45 @@ class CardItem extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            width: 0.27 * MediaQuery.of(context).size.width,
-            height: 100,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Container(
-                width: imageWidth,
-                height: imageHeight,
-                child: Image.asset(imagePath),
+          Stack(
+            alignment: Alignment.topCenter, 
+            children: [
+              Container(
+                width: 0.27 * MediaQuery.of(context).size.width,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Container(
+                    width: imageWidth,
+                    height: imageHeight,
+                    child: Image.asset(imagePath),
+                  ),
+                ),
               ),
-            ),
+              if (notificationCount > 0) 
+                Positioned(
+                  top: 0,
+                  right: 0, 
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFBC5757), 
+                    ),
+                    child: Text(
+                      '$notificationCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 5),
           Text(
