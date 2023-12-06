@@ -113,8 +113,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), '${AppLocalizations(globalLanguage).translate("current")}: Light Mode'),
                           buildDivider(),
                           buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"), '${AppLocalizations(globalLanguage).translate("current")}: $language'),
-                          // buildDivider(),
-                          // buildRow('assets/logout.png', 'Log Out', 'Log out from your account'),
                         ],
                       ),
                     ),
