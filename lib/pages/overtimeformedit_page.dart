@@ -33,8 +33,9 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("Edit Overtime"),
+            AppLocalizations(globalLanguage).translate("editOvertime"),
             style: const TextStyle(
               color: AppColors.deepGreen, fontWeight: FontWeight.bold),
           ),
