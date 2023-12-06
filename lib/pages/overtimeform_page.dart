@@ -71,6 +71,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("overtime"),
             style: const TextStyle(
