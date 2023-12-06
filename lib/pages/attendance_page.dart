@@ -41,9 +41,7 @@ class _AttendancePageState extends State<AttendancePage> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage()
-              ),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           },
         ),
@@ -56,7 +54,6 @@ class _AttendancePageState extends State<AttendancePage> {
           } else if (snapshot.hasError) {
             return const Text('No data');
           }
-
           return const CircularProgressIndicator();
         },
       ),
@@ -91,51 +88,50 @@ class _AttendancePageState extends State<AttendancePage> {
         ),
         Positioned(
           bottom: 16,
-          left: 100,
-          right: 100,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              gradient: const LinearGradient(
-                colors: [Colors.white, AppColors.lightGreen],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 3),
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: const LinearGradient(
+                  colors: [Colors.white, AppColors.lightGreen],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AttendanceCorrectionPage(),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 3),
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                ],
               ),
-              child: Text(
-                AppLocalizations(globalLanguage).translate("addCorrection"),
-                style: const TextStyle(
-                  color: AppColors.deepGreen,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AttendanceCorrectionPage(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                  child: Text(
+                    AppLocalizations(globalLanguage).translate("addCorrection"),
+                    style: const TextStyle(
+                      color: AppColors.deepGreen,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        )
       ],
     );
   }
@@ -145,54 +141,52 @@ class _AttendancePageState extends State<AttendancePage> {
 
     Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
-    return Column(
-      children: [
-        if (index == 0) const SizedBox(height: 16),
-        Card(
-          color: cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.zero,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Card(
-              color: AppColors.grey,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
+    return Column(children: [
+      if (index == 0) const SizedBox(height: 16),
+      Card(
+        color: cardColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Card(
+            color: AppColors.grey,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
-              margin: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(formatLanguageDate(data.tglAbsen)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: <Widget>[
-                        Image.asset("assets/checkin.png", width: 24, height: 24),
-                        const SizedBox(width: 10),
-                        Text(data.jamMasuk ?? 'N/A⠀'),
-                        const Spacer(),
-                        Image.asset("assets/checkout.png", width: 24, height: 24),
-                        const SizedBox(width: 10),
-                        Text(data.jamPulang ?? 'N/A⠀'),
-                        const SizedBox(width: 20),
-                      ],
-                    ),
-                  ],
-                ),
+            ),
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(formatLanguageDate(data.tglAbsen)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Image.asset("assets/checkin.png", width: 24, height: 24),
+                      const SizedBox(width: 10),
+                      Text(data.jamMasuk ?? 'N/A⠀'),
+                      const Spacer(),
+                      Image.asset("assets/checkout.png", width: 24, height: 24),
+                      const SizedBox(width: 10),
+                      Text(data.jamPulang ?? 'N/A⠀'),
+                      const SizedBox(width: 20),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
         ),
-        if (index == listLength - 1) const SizedBox(height: 76),
-      ]
-    );
+      ),
+      if (index == listLength - 1) const SizedBox(height: 56),
+    ]);
   }
 
   String formatLanguageDate(String dateString) {
