@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'attendance_page.dart';
 import 'app_colors.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 
 class AttendanceCorrectionPage extends StatefulWidget {
   const AttendanceCorrectionPage({Key? key}) : super(key: key);
@@ -33,6 +35,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("correction"),
             style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
@@ -41,7 +44,12 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AttendancePage()
+                ),
+              );
             },
           ),
         ),
@@ -82,9 +90,9 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                           children: [
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Username',
-                              style: TextStyle(color: AppColors.deepGreen),
+                            Text(
+                              SessionManager().namaUser ?? 'Unknown',
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
                         ),
@@ -147,7 +155,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                         child: Row(
                           children: [
                             Text(
-                              AppLocalizations(globalLanguage).translate("remark") + "...",
+                              '${AppLocalizations(globalLanguage).translate("remark")}...',
                               style: const TextStyle(color: Colors.grey),
                             ),
                             const Spacer(),

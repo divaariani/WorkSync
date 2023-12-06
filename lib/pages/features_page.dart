@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'app_colors.dart';
-import 'requestlist_page.dart';
-import 'overtimeform_page.dart';
-import 'offworkform_page.dart';
-import 'attendanceform_page.dart';
+import 'approvals_page.dart';
+import 'overtimelist_page.dart';
+import 'leave_list_page.dart';
+import 'checkpoint_page.dart';
+import 'refresh_page.dart';
+import 'ticketing_page.dart';
+import 'monitoringcheckpoint_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../controllers/overtime_controller.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({Key? key}) : super(key: key);
@@ -18,92 +19,12 @@ class FeaturesPage extends StatefulWidget {
 }
 
 class _FeaturesPageState extends State<FeaturesPage> {
-  // LOCATION DETECT
-  String message = 'Location';
+  late OvertimeController overtimeController;
 
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
-    if (permission == geolocator.LocationPermission.denied) {
-      permission = await geolocator.Geolocator.requestPermission();
-      if (permission == geolocator.LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == geolocator.LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cant request');
-    }
-
-    final position = await geolocator.Geolocator.getCurrentPosition();
-    globalLat = position.latitude.toString();
-    globalLong = position.longitude.toString();
-    await getLocationName();
-
-    setState(() {
-      message = 'Latitude $globalLat, Longitude: $globalLong';
-    });
-
-    return await geolocator.Geolocator.getCurrentPosition();
-  }
-
-  Future<String> getLocationName() async {
-    double latitude = double.parse(globalLat);
-    double longitude = double.parse(globalLong);
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-
-    if (placemarks.isNotEmpty) {
-      Placemark placemark = placemarks[0];
-      String locationName = placemark.name ?? "";
-      String thoroughfare = placemark.thoroughfare ?? "";
-      String subLocality = placemark.subLocality ?? "";
-      String locality = placemark.locality ?? "";
-      String administrativeArea = placemark.administrativeArea ?? "";
-      String country = placemark.country ?? "";
-      String postalCode = placemark.postalCode ?? "";
-
-      String address = "$locationName $thoroughfare $subLocality $locality $administrativeArea $country $postalCode";
-
-      globalLocationName = address;
-      return address;
-    } else {
-      globalLocationName = "Location not found";
-      return "Location not found";
-    }
-  }
-
-  void _liveLocation() {
-    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
-        accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
-
-    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((geolocator.Position position) {
-      double targetLatitude = -6.520107;
-      double targetLongitude = 106.830266;
-      double distance = geolocator.Geolocator.distanceBetween(
-        position.latitude, position.longitude, targetLatitude, targetLongitude);
-
-      if (distance <= 500) {
-        globalLat = position.latitude.toString();
-        globalLong = position.longitude.toString();
-
-        setState(() {
-          message = 'Latitude $globalLat, Longitude: $globalLong';
-        });
-      } else {
-        setState(() {
-          message = 'Outside the allowed area';
-        });
-        globalLat = '';
-        globalLong = '';
-        globalLocationName = 'Outside the allowed area';
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    overtimeController = OvertimeController();
   }
 
   @override
@@ -128,20 +49,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   imagePath: 'assets/attendancefeature.png',
                   title: AppLocalizations(globalLanguage).translate("attendanceForm"),
                   onTap: () {
-                    _getCurrentLocation().then((value) {
-                      globalLat = '${value.latitude}';
-                      globalLong = '${value.longitude}';
-                      getLocationName();
-                      setState(() {
-                        message = 'Latitude $globalLat, Longitude: $globalLong, Name: $globalLocationName';
-                      });
-                      _liveLocation();
-                      Navigator.of(context).push(
+                    Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AttendanceFormPage(),
+                          builder: (context) => const RefreshAttendance(),
                         ),
                       );
-                    });
                   },
                 ),
                 CardItem(
@@ -152,19 +64,70 @@ class _FeaturesPageState extends State<FeaturesPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const OvertimeFormPage()),
+                          builder: (context) => const OvertimeListPage()),
                     );
                   },
                 ),
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/paidleave.png',
-                  title: AppLocalizations(globalLanguage).translate("offWork"),
+                  imagePath: 'assets/leave.png',
+                  title: AppLocalizations(globalLanguage).translate("leave"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const OffWorkFormPage()),
+                          builder: (context) => const LeaveListPage()),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                FutureBuilder<List<OvertimeData>>(
+                  future: overtimeController.futureData,
+                  builder: (context, snapshot) {
+                    int overtimeCount = snapshot.hasData ? snapshot.data!.length : 0;
+
+                    return CardItem(
+                      color: AppColors.mainGreen,
+                      imagePath: 'assets/approval.png',
+                      title: AppLocalizations(globalLanguage).translate("approvals"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ApprovalsPage(),
+                          ),
+                        );
+                      },
+                      notificationCount: overtimeCount,
+                    );
+                  },
+                ),
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/checkpoint.png',
+                  title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CheckPointPage(
+                         result: '', resultCheckpoint: globalBarcodeCheckpointResults
+                      )),
+                    );
+                  },
+                ),
+                CardItem(
+                  color: AppColors.mainGreen,
+                  imagePath: 'assets/ticketing.png',
+                  title: AppLocalizations(globalLanguage).translate("ticketing"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const TicketingPage()),
                     );
                   },
                 ),
@@ -176,37 +139,14 @@ class _FeaturesPageState extends State<FeaturesPage> {
               children: <Widget>[
                 CardItem(
                   color: AppColors.mainGreen,
-                  imagePath: 'assets/leave.png',
-                  title: AppLocalizations(globalLanguage).translate("leave"),
+                  imagePath: 'assets/monitoring.png',
+                  title: AppLocalizations(globalLanguage).translate("Monitoring"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RequestListPage()),
+                          builder: (context) => const MonitoringCpPage()),
                     );
-                  },
-                ),
-                CardItem(
-                  color: AppColors.mainGreen,
-                  imagePath: 'assets/checkpoint.png',
-                  title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => CheckpointPage()),
-                    // );
-                  },
-                ),
-                CardItem(
-                  color: AppColors.mainGreen,
-                  imagePath: 'assets/ticketing.png',
-                  title:
-                      AppLocalizations(globalLanguage).translate("ticketing"),
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => TicketingPage()),
-                    // );
                   },
                 ),
               ],
@@ -224,6 +164,7 @@ class CardItem extends StatelessWidget {
   final String title;
   final double imageWidth;
   final double imageHeight;
+  final int notificationCount; 
   final VoidCallback onTap;
 
   CardItem({
@@ -232,6 +173,7 @@ class CardItem extends StatelessWidget {
     this.title = '',
     this.imageWidth = 70,
     this.imageHeight = 70,
+    this.notificationCount = 0, 
     required this.onTap,
   });
 
@@ -241,20 +183,45 @@ class CardItem extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            width: 0.275 * MediaQuery.of(context).size.width,
-            height: 100,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Container(
-                width: imageWidth,
-                height: imageHeight,
-                child: Image.asset(imagePath),
+          Stack(
+            alignment: Alignment.topCenter, 
+            children: [
+              Container(
+                width: 0.27 * MediaQuery.of(context).size.width,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Container(
+                    width: imageWidth,
+                    height: imageHeight,
+                    child: Image.asset(imagePath),
+                  ),
+                ),
               ),
-            ),
+              if (notificationCount > 0) 
+                Positioned(
+                  top: 0,
+                  right: 0, 
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFBC5757), 
+                    ),
+                    child: Text(
+                      '$notificationCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 5),
           Text(

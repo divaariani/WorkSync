@@ -48,6 +48,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
 
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("attendanceForm"),
             style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
@@ -56,7 +57,12 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage()
+                ),
+              );
             },
           ),
         ),
@@ -233,7 +239,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                     const SizedBox(height: 20),
                     Center(
                       child: Visibility(
-                        visible: globalLat != null && globalLong != null,
+                        visible: globalLat.isNotEmpty && globalLong.isNotEmpty,
                         child: GestureDetector(
                           onTap: () async {
                             String tap = selectedType == AppLocalizations(globalLanguage).translate("checkOut") ? 'P' : 'M';
