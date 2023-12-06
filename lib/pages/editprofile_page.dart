@@ -25,8 +25,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveChanges() {
-    Navigator.push(
-      context,
+    Navigator.push(context,
       MaterialPageRoute(
         builder: (context) => const RefreshHomepage()
       )
@@ -41,6 +40,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("Edit Profile"),
             style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
@@ -128,13 +128,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   });
                                 }
                               },
-                              items: <String>[
-                                'Light Theme',
-                                'Dark Theme'
-                              ].map((String value) {
+                              items: <String>['Light Theme', 'Dark Theme']
+                                  .map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(value, style: const TextStyle( color: AppColors.deepGreen)),
+                                  child: Text(value,
+                                      style: const TextStyle(
+                                          color: AppColors.deepGreen)),
                                 );
                               }).toList(),
                             ),
@@ -161,76 +161,82 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
-                            Image.asset('assets/attendancetype.png', height: 24, width: 24),
+                            Image.asset('assets/language.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             _buildLanguageDropdown(),
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     Center(
-                        child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            colors: [Colors.white, AppColors.lightGreen],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
-                        child: TextButton(
-                          onPressed: _saveChanges,
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("save"),
-                            style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            _saveChanges();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 50),
+                            child: Text(
+                              AppLocalizations(globalLanguage)
+                                  .translate("save"),
+                              style: const TextStyle(
+                                color: AppColors.deepGreen,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        )
+                        ),
                       ),
                     )
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      )
-    );
+          ],
+        ));
   }
 
   Widget _buildLanguageDropdown() {
     return DropdownButton<Locale>(
       value: _currentLocale,
-      style: const TextStyle(color: AppColors.deepGreen), 
+      style: const TextStyle(color: AppColors.deepGreen),
       items: <DropdownMenuItem<Locale>>[
         DropdownMenuItem(
           value: const Locale('en', 'US'),
-          child: Text(AppLocalizations(globalLanguage).translate("languageEn"), style: const TextStyle(color: AppColors.deepGreen)),
+          child: Text(AppLocalizations(globalLanguage).translate("languageEn"),
+              style: const TextStyle(color: AppColors.deepGreen)),
         ),
         DropdownMenuItem(
           value: const Locale('id', 'ID'),
-          child: Text(AppLocalizations(globalLanguage).translate("languageId"), style: const TextStyle(color: AppColors.deepGreen)),
+          child: Text(AppLocalizations(globalLanguage).translate("languageId"),
+              style: const TextStyle(color: AppColors.deepGreen)),
         ),
         DropdownMenuItem(
           value: const Locale('ko', 'KR'),
-          child: Text(AppLocalizations(globalLanguage).translate("languageKr"), style: const TextStyle(color: AppColors.deepGreen)),
+          child: Text(AppLocalizations(globalLanguage).translate("languageKr"),
+              style: const TextStyle(color: AppColors.deepGreen)),
         ),
       ],
-      onChanged: _changeLanguage, 
+      onChanged: _changeLanguage,
     );
   }
 }
