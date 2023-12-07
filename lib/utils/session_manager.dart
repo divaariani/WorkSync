@@ -9,6 +9,7 @@ class SessionManager {
 
   String? userId;
   String? namaUser;
+  String? deptId;
   String? deptFullName;
   String? deptInisial;
   String? noAbsen;
@@ -16,6 +17,7 @@ class SessionManager {
   void saveUserInfo(Map<String, dynamic> userData) {
     userId = userData['user_id'];
     namaUser = userData['Nama_User'];
+    deptId = userData['DeptId'];
     deptFullName = userData['DeptFullName'];
     deptInisial = userData['DeptInisial'];
     noAbsen = userData['NoAbsen'];
@@ -28,6 +30,7 @@ class SessionManager {
   void logout() {
     userId = null;
     namaUser = null;
+    deptId = null;
     deptFullName = null;
     deptInisial = null;
     noAbsen = null;
