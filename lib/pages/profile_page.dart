@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onTap: () {
                           SessionManager().logout();
                           setState(() {
-                            globalLanguage = const Locale('en', ''); 
+                            globalLanguage = const Locale('en', 'US'); 
                           });
                           Navigator.push(
                             context,
