@@ -32,6 +32,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   dropdown_search: ^5.0.6
   tab_container: ^2.0.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
