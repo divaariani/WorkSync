@@ -17,11 +17,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _passwordController = TextEditingController();
   final controller = LoginController();
   final formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true;
 
+  bool _obscurePassword = true;
   String username = '';
   String password = '';
 
@@ -157,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (success) {
                               if (controller.userData.isNotEmpty) {
                                 SessionManager().saveUserInfo(controller.userData);
+                                SessionManager().setLoggedIn(true);
                               }
 
                               final snackBar = SnackBar(
@@ -176,8 +177,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
+                                MaterialPageRoute(builder: (context) => HomePage()),
                               );
                             } else {
                               final snackBar = SnackBar(
@@ -226,12 +226,11 @@ class _LoginPageState extends State<LoginPage> {
                             alignment: Alignment.center,
                             child: Text(
                               AppLocalizations(globalLanguage).translate("login"),
-                              style:
-                                  const TextStyle(color: AppColors.deepGreen),
+                              style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
