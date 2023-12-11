@@ -104,7 +104,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
-                              SessionManager().namaUser ?? 'Unknown',
+                              SessionManager().getNamaUser() ?? 'Unknown',
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
@@ -244,7 +244,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                           onTap: () async {
                             String tap = selectedType == AppLocalizations(globalLanguage).translate("checkOut") ? 'P' : 'M';
                             String tglAbsen = currentDateTime();
-                            String noAbsen = SessionManager().noAbsen ?? '0';
+                            String noAbsen = SessionManager().getNoAbsen() ?? '0';
                             String latitude = globalLat;
                             String longitude = globalLong;
                             String linkphoto = '';
