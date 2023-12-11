@@ -9,7 +9,7 @@ class OvertimeController extends ChangeNotifier {
   late Future<List<OvertimeData>> futureData;
 
   OvertimeController() {
-    final String? noAbsen = SessionManager().noAbsen;
+    final String? noAbsen = SessionManager().getNoAbsen();
     futureData = fetchData(noAbsen);
   }
 
@@ -23,7 +23,7 @@ class OvertimeController extends ChangeNotifier {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+        if (response.headers['content-type']?.toLowerCase().contains('application/json') != true) {
           throw Exception('Invalid content type: ${response.headers['content-type']}');
         }
 
@@ -40,12 +40,12 @@ class OvertimeController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error fetching data: $error');
-      throw error;
+      rethrow;
     }
   }
 
   Future<List<Map<String, dynamic>>> fetchOvertimeUser() async {
-    final String? noAbsen = SessionManager().noAbsen;
+    final String? noAbsen = SessionManager().getNoAbsen();
     final url = '$apiBaseUrl?function=get_list_overtime&noabsen=$noAbsen';
 
     try {
@@ -86,7 +86,7 @@ class OvertimeController extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+        if (response.headers['content-type']?.toLowerCase().contains('application/json') != true) {
           throw Exception('Invalid content type: ${response.headers['content-type']}');
         }
 
@@ -106,7 +106,7 @@ class OvertimeController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error posting overtime: $error');
-      throw error;
+      rethrow;
     }
   }
 
@@ -126,7 +126,7 @@ class OvertimeController extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+        if (response.headers['content-type']?.toLowerCase().contains('application/json') != true) {
           throw Exception('Invalid content type: ${response.headers['content-type']}');
         }
 
@@ -146,7 +146,7 @@ class OvertimeController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error posting overtime: $error');
-      throw error;
+      rethrow;
     }
   }
 
@@ -162,7 +162,7 @@ class OvertimeController extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        if (response.headers['content-type']?.toLowerCase()?.contains('application/json') != true) {
+        if (response.headers['content-type']?.toLowerCase().contains('application/json') != true) {
           throw Exception('Invalid content type: ${response.headers['content-type']}');
         }
 
@@ -182,7 +182,7 @@ class OvertimeController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error posting approve: $error');
-      throw error;
+      rethrow;
     }
   }
 }
