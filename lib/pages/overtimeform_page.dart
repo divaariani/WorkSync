@@ -128,7 +128,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
-                              SessionManager().namaUser ?? 'Unknown',
+                              SessionManager().getNamaUser() ?? 'Unknown',
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
@@ -267,7 +267,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                             final DateTime startDateObj = DateFormat('dd MMM yyyy HH:mm').parse(startDate);
                             final DateTime endDateObj = DateFormat('dd MMM yyyy HH:mm').parse(endDate);
 
-                            final String? noAbsen = SessionManager().noAbsen;
+                            final String? noAbsen = SessionManager().getNoAbsen();
 
                             if (noAbsen != null) {
                               try {
