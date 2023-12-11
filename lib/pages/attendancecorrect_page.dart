@@ -91,7 +91,7 @@ class _AttendanceCorrectionPageState extends State<AttendanceCorrectionPage> {
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
-                              SessionManager().namaUser ?? 'Unknown',
+                              SessionManager().getNamaUser() ?? 'Unknown',
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
                           ],
