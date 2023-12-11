@@ -9,7 +9,7 @@ class AttendanceController extends ChangeNotifier {
   late Future<List<AttendanceData>> futureData;
 
   AttendanceController() {
-    final String? noAbsen = SessionManager().noAbsen;
+    final String? noAbsen = SessionManager().getNoAbsen();
     futureData = fetchData(noAbsen);
   }
 
