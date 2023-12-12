@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'pages/app_colors.dart';
 import 'splash_screen.dart';
+import 'utils/session_manager.dart';
+import 'utils/globals.dart';
+import 'pages/app_colors.dart';
+import 'pages/home_page.dart';
 
-void main() {
-  runApp(const WorkSyncApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final sessionManager = SessionManager();
+  await sessionManager.initPrefs();
+
+  final isLoggedIn = await sessionManager.isLoggedIn();
+  final savedTheme = sessionManager.getTheme();
+  final savedLanguage = sessionManager.getLanguage(); 
+
+  globalTheme = savedTheme;  
+  globalLanguage = savedLanguage; 
+
+  runApp(WorkSyncApp(isLoggedIn: isLoggedIn, savedTheme: savedTheme));
 }
 
 class WorkSyncApp extends StatelessWidget {
-  const WorkSyncApp({Key? key}) : super(key: key);
+  final bool isLoggedIn;
+  final String savedTheme;
+
+  const WorkSyncApp({Key? key, required this.isLoggedIn, required this.savedTheme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +61,7 @@ class WorkSyncApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme), 
       ),
-      home: const SplashScreen(),
+      home: isLoggedIn ? const HomePage() : const SplashScreen(),
     );
   }
 }
