@@ -4,6 +4,7 @@ import 'app_colors.dart';
 import 'dashboard_page.dart';
 import 'features_page.dart';
 import 'profile_page.dart';
+import '../utils/globals.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,20 +26,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _tabs[_currentIndex],
-      bottomNavigationBar: MoltenBottomNavigationBar(
-        domeCircleColor: Colors.white,
-        barColor: AppColors.deepGreen,
-        selectedIndex: _currentIndex,
-        onTabChange: (clickedIndex) {
-          setState(() {
-            _currentIndex = clickedIndex;
-          });
-        },
-        tabs: [
-          MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
-          MoltenTab(icon: const Icon(Icons.featured_play_list_sharp, color: AppColors.mainGreen)),
-          MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
-        ],
+      bottomNavigationBar: Container(
+        color: globalTheme == 'Light Theme' ? Colors.white : Colors.black, 
+        child: MoltenBottomNavigationBar(
+          domeCircleColor: Colors.white,
+          barColor: AppColors.deepGreen,
+          selectedIndex: _currentIndex,
+          onTabChange: (clickedIndex) {
+            setState(() {
+              _currentIndex = clickedIndex;
+            });
+          },
+          tabs: [
+            MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
+            MoltenTab(icon: const Icon(Icons.featured_play_list_sharp, color: AppColors.mainGreen)),
+            MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
+          ],
+        ),
       ),
     );
   }
