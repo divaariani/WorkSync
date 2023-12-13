@@ -13,26 +13,39 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  String selectedThemeType = 'Light Theme';
-  Locale _currentLocale = globalLanguage;
-
+  String currentTheme = globalTheme;
+  Locale currentLocale = globalLanguage;
+  
+  void _changeTheme(String? newTheme) {
+    if (newTheme != null) {
+      setState(() {
+        currentTheme = newTheme;
+      });
+    }
+  }
+  
   void _changeLanguage(Locale? newLocale) {
     if (newLocale != null) {
       setState(() {
-        _currentLocale = newLocale;
+        currentLocale = newLocale;
       });
     }
   }
 
-  void _saveChanges() {
-    Navigator.push(context,
+  void _saveChanges() async {
+    await SessionManager().setTheme(currentTheme);
+    await SessionManager().setLanguage(currentLocale);
+
+    Navigator.push(
+      context,
       MaterialPageRoute(
-        builder: (context) => const RefreshHomepage()
-      )
+        builder: (context) => const RefreshHomepage(),
+      ),
     );
 
     setState(() {
-      globalLanguage = _currentLocale;
+      globalLanguage = currentLocale;
+      globalTheme = currentTheme;
     });
   }
 
@@ -91,8 +104,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
-                              SessionManager().namaUser ?? 'Unknown',
-                              style: const TextStyle(color: AppColors.deepGreen),
+                              SessionManager().getNamaUser() ?? 'Unknown',
+                              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16),
                             ),
                           ],
                         ),
@@ -119,25 +132,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           children: [
                             Image.asset('assets/attendancetype.png', height: 24, width: 24),
                             const SizedBox(width: 10),
-                            DropdownButton<String>(
-                              value: selectedThemeType,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    selectedThemeType = newValue;
-                                  });
-                                }
-                              },
-                              items: <String>['Light Theme', 'Dark Theme']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          color: AppColors.deepGreen)),
-                                );
-                              }).toList(),
-                            ),
+                            _buildThemeDropdown()
                           ],
                         ),
                       ),
@@ -192,11 +187,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             _saveChanges();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 50),
+                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                             child: Text(
-                              AppLocalizations(globalLanguage)
-                                  .translate("save"),
+                              AppLocalizations(globalLanguage).translate("save"),
                               style: const TextStyle(
                                 color: AppColors.deepGreen,
                                 fontSize: 16,
@@ -215,25 +208,45 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ));
   }
 
+  Widget _buildThemeDropdown() {
+    return DropdownButton<String>(
+      value: currentTheme,
+      style: const TextStyle(color: AppColors.deepGreen),
+      items: <DropdownMenuItem<String>>[
+        DropdownMenuItem(
+          value: 'Light Theme',
+          child: Text(AppLocalizations(globalLanguage).translate("Light Theme"),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
+        ),
+        DropdownMenuItem(
+          value: 'Dark Theme',
+          child: Text(AppLocalizations(globalLanguage).translate("Dark Theme"),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
+        ),
+      ],
+      onChanged: _changeTheme,
+    );
+  }
+
   Widget _buildLanguageDropdown() {
     return DropdownButton<Locale>(
-      value: _currentLocale,
+      value: currentLocale,
       style: const TextStyle(color: AppColors.deepGreen),
       items: <DropdownMenuItem<Locale>>[
         DropdownMenuItem(
           value: const Locale('en', 'US'),
           child: Text(AppLocalizations(globalLanguage).translate("languageEn"),
-              style: const TextStyle(color: AppColors.deepGreen)),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
         DropdownMenuItem(
           value: const Locale('id', 'ID'),
           child: Text(AppLocalizations(globalLanguage).translate("languageId"),
-              style: const TextStyle(color: AppColors.deepGreen)),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
         DropdownMenuItem(
           value: const Locale('ko', 'KR'),
           child: Text(AppLocalizations(globalLanguage).translate("languageKr"),
-              style: const TextStyle(color: AppColors.deepGreen)),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
       ],
       onChanged: _changeLanguage,
