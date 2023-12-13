@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         ),
         SingleChildScrollView(
           child: Padding(
@@ -46,7 +46,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations(globalLanguage).translate("profile"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("profile"), 
+                      style: TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold,
+                        color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                      )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -73,8 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(SessionManager().namaUser ?? 'Unknown', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                    Text(SessionManager().deptFullName ?? 'Unknown', style: const TextStyle(color: Colors.white)),
+                                    Text(SessionManager().getNamaUser() ?? 'Unknown', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                    Text(SessionManager().getDeptFullName() ?? 'Unknown', style: const TextStyle(color: Colors.white)),
                                   ],
                                 ),
                                 const Spacer(),
@@ -106,11 +113,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: AppColors.grey,
                       child: Column(
                         children: [
-                          buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"), '${SessionManager().deptInisial ?? 'Unknown'} Department'),
+                          buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"), '${SessionManager().getDeptInisial()} Department'),
                           buildDivider(),
                           buildRow('assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"), '${AppLocalizations(globalLanguage).translate("performance")}: 80%'),
                           buildDivider(),
-                          buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), '${AppLocalizations(globalLanguage).translate("current")}: Light Mode'),
+                          buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), '${AppLocalizations(globalLanguage).translate("current")}: $globalTheme'),
                           buildDivider(),
                           buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"), '${AppLocalizations(globalLanguage).translate("current")}: $language'),
                         ],
@@ -120,15 +127,40 @@ class _ProfilePageState extends State<ProfilePage> {
                       margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 25),
                       child: GestureDetector(
                         onTap: () {
-                          SessionManager().logout();
-                          setState(() {
-                            globalLanguage = const Locale('en', 'US'); 
-                          });
-                          Navigator.push(
-                            context,
-                              MaterialPageRoute(
-                                builder: (context) => const WelcomePage()
-                              )
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: AppColors.mainGrey, 
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20), 
+                              ),
+                              content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); 
+                                  },
+                                  child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
+                                    style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    SessionManager().logout();
+                                    setState(() {
+                                      globalLanguage = const Locale('en', 'US'); 
+                                    });
+                                    Navigator.push(
+                                      context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const WelcomePage()
+                                        )
+                                    );
+                                  },
+                                  child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
+                                    style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
                           );
                         },
                         child: Container(
