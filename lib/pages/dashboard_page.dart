@@ -29,7 +29,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         ),
         SingleChildScrollView(
           child: Padding(
@@ -45,15 +45,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Text(
                           AppLocalizations(globalLanguage).translate("welcome"),
-                          style: const TextStyle(
-                            fontSize: 14, 
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: globalTheme == 'Light Theme' ? Colors.black : Colors.white,
                           ),
                         ),
                         Text(
-                          SessionManager().namaUser ?? 'Unknown',
-                          style: const TextStyle(
+                          SessionManager().getNamaUser() ?? 'Unknown',
+                          style: TextStyle(
                             fontSize: 14, 
                             fontWeight: FontWeight.bold,
+                            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : AppColors.lightGreen
                           ),
                         ),
                       ],
@@ -232,14 +234,21 @@ class _DashboardPageState extends State<DashboardPage> {
                 Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations(globalLanguage).translate("attendance"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    AppLocalizations(globalLanguage).translate("attendance"), 
+                    style: TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold,
+                      color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                    )
+                  ),
                   const Spacer(),
                   InkWell(
                     child: Text(
                       AppLocalizations(globalLanguage).translate("seeAll"), 
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12, 
-                        color: AppColors.deepGreen, 
+                        color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
                         shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
                       )
                     ),
