@@ -9,6 +9,8 @@ import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../service/approve_list_leave_service.dart';
+import '../service/approve_list_leave_model.dart';
 import '../controllers/overtime_controller.dart';
 
 class FeaturesPage extends StatefulWidget {
@@ -31,14 +33,22 @@ class _FeaturesPageState extends State<FeaturesPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(color: Colors.white),
+        Container(
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black
+        ),
         SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 70),
             child: Column(children: [
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(AppLocalizations(globalLanguage).translate("features"),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  AppLocalizations(globalLanguage).translate("features"),
+                  style: TextStyle(
+                    fontSize: 18, 
+                    fontWeight: FontWeight.bold,
+                    color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                  )
+                ),
             ]),
             const SizedBox(height: 10),
             Row(
@@ -86,10 +96,25 @@ class _FeaturesPageState extends State<FeaturesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                FutureBuilder<List<OvertimeData>>(
-                  future: overtimeController.futureData,
+                FutureBuilder<List<dynamic>>(
+                  future: Future.wait([overtimeController.futureData, ApprovedListLeaveService().fetchData()]),
                   builder: (context, snapshot) {
-                    int overtimeCount = snapshot.hasData ? snapshot.data!.length : 0;
+                    int overtimeCount = 0;
+                    int leaveCount = 0;
+
+                    if (snapshot.hasData) {
+                      List<dynamic> data = snapshot.data!;
+                      
+                      if (data.length > 0 && data[0] is List<OvertimeData>) {
+                        overtimeCount = (data[0] as List<OvertimeData>).length;
+                      }
+
+                      if (data.length > 1 && data[1] is ApproveListLeaveModel) {
+                        leaveCount = (data[1] as ApproveListLeaveModel).data.length;
+                      }
+                    }
+
+                    int totalCount = overtimeCount + leaveCount;
 
                     return CardItem(
                       color: AppColors.mainGreen,
@@ -103,7 +128,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           ),
                         );
                       },
-                      notificationCount: overtimeCount,
+                      notificationCount: totalCount,
                     );
                   },
                 ),
@@ -226,9 +251,9 @@ class CardItem extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.deepGreen,
+              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             ),
           ),
         ],
