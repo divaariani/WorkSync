@@ -77,14 +77,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                   backgroundImage: AssetImage('assets/avatar.jpg'),
                                 ),
                                 const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(SessionManager().getNamaUser() ?? 'Unknown', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                    Text(SessionManager().getDeptFullName() ?? 'Unknown', style: const TextStyle(color: Colors.white)),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        SessionManager().getNamaUser() ?? 'Unknown',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Wrap(
+                                        spacing: 14,
+                                        children: [
+                                          Text(
+                                            SessionManager().getDeptFullName() ?? 'Unknown',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(color: Colors.white)
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const Spacer(),
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -173,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               colors: [Colors.white, AppColors.lightGreen],
                             ),
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 color: Colors.grey,
                                 blurRadius: 5,
