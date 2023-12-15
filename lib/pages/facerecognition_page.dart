@@ -28,7 +28,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _start();
   }
@@ -40,7 +40,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
 
   @override
   void dispose() async {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     if (_camera != null) {
       await _camera!.stopImageStream();
       await Future.delayed(const Duration(milliseconds: 200));
@@ -59,7 +59,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   dynamic _scanResults;
   String _predRes = '';
   bool isStream = true;
-  CameraImage? _cameraimage;
+  //CameraImage? _cameraimage;
   Directory? tempDir;
   bool _faceFound = false;
   bool _verify = false;
