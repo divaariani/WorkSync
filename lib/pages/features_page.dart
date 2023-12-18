@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
@@ -7,8 +8,10 @@ import 'checkpoint_page.dart';
 import 'refresh_page.dart';
 import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
+import 'stock_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
+import '../utils/session_manager.dart';
 import '../service/approve_list_leave_service.dart';
 import '../service/approve_list_leave_model.dart';
 import '../controllers/overtime_controller.dart';
@@ -23,10 +26,31 @@ class FeaturesPage extends StatefulWidget {
 class _FeaturesPageState extends State<FeaturesPage> {
   late OvertimeController overtimeController;
 
+  String? actorAttendance = '';
+  String? actorOvertime = '';
+  String? actorLeave = '';
+  String? actorApprovalLeave = '';
+  String? actorApprovalOvertime = '';
+  String? actorCheckpoint = '';
+  String? actorTicketing = '';
+  String? actorMonitoring = '';
+  String? actorAuditor= '';
+
   @override
   void initState() {
     super.initState();
     overtimeController = OvertimeController();
+
+    SessionManager sessionManager = SessionManager();
+    actorAttendance = sessionManager.getActorAttendance();
+    actorOvertime = sessionManager.getActorOvertime();
+    actorLeave = sessionManager.getActorLeave();
+    actorApprovalLeave = sessionManager.getActorApproveLeave();
+    actorApprovalOvertime = sessionManager.getActorApproveOvertime();
+    actorCheckpoint = sessionManager.getActorCheckpoint();
+    actorTicketing = sessionManager.getActorTicketing();
+    actorMonitoring = sessionManager.getActorMonitoring();
+    actorAuditor= sessionManager.getActorAuditor();
   }
 
   @override
@@ -55,39 +79,90 @@ class _FeaturesPageState extends State<FeaturesPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CardItem(
-                  color: AppColors.mainGreen,
+                  color: actorAttendance == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/attendancefeature.png',
                   title: AppLocalizations(globalLanguage).translate("attendanceForm"),
                   onTap: () {
-                    Navigator.of(context).push(
+                    if (actorAttendance == '1') {
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const RefreshAttendance(),
                         ),
                       );
+                    } else {
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: AppLocalizations(globalLanguage).translate("Attendance Feature"),
+                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          contentType: ContentType.warning,
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(snackBar);
+                    }
                   },
                 ),
                 CardItem(
-                  color: AppColors.mainGreen,
+                  color: actorOvertime == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/overtime.png',
                   title: AppLocalizations(globalLanguage).translate("overtime"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OvertimeListPage()),
-                    );
+                    if (actorOvertime == '1') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const OvertimeListPage(),
+                        ),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: AppLocalizations(globalLanguage).translate("Overtime Feature"),
+                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          contentType: ContentType.warning,
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(snackBar);
+                    }
                   },
                 ),
                 CardItem(
-                  color: AppColors.mainGreen,
+                  color: actorLeave == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/leave.png',
                   title: AppLocalizations(globalLanguage).translate("leave"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LeaveListPage()),
-                    );
+                    if (actorLeave == '1') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LeaveListPage(),
+                        ),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: AppLocalizations(globalLanguage).translate("Leave Feature"),
+                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          contentType: ContentType.warning,
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(snackBar);
+                    }
                   },
                 ),
               ],
@@ -117,43 +192,94 @@ class _FeaturesPageState extends State<FeaturesPage> {
                     int totalCount = overtimeCount + leaveCount;
 
                     return CardItem(
-                      color: AppColors.mainGreen,
+                      color: actorApprovalLeave == '1' || actorApprovalOvertime == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                       imagePath: 'assets/approval.png',
                       title: AppLocalizations(globalLanguage).translate("approvals"),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ApprovalsPage(),
-                          ),
-                        );
+                        if (actorApprovalLeave == '1' || actorApprovalOvertime == '1') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ApprovalsPage(),
+                            ),
+                          );
+                        } else {
+                          final snackBar = SnackBar(
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            content: AwesomeSnackbarContent(
+                              title: AppLocalizations(globalLanguage).translate("Approval Feature"),
+                              message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                              contentType: ContentType.warning,
+                            ),
+                          );
+
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                        } 
                       },
                       notificationCount: totalCount,
                     );
                   },
                 ),
                 CardItem(
-                  color: AppColors.mainGreen,
+                  color: actorCheckpoint == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/checkpoint.png',
                   title: AppLocalizations(globalLanguage).translate("checkpoinTour"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CheckPointPage(
-                         result: '', resultCheckpoint: globalBarcodeCheckpointResults
-                      )),
-                    );
+                    if (actorCheckpoint == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CheckPointPage(
+                          result: '', resultCheckpoint: globalBarcodeCheckpointResults
+                        )),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("Checkpoint Tour Feature"),
+                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    } 
                   },
                 ),
                 CardItem(
-                  color: AppColors.mainGreen,
-                  imagePath: 'assets/ticketing.png',
-                  title: AppLocalizations(globalLanguage).translate("ticketing"),
+                  color: actorMonitoring == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/monitoring.png',
+                  title: AppLocalizations(globalLanguage).translate("Monitoring"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const TicketingPage()),
-                    );
+                    if (actorMonitoring == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MonitoringCpPage()),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("Monitoring Feature"),
+                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
                   },
                 ),
               ],
@@ -163,15 +289,59 @@ class _FeaturesPageState extends State<FeaturesPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CardItem(
-                  color: AppColors.mainGreen,
-                  imagePath: 'assets/monitoring.png',
-                  title: AppLocalizations(globalLanguage).translate("Monitoring"),
+                  color: actorTicketing == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/ticketing.png',
+                  title: AppLocalizations(globalLanguage).translate("ticketing"),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MonitoringCpPage()),
-                    );
+                    if (actorTicketing == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TicketingPage()),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("Ticketing Feature"),
+                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    } 
+                  },
+                ),
+                CardItem(
+                  color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/opname.png',
+                  title: AppLocalizations(globalLanguage).translate("Stock Opname"),
+                  onTap: () {
+                    if (actorAuditor == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const StockPage()),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("Stock Opname Feature"),
+                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
                   },
                 ),
               ],
