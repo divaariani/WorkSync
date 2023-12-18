@@ -10,6 +10,16 @@ class SessionManager {
   static const String _keyDeptFullName = 'deptFullName';
   static const String _keyDeptInisial = 'deptInisial';
   static const String _keyNoAbsen = 'noAbsen';
+  static const String _keymAbsen = 'mAbsen';
+  static const String _keymLeave = 'mLeave';
+  static const String _keymOvt = 'mOvt';
+  static const String _keymITCP = 'mITCP';
+  static const String _keymTicket = 'mTicket';
+  static const String _keymAppL = 'mAppL';
+  static const String _keymAppO = 'mAppO';
+  static const String _keymMCP = 'mMCP';
+  static const String _keymSTO = 'mSTO';
+
   static const String _themeKey = 'theme';
   static const Locale _languageKey = Locale('en', 'US');
 
@@ -44,6 +54,15 @@ class SessionManager {
     await _prefs.setString(_keyDeptFullName, userData['DeptFullName']);
     await _prefs.setString(_keyDeptInisial, userData['DeptInisial']);
     await _prefs.setString(_keyNoAbsen, userData['NoAbsen']);
+    await _prefs.setString(_keymAbsen, userData['mAbsen']);
+    await _prefs.setString(_keymLeave, userData['mLeave']);
+    await _prefs.setString(_keymOvt, userData['mOvt']);
+    await _prefs.setString(_keymITCP, userData['mITCP']);
+    await _prefs.setString(_keymTicket, userData['mTicket']);
+    await _prefs.setString(_keymAppL, userData['mAppL']);
+    await _prefs.setString(_keymAppO, userData['mAppO']);
+    await _prefs.setString(_keymMCP, userData['mMCP']);
+    await _prefs.setString(_keymSTO, userData['mSTO']);
   }
 
   String? getUserId() {
@@ -68,6 +87,34 @@ class SessionManager {
 
   String? getNoAbsen() {
     return _prefs.getString(_keyNoAbsen);
+  }
+
+  String? getActorAttendance() {
+    return _prefs.getString(_keymAbsen);
+  }
+  String? getActorLeave() {
+    return _prefs.getString(_keymLeave);
+  }
+  String? getActorOvertime() {
+    return _prefs.getString(_keymOvt);
+  }
+  String? getActorCheckpoint() {
+    return _prefs.getString(_keymITCP);
+  }
+  String? getActorTicketing() {
+    return _prefs.getString(_keymTicket);
+  }
+  String? getActorApproveLeave() {
+    return _prefs.getString(_keymAppL);
+  }
+  String? getActorApproveOvertime() {
+    return _prefs.getString(_keymAppO);
+  }
+  String? getActorMonitoring() {
+    return _prefs.getString(_keymMCP);
+  }
+  String? getActorAuditor() {
+    return _prefs.getString(_keymSTO);
   }
 
   String getTheme() {
