@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'splash_screen.dart';
-import 'utils/session_manager.dart';
-import 'utils/globals.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'pages/app_colors.dart';
 import 'pages/home_page.dart';
+import 'pages/nointernet_page.dart';
+import 'utils/session_manager.dart';
+import 'utils/globals.dart';
+import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +45,7 @@ class WorkSyncApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WorkSync',
       theme: ThemeData(
-        primaryColor: AppColors.lightGreen, 
+        primaryColor: AppColors.lightGreen,
         primarySwatch: const MaterialColor(
           0xFF93B1A6,
           <int, Color>{
@@ -59,9 +61,27 @@ class WorkSyncApp extends StatelessWidget {
             900: AppColors.lightGreen,
           },
         ),
-        textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme), 
+        textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme),
       ),
-      home: isLoggedIn ? const HomePage() : const SplashScreen(),
+      home: FutureBuilder<bool>(
+        future: isConnectedToInternet(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error checking internet connection'));
+          } else {
+            return snapshot.data == true
+              ? (isLoggedIn ? const HomePage() : const SplashScreen())
+              : const NoInternetPage();
+          }
+        },
+      ),
     );
+  }
+
+  Future<bool> isConnectedToInternet() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 }
