@@ -6,4 +6,4 @@ String globalLat = '';
 String globalLong = '';
 String globalLocationName = '';
 String globalTheme = 'Light Theme';
-Locale globalLanguage = const Locale('en', '');
+Locale globalLanguage = const Locale('en', 'US');
