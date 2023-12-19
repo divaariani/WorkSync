@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      globalLanguage = const Locale('en', ''); 
+                      globalLanguage = const Locale('en', 'US'); 
                     });
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return const WelcomePage();
