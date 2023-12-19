@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -6,6 +7,7 @@ import 'dart:async';
 import 'app_colors.dart';
 import 'home_page.dart';
 import 'attendanceform_page.dart';
+import 'attendance_page.dart';
 import '../utils/globals.dart';
 
 class RefreshAttendance extends StatefulWidget {
@@ -130,9 +132,53 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
             colors: [AppColors.deepGreen, AppColors.lightGreen], 
           ),
         ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white), 
+        child: Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Lottie.asset('assets/loading.json'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RefreshAttendanceList extends StatefulWidget {
+  const RefreshAttendanceList({Key? key}) : super(key: key);
+
+  @override
+  State<RefreshAttendanceList> createState() => _RefreshAttendanceListState();
+}
+
+class _RefreshAttendanceListState extends State<RefreshAttendanceList> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 1), () {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const AttendancePage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Lottie.asset('assets/loading.json'),
           ),
         ),
       ),
@@ -172,9 +218,10 @@ class _RefreshHomepageState extends State<RefreshHomepage> {
             colors: [AppColors.deepGreen, AppColors.lightGreen], 
           ),
         ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white), 
+        child: Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Lottie.asset('assets/loading.json'),
           ),
         ),
       ),
