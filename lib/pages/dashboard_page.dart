@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
-import 'attendance_page.dart';
+import 'refresh_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -118,8 +118,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return const Text('No Data');
-                    } 
+                      return const RefreshHomepage();
+                    }
 
                     return Row(
                       children: [
@@ -163,9 +163,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    controller.getTodayState(snapshot.data!),
+                                    //AppLocalizations(globalLanguage).translate("onTime"), 
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
@@ -215,9 +216,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    controller.getTodayState(snapshot.data!),
+                                    //AppLocalizations(globalLanguage).translate("onTime"), // GANTI DENGAN statusAbsen TANGGAL HARI INI
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
@@ -249,13 +251,13 @@ class _DashboardPageState extends State<DashboardPage> {
                       style: TextStyle(
                         fontSize: 12, 
                         color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
-                        shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
+                        shadows: const [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
                       )
                     ),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AttendancePage(),
+                          builder: (context) => const RefreshAttendanceList(),
                         ),
                       );
                     },
