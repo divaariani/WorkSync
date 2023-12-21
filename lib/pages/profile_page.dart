@@ -5,6 +5,7 @@ import 'editprofile_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
+import '../controllers/attendance_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late AttendanceController controller;
   late String language;
 
   @override
@@ -29,6 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       language = '';
     }
+
+    controller = AttendanceController();
   }
 
   @override
@@ -122,23 +126,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     Card(
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: AppColors.grey,
-                      child: Column(
-                        children: [
-                          buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"), '${SessionManager().getDeptInisial()} Department'),
-                          buildDivider(),
-                          buildRow('assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"), '${AppLocalizations(globalLanguage).translate("performance")}: 80%'),
-                          buildDivider(),
-                          buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), '${AppLocalizations(globalLanguage).translate("current")}: $globalTheme'),
-                          buildDivider(),
-                          buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"), '${AppLocalizations(globalLanguage).translate("current")}: $language'),
-                        ],
-                      ),
-                    ),
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: AppColors.grey,
+                        child: FutureBuilder<List<AttendanceData>>(
+                          future: controller.futureData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator(); 
+                            } else if (snapshot.hasError) {
+                              return Text('No Connection');
+                            } else {
+                              List<AttendanceData> data = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"),
+                                    '${SessionManager().getDeptInisial()} Department'),
+                                  buildDivider(),
+                                  buildRow( 'assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"),
+                                    '${AppLocalizations(globalLanguage).translate("performance")}: ${controller.calculatePerformance(data)}'),
+                                  buildDivider(),
+                                  buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"),
+                                    '${AppLocalizations(globalLanguage).translate("current")}: $globalTheme'),
+                                  buildDivider(),
+                                  buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"),
+                                    '${AppLocalizations(globalLanguage).translate("current")}: $language'),
+                                ],
+                              );
+                            }
+                          },
+                        )),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 25),
                       child: GestureDetector(
@@ -157,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Navigator.of(context).pop(); 
                                   },
                                   child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
-                                    style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                    style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                                 ),
                                 TextButton(
                                   onPressed: () {
