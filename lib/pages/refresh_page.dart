@@ -77,17 +77,19 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
   }
 
   void _liveLocation() {
-    geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
-        accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
+    geolocator.LocationSettings locationSettings = 
+      const geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.high, distanceFilter: 1000);
 
-    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((geolocator.Position position) {
-      double targetLatitude = -6.520107;
-      double targetLongitude = 106.830266;
-      double distance = geolocator.Geolocator.distanceBetween(
-        position.latitude, position.longitude, targetLatitude, targetLongitude);
+    geolocator.Geolocator.getPositionStream(locationSettings: locationSettings).listen((geolocator.Position position) {
+      double targetLatitude1 = -6.520107;
+      double targetLongitude1 = 106.830266;
+      double area1a10003000 = geolocator.Geolocator.distanceBetween(position.latitude, position.longitude, targetLatitude1, targetLongitude1);
 
-      if (distance <= 500) {
+      double targetLatitude2 = -6.520100;
+      double targetLongitude2 = 106.831998;
+      double finishedwarehouse = geolocator.Geolocator.distanceBetween(position.latitude, position.longitude, targetLatitude2, targetLongitude2);
+
+      if (area1a10003000 <= 100 || finishedwarehouse <= 100) {
         globalLat = position.latitude.toString();
         globalLong = position.longitude.toString();
 
