@@ -8,7 +8,7 @@ import 'checkpoint_page.dart';
 import 'refresh_page.dart';
 import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
-import 'stock_page.dart';
+import 'stockopname_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -84,10 +84,80 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   title: AppLocalizations(globalLanguage).translate("attendanceForm"),
                   onTap: () {
                     if (actorAttendance == '1') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const RefreshAttendance(),
-                        ),
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            content: Padding(
+                              padding: const EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("Attention!"),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.deepGreen,
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("Make sure you are at the specified location"),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.deepGreen,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("1. Finished Products Warehouse"),
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations(globalLanguage).translate("2. Area 1A10003000"),
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("Cancel"),
+                                  style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const RefreshAttendance(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("Yes"),
+                                  style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     } else {
                       final snackBar = SnackBar(
