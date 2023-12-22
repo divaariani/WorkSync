@@ -33,4 +33,48 @@ class FaceRecognitionController extends ChangeNotifier {
       print('API request failed with status code: ${response.statusCode}');
     }
   }
+
+  Future<List<FaceRecognitionData>> getFaceRecognition() async {
+    String userId = SessionManager().getUserId() ?? '';
+    final url = '$apiBaseUrl?function=get_list_face_detection&userid=$userId';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+
+        if (jsonData['status'] == 1) {
+          final List<dynamic> dataList = jsonData['data'];
+          return dataList.map((data) => FaceRecognitionData.fromJson(data)).toList();
+        } else {
+          throw Exception(jsonData['message']);
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+}
+
+class FaceRecognitionData {
+  final String userId;
+  final String userName;
+  final String kodeFace;
+
+  FaceRecognitionData({
+    required this.userId,
+    required this.userName,
+    required this.kodeFace,
+  });
+
+  factory FaceRecognitionData.fromJson(Map<String, dynamic> json) {
+    return FaceRecognitionData(
+      userId: json['User_Id'],
+      userName: json['UserName'],
+      kodeFace: json['Kodeface'],
+    );
+  }
 }
