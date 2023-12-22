@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import '../utils/globals.dart';
 import '../pages/app_colors.dart';
 
 class FaceDetectorPainter extends CustomPainter {
@@ -30,7 +31,7 @@ class FaceDetectorPainter extends CustomPainter {
             paint);
         TextSpan span = TextSpan(
             style: const TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold),
-            text: label);
+            text: globalFaceDetection);
         TextPainter textPainter = TextPainter(
             text: span,
             textAlign: TextAlign.left,

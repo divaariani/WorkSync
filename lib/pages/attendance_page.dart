@@ -30,14 +30,14 @@ class _AttendancePageState extends State<AttendancePage> {
         centerTitle: true,
         title: Text(
           AppLocalizations(globalLanguage).translate("attendanceList"),
-          style: const TextStyle(
-            color: AppColors.deepGreen,
+          style: TextStyle(
+            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,

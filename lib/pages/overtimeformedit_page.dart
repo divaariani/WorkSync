@@ -211,7 +211,7 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
     try {
       await OvertimeController().postOvertimeEdit(
         widget.overtimeData['Ovt_Id'],
-        SessionManager().noAbsen ?? '',
+        SessionManager().getNoAbsen() ?? '',
         DateTime.parse(startDate),
         DateTime.parse(endDate),
         note,

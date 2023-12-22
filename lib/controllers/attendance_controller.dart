@@ -9,7 +9,7 @@ class AttendanceController extends ChangeNotifier {
   late Future<List<AttendanceData>> futureData;
 
   AttendanceController() {
-    final String? noAbsen = SessionManager().noAbsen;
+    final String? noAbsen = SessionManager().getNoAbsen();
     futureData = fetchData(noAbsen);
   }
 
@@ -70,6 +70,36 @@ class AttendanceController extends ChangeNotifier {
     );
 
     return todayData.jamPulang ?? 'N/A';
+  }
+
+  String getTodayState(List<AttendanceData> data) {
+    final todayData = data.firstWhere(
+      (element) => element.tglAbsen == DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      orElse: () => AttendanceData(
+        jamMasuk: '',
+        jamPulang: '',
+        namaPegawai: '',
+        batasTgl: '',
+        tglAbsen: '',
+        statusAbsen: 'N/A',
+        latitude: '',
+        longitude: '',
+        attendancePhoto: '',
+      ),
+    );
+
+    return todayData.statusAbsen;
+  }
+
+  String calculatePerformance(List<AttendanceData> data) {
+    final latest30Entries = data.take(30).toList();
+
+    final validEntries = latest30Entries.where((entry) => entry.jamMasuk != null && entry.jamPulang != null).toList();
+    final totalValidEntries = validEntries.length;
+
+    final percentage = totalValidEntries > 0 ? ((totalValidEntries / 20) * 100).round().toString() : '0';
+
+    return '$percentage%';
   }
 
   Future<void> postAttendance(String noAbsen, DateTime tglAbsen, String tap, String latitude, String longitude, String linkPhoto) async {

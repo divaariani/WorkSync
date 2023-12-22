@@ -6,7 +6,9 @@ const String apiBaseUrl2 = '{API}';
 String globalLat = '';
 String globalLong = '';
 String globalLocationName = '';
-Locale globalLanguage = const Locale('en', '');
+String globalFaceDetection = 'Not Recognized';
+String globalTheme = 'Light Theme';
+Locale globalLanguage = const Locale('en', 'US');
 
 String globalBarcodeLokasiResult = '';
 String globalBarcodeBarangResult = '';

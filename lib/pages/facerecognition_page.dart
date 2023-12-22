@@ -9,13 +9,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'app_colors.dart';
-import 'refresh_page.dart';
+import 'home_page.dart';
 import '../modules/detector.dart';
 import '../modules/utils.dart';
 import '../modules/model.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
+import '../utils/session_manager.dart';
+import '../controllers/facerecognition_controller.dart';
 
 class FaceRecognitionPage extends StatefulWidget {
   const FaceRecognitionPage({Key? key}) : super(key: key);
@@ -25,10 +26,15 @@ class FaceRecognitionPage extends StatefulWidget {
 }
 
 class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsBindingObserver {
+  String username = '';
+  late FaceRecognitionController controller;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    username = SessionManager().getNamaUser() ?? '';
+    controller = FaceRecognitionController();
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _start();
   }
@@ -38,9 +44,40 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     initialCamera();
   }
 
+  void sendDataToApi() async {
+    try {
+      await controller.sendFaceRecognition(e1);
+      
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+      
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: AppLocalizations(globalLanguage).translate("Registered"),
+          message: AppLocalizations(globalLanguage).translate("Successfully register your face recognition"),
+          contentType: ContentType.success,
+        ),
+      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+
+      print('API request successful');
+    } catch (error) {
+      print('API request failed: $error');
+    }
+  }
+
   @override
   void dispose() async {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     if (_camera != null) {
       await _camera!.stopImageStream();
       await Future.delayed(const Duration(milliseconds: 200));
@@ -59,13 +96,11 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   dynamic _scanResults;
   String _predRes = '';
   bool isStream = true;
-  CameraImage? _cameraimage;
   Directory? tempDir;
   bool _faceFound = false;
   bool _verify = false;
   List? e1;
   bool loading = true;
-  final TextEditingController _name = TextEditingController(text: '');
 
   void initialCamera() async {
     CameraDescription description = await getCamera(CameraLensDirection.front);
@@ -189,29 +224,6 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                       children: <Widget>[
                         CameraPreview(_camera!),
                         _buildResults(),
-                        Positioned(
-                          bottom: 20,
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const RefreshAttendance(),
-                                  ),
-                                );
-                            },
-                            shape: const CircleBorder(
-                              side: BorderSide(color: Colors.white, width: 2.0),
-                            ),
-                            elevation: 2.0,
-                            fillColor: Colors.transparent,
-                            padding: const EdgeInsets.all(1),
-                            child: const Icon(
-                              Icons.circle,
-                              color: AppColors.mainGreen,
-                              size: 60,
-                            ),
-                          ),
-                        ),
                       ],
                     );
             }),
@@ -250,48 +262,10 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
               return AlertDialog(
                 content: Column(
                   children: [
-                    TextField(
-                      controller: _name,
-                    ),
+                    Text(username),
                     ElevatedButton(
                       onPressed: () async {
-                        if (_name.text.isNotEmpty) {
-                          Navigator.pop(context);
-                          await Future.delayed(const Duration(milliseconds: 400));
-                          data[_name.text] = e1;
-                          jsonFile.writeAsStringSync(json.encode(data));
-
-                          if (_camera != null) {
-                            await _camera!.stopImageStream();
-                            await Future.delayed(const Duration(milliseconds: 400));
-                            await _camera!.dispose();
-                            await Future.delayed(const Duration(milliseconds: 400));
-                            _camera = null;
-                          }
-
-                          initialCamera();
-                          print("e1: $e1");
-                          print("name: $_predRes");
-                          print("verify state: $_verify");
-                          Navigator.pop(context);
-                        } else {
-                          Navigator.pop(context);
-                          print("Name cannot be empty!");
-                          final snackBar = SnackBar(
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            content: AwesomeSnackbarContent(
-                              title: AppLocalizations(globalLanguage).translate("nameFailed"),
-                              message: AppLocalizations(globalLanguage).translate("nameFailedMessage"),
-                              contentType: ContentType.failure,
-                            ),
-                          );
-
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(snackBar);
-                        }
+                        sendDataToApi();
                       },
                       child: Text(AppLocalizations(globalLanguage).translate("save")),
                     )

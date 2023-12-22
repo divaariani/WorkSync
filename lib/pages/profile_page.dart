@@ -5,6 +5,7 @@ import 'editprofile_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
+import '../controllers/attendance_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late AttendanceController controller;
   late String language;
 
   @override
@@ -29,6 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       language = '';
     }
+
+    controller = AttendanceController();
   }
 
   @override
@@ -36,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         ),
         SingleChildScrollView(
           child: Padding(
@@ -46,7 +50,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations(globalLanguage).translate("profile"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("profile"), 
+                      style: TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold,
+                        color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                      )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -70,14 +81,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                   backgroundImage: AssetImage('assets/avatar.jpg'),
                                 ),
                                 const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(SessionManager().namaUser ?? 'Unknown', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                    Text(SessionManager().deptFullName ?? 'Unknown', style: const TextStyle(color: Colors.white)),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        SessionManager().getNamaUser() ?? 'Unknown',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Wrap(
+                                        spacing: 14,
+                                        children: [
+                                          Text(
+                                            SessionManager().getDeptFullName() ?? 'Unknown',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(color: Colors.white)
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const Spacer(),
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -99,36 +126,77 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     Card(
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: AppColors.grey,
-                      child: Column(
-                        children: [
-                          buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"), '${SessionManager().deptInisial ?? 'Unknown'} Department'),
-                          buildDivider(),
-                          buildRow('assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"), '${AppLocalizations(globalLanguage).translate("performance")}: 80%'),
-                          buildDivider(),
-                          buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"), '${AppLocalizations(globalLanguage).translate("current")}: Light Mode'),
-                          buildDivider(),
-                          buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"), '${AppLocalizations(globalLanguage).translate("current")}: $language'),
-                        ],
-                      ),
-                    ),
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: AppColors.grey,
+                        child: FutureBuilder<List<AttendanceData>>(
+                          future: controller.futureData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator(); 
+                            } else if (snapshot.hasError) {
+                              return Text('No Connection');
+                            } else {
+                              List<AttendanceData> data = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"),
+                                    '${SessionManager().getDeptInisial()} Department'),
+                                  buildDivider(),
+                                  buildRow( 'assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"),
+                                    '${AppLocalizations(globalLanguage).translate("performance")}: ${controller.calculatePerformance(data)}'),
+                                  buildDivider(),
+                                  buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"),
+                                    '${AppLocalizations(globalLanguage).translate("current")}: $globalTheme'),
+                                  buildDivider(),
+                                  buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"),
+                                    '${AppLocalizations(globalLanguage).translate("current")}: $language'),
+                                ],
+                              );
+                            }
+                          },
+                        )),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 25),
                       child: GestureDetector(
                         onTap: () {
-                          SessionManager().logout();
-                          setState(() {
-                            globalLanguage = const Locale('en', ''); 
-                          });
-                          Navigator.push(
-                            context,
-                              MaterialPageRoute(
-                                builder: (context) => const WelcomePage()
-                              )
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: AppColors.mainGrey, 
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20), 
+                              ),
+                              content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); 
+                                  },
+                                  child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
+                                    style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    SessionManager().logout();
+                                    setState(() {
+                                      globalLanguage = const Locale('en', 'US'); 
+                                    });
+                                    Navigator.push(
+                                      context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const WelcomePage()
+                                        )
+                                    );
+                                  },
+                                  child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
+                                    style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
                           );
                         },
                         child: Container(
@@ -141,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               colors: [Colors.white, AppColors.lightGreen],
                             ),
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 color: Colors.grey,
                                 blurRadius: 5,

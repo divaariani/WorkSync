@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
-import 'attendance_page.dart';
+import 'refresh_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -29,7 +29,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         ),
         SingleChildScrollView(
           child: Padding(
@@ -45,15 +45,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Text(
                           AppLocalizations(globalLanguage).translate("welcome"),
-                          style: const TextStyle(
-                            fontSize: 14, 
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: globalTheme == 'Light Theme' ? Colors.black : Colors.white,
                           ),
                         ),
                         Text(
-                          SessionManager().namaUser ?? 'Unknown',
-                          style: const TextStyle(
+                          SessionManager().getNamaUser() ?? 'Unknown',
+                          style: TextStyle(
                             fontSize: 14, 
                             fontWeight: FontWeight.bold,
+                            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : AppColors.lightGreen
                           ),
                         ),
                       ],
@@ -116,8 +118,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return const Text('No Data');
-                    } 
+                      return const RefreshHomepage();
+                    }
 
                     return Row(
                       children: [
@@ -161,9 +163,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    controller.getTodayState(snapshot.data!),
+                                    //AppLocalizations(globalLanguage).translate("onTime"), 
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
@@ -213,9 +216,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("onTime"),
+                                    controller.getTodayState(snapshot.data!),
+                                    //AppLocalizations(globalLanguage).translate("onTime"), // GANTI DENGAN statusAbsen TANGGAL HARI INI
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: AppColors.mainGreen,
                                     ),
                                   ),
@@ -232,21 +236,28 @@ class _DashboardPageState extends State<DashboardPage> {
                 Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations(globalLanguage).translate("attendance"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    AppLocalizations(globalLanguage).translate("attendance"), 
+                    style: TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold,
+                      color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                    )
+                  ),
                   const Spacer(),
                   InkWell(
                     child: Text(
                       AppLocalizations(globalLanguage).translate("seeAll"), 
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12, 
-                        color: AppColors.deepGreen, 
-                        shadows: [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
+                        color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
+                        shadows: const [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
                       )
                     ),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AttendancePage(),
+                          builder: (context) => const RefreshAttendanceList(),
                         ),
                       );
                     },
