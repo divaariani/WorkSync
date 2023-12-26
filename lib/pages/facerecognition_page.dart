@@ -9,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'app_colors.dart';
+import 'refresh_page.dart';
 import 'home_page.dart';
 import '../modules/detector.dart';
 import '../modules/utils.dart';
@@ -44,34 +46,73 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     initialCamera();
   }
 
-  void sendDataToApi() async {
+  void getDataFace() async {
     try {
-      await controller.sendFaceRecognition(e1);
-      
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
-      
-      final snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: AppLocalizations(globalLanguage).translate("Registered"),
-          message: AppLocalizations(globalLanguage).translate("Successfully register your face recognition"),
-          contentType: ContentType.success,
-        ),
-      );
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
+      List<FaceRecognitionData> faceRecognitionList = await controller.getFaceRecognition();
+      bool matchFound = false;
+      String matchingUsername = "";
 
-      print('API request successful');
+      for (FaceRecognitionData data in faceRecognitionList) {
+        List storedEmbeddings = json.decode(data.kodeFace);
+        double distance = euclideanDistance(storedEmbeddings, e1!);
+
+        if (distance < threshold) {
+          matchFound = true;
+          matchingUsername = data.userName;
+          break;
+        }
+      }
+
+      if (matchFound) {
+        setState(() {
+          globalFaceDetection = matchingUsername;
+        });
+
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("Recognized"),
+            message: "You are $matchingUsername",
+            contentType: ContentType.success,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+        
+        await Future.delayed(const Duration(seconds: 2));
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const RefreshAttendance(),
+          ),
+        );
+
+        await _camera!.stopImageStream();
+
+        setState(() {
+          globalFaceDetection = 'Not Recognized';
+        });
+      } else {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("Not Recognized"),
+            message: AppLocalizations(globalLanguage).translate("No user face found."),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
     } catch (error) {
-      print('API request failed: $error');
+      print('Error: $error');
     }
   }
 
@@ -242,40 +283,66 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
                   },
                 ),
                 Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
-                    style: const TextStyle(fontSize: 24, color: Colors.white)),
+                  style: const TextStyle(fontSize: 24, color: Colors.white)),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                    setState(() {
+                      globalFaceDetection = 'Not Recognized';
+                    });
+                    await _camera!.stopImageStream();
                   },
                 ),
               ],
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Column(
-                  children: [
-                    Text(username),
-                    ElevatedButton(
-                      onPressed: () async {
-                        sendDataToApi();
-                      },
-                      child: Text(AppLocalizations(globalLanguage).translate("save")),
-                    )
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: const LinearGradient(
+                    colors: [Colors.white, AppColors.lightGreen],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 3),
+                    ),
                   ],
                 ),
-              );
-            },
-          );
-        },
-        child: const Icon(Icons.add),
+                child: InkWell(
+                  onTap: () {
+                    getDataFace();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                    child: Text(
+                      AppLocalizations(globalLanguage).translate("Detect"),
+                      style: const TextStyle(
+                        color: AppColors.deepGreen,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
