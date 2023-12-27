@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'facerecognition_page.dart';
+import 'faceregister_page.dart';
 import 'refresh_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 import '../controllers/attendance_controller.dart';
+import '../controllers/facerecognition_controller.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -17,11 +20,97 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late AttendanceController controller;
+  late FaceRecognitionController faceRecognitionController;
 
   @override
   void initState() {
     super.initState();
     controller = AttendanceController();
+    faceRecognitionController = FaceRecognitionController();
+  }
+
+  void checkFaceCode() async {
+    try {
+      List<FaceRecognitionData> faceRecognitionList = await faceRecognitionController.getFaceRecognition();
+
+      bool faceCodeNotFound = faceRecognitionList.any((data) => data.kodeFace == "Face Code Not Found");
+      bool faceCodeTwoRegistered = faceRecognitionList.length == 2;
+      bool faceCodeOneRegistered = faceRecognitionList.length == 1;
+
+      if (faceCodeNotFound) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("Not Registered"),
+            message: AppLocalizations(globalLanguage).translate("You should register your face 3 times!"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else if (faceCodeOneRegistered) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("Register Again"),
+            message: AppLocalizations(globalLanguage).translate("Register your face 2 more times!"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else if (faceCodeTwoRegistered) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("Register Again"),
+            message: AppLocalizations(globalLanguage).translate("Register your face 1 more time!"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRecognitionPage(),
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override
@@ -73,10 +162,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 40),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const FaceRecognitionPage()));
+                    checkFaceCode();
                   },
                   child: Container(
                       decoration: BoxDecoration(
@@ -164,7 +250,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                   Text(
                                     controller.getTodayState(snapshot.data!),
-                                    //AppLocalizations(globalLanguage).translate("onTime"), 
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: AppColors.mainGreen,
@@ -217,7 +302,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                   Text(
                                     controller.getTodayState(snapshot.data!),
-                                    //AppLocalizations(globalLanguage).translate("onTime"), // GANTI DENGAN statusAbsen TANGGAL HARI INI
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: AppColors.mainGreen,
