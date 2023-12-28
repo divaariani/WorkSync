@@ -101,11 +101,76 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FaceRecognitionPage(),
-          ),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              content: Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      AppLocalizations(globalLanguage).translate("Attention!"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.deepGreen,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("1. Ensure that you are close to the Attendance Area / Finished Products Warehouse Area."),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("2. Make sure you are in a well-lit environment for effective face detection."),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                      AppLocalizations(globalLanguage).translate("Cancel"),
+                      style: const TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FaceRecognitionPage(),
+                      ),
+                    );
+                  },
+                  child: Text(AppLocalizations(globalLanguage).translate("Yes"),
+                      style: const TextStyle(
+                          color: AppColors.mainGreen,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
         );
       }
     } catch (error) {
