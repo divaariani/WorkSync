@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
-import 'attendancecorrect_page.dart';
 import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
@@ -25,38 +24,47 @@ class _AttendancePageState extends State<AttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          AppLocalizations(globalLanguage).translate("attendanceList"),
-          style: TextStyle(
-            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("attendanceList"),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
           ),
         ),
-        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
+        body: FutureBuilder<List<AttendanceData>>(
+          future: controller.futureData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return buildAttendanceList(snapshot.data!);
+            } else if (snapshot.hasError) {
+              return const Text('No data');
+            }
+            return const CircularProgressIndicator();
           },
         ),
-      ),
-      body: FutureBuilder<List<AttendanceData>>(
-        future: controller.futureData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildAttendanceList(snapshot.data!);
-          } else if (snapshot.hasError) {
-            return const Text('No data');
-          }
-          return const CircularProgressIndicator();
-        },
-      ),
+      )
     );
   }
 
@@ -86,52 +94,6 @@ class _AttendancePageState extends State<AttendancePage> {
             },
           ),
         ),
-        Positioned(
-          bottom: 16,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                  colors: [Colors.white, AppColors.lightGreen],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const AttendanceCorrectionPage(),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                  child: Text(
-                    AppLocalizations(globalLanguage).translate("addCorrection"),
-                    style: const TextStyle(
-                      color: AppColors.deepGreen,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
       ],
     );
   }
@@ -185,7 +147,7 @@ class _AttendancePageState extends State<AttendancePage> {
           ),
         ),
       ),
-      if (index == listLength - 1) const SizedBox(height: 56),
+      if (index == listLength - 1) const SizedBox(height: 16),
     ]);
   }
 
