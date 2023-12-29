@@ -46,25 +46,33 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
       imageAsset = 'assets/in.png';
     }
 
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+        return false;
+      },
+      child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("attendanceForm"),
-            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            AppLocalizations(globalLanguage).translate("attendanceTitle"),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomePage()
+                  builder: (context) => const HomePage(),
                 ),
               );
             },
-          ),
+          )
         ),
         body: Stack(
           children: [
@@ -226,12 +234,6 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                               DateFormat('HH:mm').format(DateTime.now()),
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
-                            // Text(
-                            //   " ("+AppLocalizations(globalLanguage).translate('late')+")",
-                            //   style: const TextStyle(
-                            //       color: AppColors.deepGreen,
-                            //       fontWeight: FontWeight.bold),
-                            // ),
                           ],
                         ),
                       ),
@@ -256,8 +258,8 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Attendance Success',
-                                  message: 'You are successfully attendance',
+                                  title: AppLocalizations(globalLanguage).translate("attendancePosted"),
+                                  message: AppLocalizations(globalLanguage).translate("attendancePostedDesc"),
                                   contentType: ContentType.success,
                                 ),
                               );
@@ -272,14 +274,19 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                     builder: (context) => HomePage()),
                               );
 
+                              await Future.delayed(const Duration(seconds: 2));
+                              setState(() {
+                                globalLat = '';
+                                globalLong = '';
+                              });
                             } catch (error) {
                               final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Attendance Failed',
-                                  message: 'Something went wrong',
+                                  title: AppLocalizations(globalLanguage).translate("attendanceFailed"),
+                                  message: AppLocalizations(globalLanguage).translate("attendanceFailedDesc"),
                                   contentType: ContentType.failure,
                                 ),
                               );
@@ -333,6 +340,7 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
             ),
           ],
         )
-      );
+      )
+    );
   }
 }
