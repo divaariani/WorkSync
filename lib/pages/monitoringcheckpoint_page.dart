@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'app_colors.dart';
-import '../controllers/monitoring_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:excel/excel.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'app_colors.dart';
+import '../utils/globals.dart';
+import 'package:excel/excel.dart';
+import '../utils/localizations.dart';
+import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import '../controllers/monitoring_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MonitoringCpPage extends StatefulWidget {
   const MonitoringCpPage({Key? key}) : super(key: key);
@@ -20,12 +21,13 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
   late List<Map<String, dynamic>> _data = [];
   late TextEditingController searchController;
   int searchYear = DateTime.now().year;
+  final TextEditingController cariController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    cardGradient = LinearGradient(
+    cardGradient = const LinearGradient(
       colors: [Colors.white, AppColors.lightGreen],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -37,7 +39,14 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
 
   Future<void> fetchData({int? searchYear}) async {
     try {
-      List<Map<String, dynamic>> data = await MonitoringController().fetchMonitoringData(searchYear: searchYear);
+      if (searchYear == null) {
+        searchYear = DateTime.now().year;
+      }
+
+      List<Map<String, dynamic>> data = await MonitoringController()
+          .fetchMonitoringData(searchYear: searchYear);
+      print('API Response: $data');
+
       setState(() {
         _data = data;
       });
@@ -46,21 +55,28 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
     }
   }
 
-  Future<void> createAndExportExcel(List<Map<String, dynamic>> data) async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-      status = await Permission.storage.status;
-      if (!status.isGranted) {
-        return;
-      }
-    }
-
+  Future<void> createAndExportExcel(
+      int searchYear, List<Map<String, dynamic>> data) async {
+    List<Map<String, dynamic>> data = await MonitoringController()
+        .fetchMonitoringData(searchYear: searchYear);
     final excel = Excel.createExcel();
-    final sheet = excel['Sheet1'];
+    final sheet = excel['Data $searchYear'];
 
     sheet.appendRow([
-      'Nama Point', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      'Nama Point',
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+      'Total'
     ]);
 
     for (var item in data) {
@@ -78,6 +94,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
         item['Okt'] ?? '',
         item['Nop'] ?? '',
         item['Des'] ?? '',
+        item['TotalPerCP'] ?? '',
       ]);
     }
 
@@ -89,7 +106,8 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
       }
     }
 
-    final excelFile = File('${(await getTemporaryDirectory()).path}/MonitoringCheckPoint.xlsx');
+    final excelFile = File(
+        '${(await getTemporaryDirectory()).path}/Monitoring CheckPoint.xlsx');
     final excelData = excel.encode()!;
 
     await excelFile.writeAsBytes(excelData);
@@ -114,11 +132,11 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
       appBar: AppBar(
         title: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: const Text(
-              'Monitoring',
-              style: TextStyle(
-                color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              AppLocalizations(globalLanguage).translate("monitoring"),
+              style: const TextStyle(
+                  color: AppColors.deepGreen, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -129,17 +147,6 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
             Navigator.of(context).pop();
           },
         ),
-        actions: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
-              icon: Image.asset('assets/search.png'),
-              onPressed: () {
-                showSearchField();
-              },
-            ),
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -152,187 +159,110 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 5),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: FutureBuilder<List<Map<String, dynamic>>>(
-                        future: MonitoringController().fetchMonitoringData(searchYear: searchYear),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            List<Map<String, dynamic>> data = snapshot.data!;
-                            if (data.isNotEmpty) {
-                              return Column(
-                                children: data.map((item) {
-                                  String CP_Note = item['CP_Note'] ?? '';
-                                  String Jan = item['Jan'] ?? '';
-                                  String February = item['Peb'] ?? '';
-                                  String March = item['Mar'] ?? '';
-                                  String April = item['Apr'] ?? '';
-                                  String Mei = item['Mei'] ?? '';
-                                  String June = item['Jun'] ?? '';
-                                  String July = item['Jul'] ?? '';
-                                  String August = item['Ags'] ?? '';
-                                  String Sept = item['Sep'] ?? '';
-                                  String Oktober = item['Okt'] ?? '';
-                                  String Nop = item['Nop'] ?? '';
-                                  String December = item['Des'] ?? '';
-                                  String totalPerCP = item['TotalPerCP'] ?? '';
-
-                                  return Container(
-                                    margin: const EdgeInsets.symmetric(vertical: 10),
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          constraints: BoxConstraints(
-                                            maxWidth: 100,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              CP_Note,
-                                              style: TextStyle(
-                                                color: AppColors.deepGreen,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 1),
-                                        Expanded(
-                                          child: Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                vertical: 3,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  CarouselSlider(
-                                                    options: CarouselOptions(
-                                                      enableInfiniteScroll: false,
-                                                      autoPlay: false,
-                                                      enlargeCenterPage: true,
-                                                      viewportFraction: 0.5,
-                                                    ),
-                                                    items: [
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'January',
-                                                        kali: Jan.isNotEmpty ? '$Jan X' : Jan,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'February',
-                                                        kali: February.isNotEmpty ? '$February X' : February,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'March',
-                                                        kali: March.isNotEmpty ? '$March X' : March,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'April',
-                                                        kali: April.isNotEmpty ? '$April X' : April,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'Mei',
-                                                        kali: Mei.isNotEmpty ? '$Mei X' : Mei,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'June',
-                                                        kali: June.isNotEmpty ? '$June X' : June,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'July',
-                                                        kali: July.isNotEmpty ? '$July X' : July,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'August',
-                                                        kali: August.isNotEmpty ? '$August X' : August,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'September',
-                                                        kali: Sept.isNotEmpty ? '$Sept X' : Sept,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'Oktober',
-                                                        kali: Oktober.isNotEmpty ? '$Oktober X' : Oktober,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'November',
-                                                        kali: Nop.isNotEmpty ? '$Nop X' : Nop,
-                                                      ),
-                                                      CustomCard(
-                                                        gradient: cardGradient,
-                                                        imagePath: 'assets/book_check.png',
-                                                        bulan: 'December',
-                                                        kali: December.isNotEmpty ? '$December X' : December,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            } else {
-                              return Text('No data available.');
-                            }
-                          }
-                        },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextField(
+                            controller: cariController,
+                            onChanged: (query) {
+                              setState(() {});
+                            },
+                            decoration: InputDecoration(
+                              hintText:
+                                  '${AppLocalizations(globalLanguage).translate("search")}...',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        showSearchField();
+                      },
+                      child: Container(
+                        height: 63,
+                        width: 63,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            'assets/filter.png',
+                            width: 25,
+                            height: 25,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: MonitoringController()
+                        .fetchMonitoringData(searchYear: searchYear),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                        child:  CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        List<Map<String, dynamic>> data = snapshot.data!;
+                        data = data.where((item) {
+                          String cpNote = item['CP_Note'] ?? '';
+                          return cpNote
+                              .toLowerCase()
+                              .contains(cariController.text.toLowerCase());
+                        }).toList();
+
+                        if (data.isNotEmpty) {
+                          return ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> item = data[index];
+                              return buildSingleCard(
+                                  item); 
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                              'No data available',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -342,7 +272,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
             child: InkWell(
               onTap: () {
                 print(_data);
-                createAndExportExcel(_data);
+                createAndExportExcel(searchYear, _data);
               },
               child: Center(
                 child: Container(
@@ -363,10 +293,11 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                     child: Text(
-                      'Export Excel',
-                      style: TextStyle(
+                      AppLocalizations(globalLanguage).translate("exportexcel"),
+                      style: const TextStyle(
                         color: AppColors.deepGreen,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -382,39 +313,237 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
     );
   }
 
+  Widget buildSingleCard(Map<String, dynamic> item) {
+    String cpNote = item['CP_Note'] ?? '';
+    String totalPerCP = item['TotalPerCP'] ?? '';
+    String january = item['Jan'] ?? '';
+    String february = item['Peb'] ?? '';
+    String march = item['Mar'] ?? '';
+    String april = item['Apr'] ?? '';
+    String mei = item['Mei'] ?? '';
+    String june = item['Jun'] ?? '';
+    String july = item['Jul'] ?? '';
+    String august = item['Ags'] ?? '';
+    String sept = item['Sep'] ?? '';
+    String october = item['Okt'] ?? '';
+    String nov = item['Nop'] ?? '';
+    String december = item['Des'] ?? '';
+    String total = AppLocalizations(globalLanguage).translate("total");
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: 
+      Row(
+        children: [
+          Container(
+            constraints: const BoxConstraints(
+              maxWidth: 100,
+            ),
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    cpNote,
+                    style: const TextStyle(
+                      color: AppColors.deepGreen,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "$total : $totalPerCP",
+                    style: const TextStyle(
+                      color: AppColors.deepGreen,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 1),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Column(
+                  children: [
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        enableInfiniteScroll: false,
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        viewportFraction: 0.5,
+                      ),
+                      items: [
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("january"),
+                          kali: january.isNotEmpty && january.isNotEmpty
+                              ? '$january X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("february"),
+                          kali: february.isNotEmpty && february.isNotEmpty
+                              ? '$february X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("march"),
+                          kali: march.isNotEmpty && march.isNotEmpty
+                              ? '$march X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("april"),
+                          kali: april.isNotEmpty && april.isNotEmpty
+                              ? '$april X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan:
+                              AppLocalizations(globalLanguage).translate("may"),
+                          kali:
+                              mei.isNotEmpty && mei.isNotEmpty ? '$mei X' : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("june"),
+                          kali: june.isNotEmpty && june.isNotEmpty
+                              ? '$june X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan:
+                              AppLocalizations(globalLanguage).translate("jul"),
+                          kali: july.isNotEmpty && july.isNotEmpty
+                              ? '$july X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("august"),
+                          kali: august.isNotEmpty && august.isNotEmpty
+                              ? '$august X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan: AppLocalizations(globalLanguage)
+                              .translate("sept"),
+                          kali: sept.isNotEmpty && sept.isNotEmpty
+                              ? '$sept X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan:
+                              AppLocalizations(globalLanguage).translate("okt"),
+                          kali: october.isNotEmpty && october.isNotEmpty
+                              ? '$october X'
+                              : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan:
+                              AppLocalizations(globalLanguage).translate("nov"),
+                          kali:
+                              nov.isNotEmpty && nov.isNotEmpty ? '$nov X' : '0',
+                        ),
+                        CustomCard(
+                          gradient: cardGradient,
+                          imagePath: 'assets/book_check.png',
+                          bulan:
+                              AppLocalizations(globalLanguage).translate("des"),
+                          kali: december.isNotEmpty && december.isNotEmpty
+                              ? '$december X'
+                              : '0',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+
+    );
+  }
+
   void showSearchField() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          'Enter Year',
-          style: TextStyle(
-            color: AppColors.deepGreen,
-            fontSize: 14,
-          )),
+        title: Text(AppLocalizations(globalLanguage).translate("inputyear"),
+            style: const TextStyle(
+              color: AppColors.deepGreen,
+              fontSize: 14,
+            )),
         content: TextField(
           controller: searchController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'Enter Year',
+            hintText: AppLocalizations(globalLanguage).translate("inputyear"),
           ),
         ),
         actions: <Widget>[
           IconButton(
             onPressed: () {
               setState(() {
-                searchYear = int.tryParse(searchController.text) ?? DateTime.now().year;
+                searchYear =
+                    int.tryParse(searchController.text) ?? DateTime.now().year;
               });
               Navigator.pop(context);
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
         ],
       ),
     );
   }
 }
-
 
 class CustomCard extends StatelessWidget {
   final Gradient gradient;
@@ -454,18 +583,18 @@ class CustomCard extends StatelessWidget {
                 height: 50,
                 fit: BoxFit.cover,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 bulan,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.deepGreen,
                   fontSize: 14,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 kali,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.deepGreen,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
