@@ -36,12 +36,11 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
           centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("editOvertime"),
-            style: const TextStyle(
-              color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -222,8 +221,8 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.transparent,
         content: AwesomeSnackbarContent(
-          title: 'Success',
-          message: 'Your overtime edited successfully',
+          title: AppLocalizations(globalLanguage).translate("overtimeEdit"),
+          message: AppLocalizations(globalLanguage).translate("overtimeEditDesc"),
           contentType: ContentType.success,
         ),
       );
