@@ -74,12 +74,11 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
           centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("overtime"),
-            style: const TextStyle(
-              color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -285,8 +284,8 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                                   behavior: SnackBarBehavior.floating,
                                   backgroundColor: Colors.transparent,
                                   content: AwesomeSnackbarContent(
-                                    title: 'Success',
-                                    message: 'Your overtime request posted',
+                                    title: AppLocalizations(globalLanguage).translate("overtimePosted"),
+                                    message: AppLocalizations(globalLanguage).translate("overtimePostedDesc"),
                                     contentType: ContentType.success,
                                   ),
                                 );

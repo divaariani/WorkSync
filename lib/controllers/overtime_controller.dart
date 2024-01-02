@@ -158,6 +158,7 @@ class OvertimeController extends ChangeNotifier {
         url,
         body: {
           'lineuid': ovtId,
+          'nstatrecord': '11'
         },
       );
 
@@ -182,6 +183,43 @@ class OvertimeController extends ChangeNotifier {
       }
     } catch (error) {
       print('Error posting approve: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> postRejectOvertime(String ovtId) async {
+    try {
+      final Uri url = Uri.parse('$apiBaseUrl?function=post_approve_overtime');
+
+      final response = await http.post(
+        url,
+        body: {
+          'lineuid': ovtId,
+          'nstatrecord': '22'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (response.headers['content-type']?.toLowerCase().contains('application/json') != true) {
+          throw Exception('Invalid content type: ${response.headers['content-type']}');
+        }
+
+        final dynamic responseData = json.decode(response.body);
+
+        if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
+          if (responseData['status'] == 1) {
+            print('Overtime rejected successfully');
+          } else {
+            throw Exception('Failed to reject overtime: ${responseData['message']}');
+          }
+        } else {
+          throw Exception('Invalid response format');
+        }
+      } else {
+        throw Exception('Failed to reject overtime. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error posting reject: $error');
       rethrow;
     }
   }

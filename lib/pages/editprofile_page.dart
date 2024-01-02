@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'refresh_page.dart';
+import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -33,6 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveChanges() async {
+    await Future.delayed(const Duration(seconds: 1));
     await SessionManager().setTheme(currentTheme);
     await SessionManager().setLanguage(currentLocale);
 
@@ -51,18 +53,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 2)),
+        );
+        return false;
+      },
+      child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("Edit Profile"),
-            style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+            AppLocalizations(globalLanguage).translate("editProfile"),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 2)),
+              );
             },
           ),
         ),
@@ -205,7 +218,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ],
-        ));
+        )
+      )
+    );
   }
 
   Widget _buildThemeDropdown() {

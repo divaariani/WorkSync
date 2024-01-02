@@ -89,7 +89,7 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
       double targetLongitude2 = 106.831998;
       double finishedwarehouse = geolocator.Geolocator.distanceBetween(position.latitude, position.longitude, targetLatitude2, targetLongitude2);
 
-      if (area1a10003000 <= 100 || finishedwarehouse <= 100) {
+      if (area1a10003000 <= 50 || finishedwarehouse <= 50) {
         globalLat = position.latitude.toString();
         globalLong = position.longitude.toString();
 
@@ -136,7 +136,7 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
         ),
         child: Center(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.3,
             child: Lottie.asset('assets/loading.json'),
           ),
         ),
@@ -179,7 +179,7 @@ class _RefreshAttendanceListState extends State<RefreshAttendanceList> {
         ),
         child: Center(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.3,
             child: Lottie.asset('assets/loading.json'),
           ),
         ),
@@ -222,7 +222,7 @@ class _RefreshHomepageState extends State<RefreshHomepage> {
         ),
         child: Center(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.3,
             child: Lottie.asset('assets/loading.json'),
           ),
         ),

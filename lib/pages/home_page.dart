@@ -7,14 +7,17 @@ import 'profile_page.dart';
 import '../utils/globals.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int initialIndex;
+
+  const HomePage({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(initialIndex);
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  _HomePageState(this._currentIndex);
 
   final List<Widget> _tabs = [
     const DashboardPage(),
@@ -23,11 +26,17 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _tabs[_currentIndex],
       bottomNavigationBar: Container(
-        color: globalTheme == 'Light Theme' ? Colors.white : Colors.black, 
+        color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         child: MoltenBottomNavigationBar(
           domeCircleColor: Colors.white,
           barColor: AppColors.deepGreen,
@@ -39,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           },
           tabs: [
             MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
-            MoltenTab(icon: const Icon(Icons.featured_play_list_sharp, color: AppColors.mainGreen)),
+            MoltenTab(icon: const Icon(Icons.window, color: AppColors.mainGreen)),
             MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
           ],
         ),

@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator(); 
                             } else if (snapshot.hasError) {
-                              return Text('No Connection');
+                              return const Text('No Data');
                             } else {
                               List<AttendanceData> data = snapshot.data!;
                               return Column(
@@ -146,11 +146,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                   buildRow('assets/department.png', AppLocalizations(globalLanguage).translate("department"),
                                     '${SessionManager().getDeptInisial()} Department'),
                                   buildDivider(),
-                                  buildRow( 'assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceForm"),
-                                    '${AppLocalizations(globalLanguage).translate("performance")}: ${controller.calculatePerformance(data)}'),
+                                  buildRow('assets/attendance.png', AppLocalizations(globalLanguage).translate("attendanceTitle"),
+                                    '${AppLocalizations(globalLanguage).translate("performance")}: ${controller.calculatePerformance(data)}'), 
                                   buildDivider(),
-                                  buildRow('assets/theme.png', AppLocalizations(globalLanguage).translate("switchTheme"),
-                                    '${AppLocalizations(globalLanguage).translate("current")}: $globalTheme'),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20), 
+                                    child: Row(
+                                      children: [
+                                        const CircleAvatar(
+                                          backgroundColor: AppColors.mainGrey,
+                                          radius: 20,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: CircleAvatar(
+                                              backgroundColor: AppColors.mainGrey,
+                                              radius: 15,
+                                              backgroundImage: AssetImage('assets/theme.png'),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(AppLocalizations(globalLanguage).translate("switchTheme"), style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold)),
+                                            Text('${AppLocalizations(globalLanguage).translate("current")}: $globalTheme', style: const TextStyle(color: AppColors.deepGrey)),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              if (globalTheme == 'Light Theme') {
+                                                globalTheme = 'Dark Theme';
+                                              } else {
+                                                globalTheme = 'Light Theme';
+                                              }
+                                            });
+                                            
+                                          },
+                                          child: Image.asset(globalTheme == 'Light Theme' ? 'assets/mode_light.png' : 'assets/mode_dark.png', height: 30),
+                                        ),
+                                      ],
+                                    )
+                                  ),
                                   buildDivider(),
                                   buildRow('assets/language.png', AppLocalizations(globalLanguage).translate("language"),
                                     '${AppLocalizations(globalLanguage).translate("current")}: $language'),
@@ -158,72 +197,74 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                             }
                           },
-                        )),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 25),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: AppColors.mainGrey, 
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20), 
-                              ),
-                              content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); 
-                                  },
-                                  child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
-                                    style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    SessionManager().logout();
-                                    setState(() {
-                                      globalLanguage = const Locale('en', 'US'); 
-                                    });
-                                    Navigator.push(
-                                      context,
-                                        MaterialPageRoute(
-                                          builder: (context) => const WelcomePage()
-                                        )
-                                    );
-                                  },
-                                  child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
-                                    style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [Colors.white, AppColors.lightGreen],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
+                        )
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            colors: [Colors.white, AppColors.lightGreen],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          child: Center(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: AppColors.mainGrey, 
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20), 
+                                ),
+                                content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); 
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
+                                      style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      SessionManager().logout();
+                                      setState(() {
+                                        globalLanguage = const Locale('en', 'US'); 
+                                      });
+                                      Navigator.push(
+                                        context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const WelcomePage()
+                                          )
+                                      );
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
+                                      style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                             child: Text(
                               AppLocalizations(globalLanguage).translate("logout"),
                               style: const TextStyle(
-                                  color: AppColors.mainGreen,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                                color: AppColors.deepGreen,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
