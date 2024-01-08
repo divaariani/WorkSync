@@ -43,8 +43,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Not Registered"),
-            message: AppLocalizations(globalLanguage).translate("You should register your face 3 times!"),
+            title: AppLocalizations(globalLanguage).translate("notRegistered"),
+            message: AppLocalizations(globalLanguage).translate("notRegistered3More"),
             contentType: ContentType.warning,
           ),
         );
@@ -64,8 +64,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 2 more times!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register2More"),
             contentType: ContentType.warning,
           ),
         );
@@ -85,8 +85,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 1 more time!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register1More"),
             contentType: ContentType.warning,
           ),
         );
@@ -115,7 +115,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      AppLocalizations(globalLanguage).translate("Attention!"),
+                      AppLocalizations(globalLanguage).translate("attention"),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,
@@ -125,7 +125,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      AppLocalizations(globalLanguage).translate("1. Ensure that you are close to the Attendance Area / Finished Products Warehouse Area."),
+                      AppLocalizations(globalLanguage).translate("makeSureLocation"),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 14,
@@ -134,7 +134,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      AppLocalizations(globalLanguage).translate("2. Make sure you are in a well-lit environment for effective face detection."),
+                      AppLocalizations(globalLanguage).translate("makeSureCamera"),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 14,
@@ -150,7 +150,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                      AppLocalizations(globalLanguage).translate("Cancel"),
+                      AppLocalizations(globalLanguage).translate("cancel"),
                       style: const TextStyle(
                           color: Colors.grey, fontWeight: FontWeight.bold)),
                 ),
@@ -163,7 +163,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     );
                   },
-                  child: Text(AppLocalizations(globalLanguage).translate("Yes"),
+                  child: Text(AppLocalizations(globalLanguage).translate("yes"),
                       style: const TextStyle(
                           color: AppColors.mainGreen,
                           fontWeight: FontWeight.bold)),
