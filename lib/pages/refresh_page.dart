@@ -8,7 +8,9 @@ import 'app_colors.dart';
 import 'home_page.dart';
 import 'attendanceform_page.dart';
 import 'attendance_page.dart';
+import 'stockopname_page.dart';
 import '../utils/globals.dart';
+import '../utils/localizations.dart';
 
 class RefreshAttendance extends StatefulWidget {
   const RefreshAttendance({Key? key}) : super(key: key);
@@ -101,7 +103,7 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
           message = 'Outside the allowed area';
           globalLat = '';
           globalLong = '';
-          globalLocationName = 'Outside the allowed area';
+          globalLocationName = AppLocalizations(globalLanguage).translate("outsideArea");
         });
       }
     });
@@ -204,6 +206,50 @@ class _RefreshHomepageState extends State<RefreshHomepage> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomePage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: Lottie.asset('assets/loading.json'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RefreshStockTable extends StatefulWidget {
+  const RefreshStockTable({Key? key}) : super(key: key);
+
+  @override
+  State<RefreshStockTable> createState() => _RefreshStockTableState();
+}
+
+class _RefreshStockTableState extends State<RefreshStockTable> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 1), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const StockOpnamePage(),
         ),
       );
     });
