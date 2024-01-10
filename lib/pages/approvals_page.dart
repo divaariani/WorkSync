@@ -30,9 +30,10 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
   @override
   void initState() {
     super.initState();
-    init();
     currentDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(DateTime.now());
     overtimeController = OvertimeController();
+    _fetchOvertimeData();
+    _fetchApprovedLeaveData();
   }
 
   final TextEditingController searchControllerr = TextEditingController();
@@ -40,11 +41,6 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
   List<DatumApproveListLeave> approvedLeave = [];
   String formatLanguageFulllDate(DateTime date) {
     return DateFormat('E, d MMM yyyy', 'id_ID').format(date);
-  }
-
-  Future<void> init() async {
-    await _fetchApprovedLeaveData();
-    await _fetchOvertimeData();
   }
 
   Future<void> _handleApproval(String attLeaveId, int nstatrecord) async {
@@ -62,6 +58,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
       approvedLeave = result.data;
       _updateLeaveCount();
     });
+    
   }
 
   Future<void> _fetchOvertimeData() async {
@@ -275,7 +272,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                                 },
                                                                 child: Text(
                                                                   AppLocalizations(globalLanguage).translate("cancel"),
-                                                                  style: const TextStyle(color: Color(0xFFBC5757), fontWeight: FontWeight.bold)),
+                                                                  style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                                                               ),
                                                               TextButton(
                                                                 onPressed: () async {
@@ -548,7 +545,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                       ),
                                                       const SizedBox(height: 5),
                                                       Text(
-                                                        AppLocalizations(globalLanguage).translate("Leave Type"),
+                                                        AppLocalizations(globalLanguage).translate("leaveType"),
                                                         style: const TextStyle(
                                                             fontWeight: FontWeight.bold),
                                                       ),
@@ -623,19 +620,24 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                     children: [
                                                       TextButton(
                                                         onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => ImagePage(
-                                                                imageUrl: approvedLeave[index].attachment,
-                                                              ),
-                                                            ),
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (BuildContext context) {
+                                                              return AlertDialog(
+                                                                content: Container(
+                                                                  child: Image.network(
+                                                                    approvedLeave[index].attachment!, 
+                                                                    fit: BoxFit.cover,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
                                                           );
                                                           print(approvedLeave[index].attachment);
                                                         },
-                                                        child: const Text(
-                                                          'Link Photo',
-                                                          style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                                                        child: Text(
+                                                          AppLocalizations(globalLanguage).translate("viewPhoto"),
+                                                            style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                                                         ),
                                                       ),
                                                     ],
@@ -664,7 +666,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                                 },
                                                                 child: Text(
                                                                   AppLocalizations(globalLanguage).translate("cancel"),
-                                                                  style: const TextStyle(color: Color(0xFFBC5757), fontWeight: FontWeight.bold)),
+                                                                  style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                                                               ),
                                                               TextButton(
                                                                 onPressed: () async {
@@ -771,54 +773,5 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
     final DateTime dateTime = DateTime.parse(dateString);
     final String formattedDate = DateFormat('dd MMM yyyy [HH:mm]', globalLanguage.toLanguageTag()).format(dateTime);
     return formattedDate;
-  }
-}
-
-class ImagePage extends StatelessWidget {
-  final String imageUrl;
-
-  ImagePage({required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ApprovalsPage()),
-        );
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const ApprovalsPage()),
-              );
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("attachment"),
-            style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        body: Stack(
-          children: [
-            Container(
-              color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-            ),
-            Image.network(imageUrl)
-          ]
-        )
-      )
-    );
   }
 }
