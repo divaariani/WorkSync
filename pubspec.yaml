@@ -33,12 +33,17 @@ dependencies:
   dropdown_search: ^5.0.6
   tab_container: ^2.0.0
   carousel_slider: ^4.2.1
-  permission_handler: ^11.0.1
   share_plus: ^7.2.1
   excel: ^2.0.4
   shared_preferences: ^2.2.2
   connectivity_plus: ^5.0.2
   lottie: ^2.7.0
+  image_picker: ^1.0.5
+  dotted_border: ^2.1.0
+  file_picker: ^6.1.1
+  firebase_core: ^2.24.2
+  firebase_storage: ^11.5.6
+  cloud_firestore: ^4.13.6
 
 dev_dependencies:
   flutter_test:
