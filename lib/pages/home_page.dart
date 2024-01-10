@@ -16,8 +16,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
   _HomePageState(this._currentIndex);
+  int _currentIndex = 0;
+  DateTime? currentBackPressTime;
 
   final List<Widget> _tabs = [
     const DashboardPage(),
@@ -33,24 +34,39 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _tabs[_currentIndex],
-      bottomNavigationBar: Container(
-        color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-        child: MoltenBottomNavigationBar(
-          domeCircleColor: Colors.white,
-          barColor: AppColors.deepGreen,
-          selectedIndex: _currentIndex,
-          onTabChange: (clickedIndex) {
-            setState(() {
-              _currentIndex = clickedIndex;
-            });
-          },
-          tabs: [
-            MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
-            MoltenTab(icon: const Icon(Icons.window, color: AppColors.mainGreen)),
-            MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        DateTime now = DateTime.now();
+        if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+          currentBackPressTime = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit the app'),
+            ),
+          );
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        body: _tabs[_currentIndex],
+        bottomNavigationBar: Container(
+          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          child: MoltenBottomNavigationBar(
+            domeCircleColor: Colors.white,
+            barColor: AppColors.deepGreen,
+            selectedIndex: _currentIndex,
+            onTabChange: (clickedIndex) {
+              setState(() {
+                _currentIndex = clickedIndex;
+              });
+            },
+            tabs: [
+              MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
+              MoltenTab(icon: const Icon(Icons.window, color: AppColors.mainGreen)),
+              MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
+            ],
+          ),
         ),
       ),
     );
