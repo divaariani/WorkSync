@@ -7,7 +7,7 @@ import 'response_model.dart';
 class CheckPointController {
 
   Future<List<Map<String, dynamic>>> fetchCheckPointUser() async {
-    final String? userId = SessionManager().userId;
+    final String? userId = SessionManager().getUserId();
     final url = '$apiBaseUrl?function=get_list_checkpoint_tour&userid=$userId';
 
     try {
@@ -35,7 +35,7 @@ class CheckPointController {
 
    static Future<ResponseModel> fetchDataScan({required String cp_barcode}) async {
     SessionManager sessionManager = SessionManager();
-    String? userIdString = sessionManager.userId;
+    String? userIdString = sessionManager.getUserId();
 
     if (userIdString == null) {
       throw Exception('User ID tidak tersedia.');
