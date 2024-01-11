@@ -4,8 +4,8 @@ import '../utils/globals.dart';
 
 class MonitoringController {
 
-  Future<List<Map<String, dynamic>>> fetchMonitoringData() async {
-    final url = '$apiBaseUrl?function=get_list_checkpoint_tour_monitoring&caritahun=2023';
+  Future<List<Map<String, dynamic>>> fetchMonitoringData({int? searchYear}) async {
+    final url = '$apiBaseUrl?function=get_list_checkpoint_tour_monitoring&caritahun=$searchYear';
 
     try {
       final response = await http.get(Uri.parse(url));
