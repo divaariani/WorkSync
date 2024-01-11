@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'app_colors.dart';
-import '../utils/globals.dart';
-import 'package:excel/excel.dart';
-import '../utils/localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:excel/excel.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import '../controllers/monitoring_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'app_colors.dart';
+import 'home_page.dart';
+import '../utils/globals.dart';
+import '../utils/localizations.dart';
+import '../controllers/monitoring_controller.dart';
 
 class MonitoringCpPage extends StatefulWidget {
   const MonitoringCpPage({Key? key}) : super(key: key);
@@ -43,9 +44,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
         searchYear = DateTime.now().year;
       }
 
-      List<Map<String, dynamic>> data = await MonitoringController()
-          .fetchMonitoringData(searchYear: searchYear);
-      print('API Response: $data');
+      List<Map<String, dynamic>> data = await MonitoringController().fetchMonitoringData(searchYear: searchYear);
 
       setState(() {
         _data = data;
@@ -130,24 +129,25 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              AppLocalizations(globalLanguage).translate("monitoring"),
-              style: const TextStyle(
-                  color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("monitoring"),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+          ),
         ),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
       body: Stack(
         children: [
           Container(
@@ -167,7 +167,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.only(top: 16),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -191,22 +191,25 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () async {
-                        showSearchField();
-                      },
-                      child: Container(
-                        height: 63,
-                        width: 63,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            'assets/filter.png',
-                            width: 25,
-                            height: 25,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: GestureDetector(
+                        onTap: () async {
+                          showSearchField();
+                        },
+                        child: Container(
+                          height: 63,
+                          width: 63,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              'assets/filter.png',
+                              width: 25,
+                              height: 25,
+                            ),
                           ),
                         ),
                       ),
@@ -220,11 +223,11 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
-                        child:  CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      );
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
@@ -241,8 +244,24 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                             itemCount: data.length,
                             itemBuilder: (context, index) {
                               Map<String, dynamic> item = data[index];
-                              return buildSingleCard(
-                                  item); 
+
+                              if (index == 0) {
+                                return Column(
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    buildSingleCard(item)
+                                  ],
+                                );
+                              } else if (index == data.length - 1) {
+                                return Column(
+                                  children: [
+                                    buildSingleCard(item),
+                                    const SizedBox(height: 58)
+                                  ],
+                                );
+                              } else {
+                                return buildSingleCard(item);
+                              }
                             },
                           );
                         } else {
@@ -271,7 +290,6 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
             right: 80,
             child: InkWell(
               onTap: () {
-                print(_data);
                 createAndExportExcel(searchYear, _data);
               },
               child: Center(
@@ -293,8 +311,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                     ],
                   ),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                     child: Text(
                       AppLocalizations(globalLanguage).translate("exportexcel"),
                       style: const TextStyle(
@@ -345,8 +362,7 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
           ),
         ],
       ),
-      child: 
-      Row(
+      child: Row(
         children: [
           Container(
             constraints: const BoxConstraints(
@@ -508,7 +524,6 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
           ),
         ],
       ),
-
     );
   }
 
