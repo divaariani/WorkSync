@@ -19,7 +19,7 @@ class SessionManager {
   static const String _keymAppO = 'mAppO';
   static const String _keymMCP = 'mMCP';
   static const String _keymSTO = 'mSTO';
-
+  static const String _keymWarehouse = 'mWarehouse';
   static const String _themeKey = 'theme';
   static const Locale _languageKey = Locale('en', 'US');
 
@@ -63,6 +63,7 @@ class SessionManager {
     await _prefs.setString(_keymAppO, userData['mAppO']);
     await _prefs.setString(_keymMCP, userData['mMCP']);
     await _prefs.setString(_keymSTO, userData['mSTO']);
+    await _prefs.setString(_keymWarehouse, userData['mChecker']);
   }
 
   String? getUserId() {
@@ -115,6 +116,9 @@ class SessionManager {
   }
   String? getActorAuditor() {
     return _prefs.getString(_keymSTO);
+  }
+  String? getActorWarehouse() {
+    return _prefs.getString(_keymWarehouse);
   }
 
   String getTheme() {
