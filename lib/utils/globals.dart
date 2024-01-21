@@ -11,10 +11,13 @@ String globalTheme = 'Light Theme';
 Locale globalLanguage = const Locale('en', 'US');
 
 String globalBarcodeLokasiResult = '';
+String globalBarcodeMobilResult = '';
 String globalBarcodeBarangResult = '';
+String globalBarcodeGudangResult = '';
 String globalBarcodeCheckpointResult = ''; 
 String globalBarcodeScanLokasiResult = '';
 List<String> globalBarcodeBarangResults = [];
+List<String> globalBarcodeGudangResults = [];
 List<String> globalBarcodeCheckpointResults = [];
 
 void setGlobalBarcodeLokasiResult(String barcodeStockResult){
@@ -27,4 +30,12 @@ void setGlobalBarcodeBarangResult(String barcodeBarangResult) {
 
 void setGlobalBarcodeCheckpointResult(String barcodeCheckpointResult) {
   globalBarcodeCheckpointResult = barcodeCheckpointResult;
+}
+
+void setGlobalBarcodeMobilResult(String barcodeMobilResult) {
+  globalBarcodeMobilResult = barcodeMobilResult;
+}
+
+void setGlobalBarcodeGudangResult(String barcodeGudangResult) { 
+  globalBarcodeGudangResult = barcodeGudangResult;
 }
