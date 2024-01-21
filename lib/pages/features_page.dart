@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:worksync/pages/warehouse_page.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
@@ -40,6 +41,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
   String? actorTicketing = '';
   String? actorMonitoring = '';
   String? actorAuditor= '';
+  String? actorWarehouse= '';
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
     actorTicketing = sessionManager.getActorTicketing();
     actorMonitoring = sessionManager.getActorMonitoring();
     actorAuditor= sessionManager.getActorAuditor();
+    actorWarehouse = sessionManager.getActorWarehouse();
 
     fetchOvertimeData();
     fetchApprovedLeaveData();
@@ -491,6 +494,34 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           backgroundColor: Colors.transparent,
                           content: AwesomeSnackbarContent(
                             title: AppLocalizations(globalLanguage).translate("stockOpnameFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
+                CardItem(
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/warehouse.png',
+                  title: AppLocalizations(globalLanguage).translate("DO Picking"),
+                  onTap: () {
+                    if (actorWarehouse == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const WarehousePage()),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("warehouseFeature"),
                             message: AppLocalizations(globalLanguage).translate("featureWarning"),
                             contentType: ContentType.warning,
                           ),
