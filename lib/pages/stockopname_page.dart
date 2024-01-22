@@ -625,7 +625,7 @@ class EmptyData extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
-                    AppLocalizations(globalLanguage).translate("nodata"),
+                    AppLocalizations(globalLanguage).translate("noDataa"),
                   ),
                 ),
               ],

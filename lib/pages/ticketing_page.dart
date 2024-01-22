@@ -66,7 +66,7 @@ class _TicketingPageState extends State<TicketingPage> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         );
                       } else if (snapshot.hasError) {
-                        return const Text('No Data', style: TextStyle(color: Colors.white));
+                        return Text(AppLocalizations(globalLanguage).translate("noDataa"), style: const TextStyle(color: Colors.white));
                       } else {
                         final List<TicketingUser> ticketingList = snapshot.data ?? [];
 

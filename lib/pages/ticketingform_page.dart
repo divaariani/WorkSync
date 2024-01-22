@@ -32,6 +32,7 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
   String selectedCategoryType = '1'; 
   String selectedSubCategoryType = '1'; 
   String selectedPriorityType = 'Low';
+  double uploadProgress = 0.0;
   List<Map<String, dynamic>> ticketingToOptions = [];
   List<Map<String, dynamic>> assignedToOptions = []; 
   List<Map<String, dynamic>> categoryOptions = [];
@@ -56,6 +57,12 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
 
       final ref = FirebaseStorage.instance.ref().child(path);
       final uploadTask = ref.putFile(file);
+
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        setState(() {
+          uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+        });
+      });
 
       final snapshot = await uploadTask.whenComplete(() {});
 
@@ -159,22 +166,22 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          AppLocalizations(globalLanguage).translate("ticketing"),
-          style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold),
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("ticketing"),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+          ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+          ),
         ),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          },
-        ),
-      ),
       body: Stack(
         children: [
           Container(
@@ -517,6 +524,24 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Visibility(
+                      visible: pickedFile != null,
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(5.0),
+                            child: LinearProgressIndicator(
+                              value: uploadProgress,
+                              minHeight: 10,
+                              backgroundColor: Colors.grey[300],
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppColors.deepGreen),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Center(
                       child: Container(
@@ -538,9 +563,18 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
+                            print('tiket kepada dept $selectedTicketingType');
+                            print('kepada $selectedAssignedType');
+                            print('subyek  ${subjectController.text}');
+                            print('deskripsi  ${descriptionController.text}');
+                            print('userid  $userId');
+                            print('kategori  $selectedCategoryType');
+                            print('sub kategori $selectedSubCategoryType');
+                            print('[prioritas] $selectedPriorityType');
+                            print('[attachment] $attachment');
+
                             try {
-                              if (attachment.isNotEmpty) {
-                                await controller.postTicketing(
+                              await controller.postTicketing(
                                   lineuid: 0,
                                   tiketingTo: int.parse(selectedTicketingType),
                                   signTo: int.parse(selectedAssignedType),
@@ -574,23 +608,7 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                                     builder: (context) => TicketingPage(),
                                   ),
                                 );
-                              } else {
-                                final snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    title: AppLocalizations(globalLanguage).translate("tryAgain"),
-                                    message: AppLocalizations(globalLanguage).translate("attachmentCantEmpty"),
-                                    contentType: ContentType.failure,
-                                  ),
-                                );
 
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-                                print("Attachment is null. Skipping postTicketing call without attachment.");
-                              }
                             } catch (e) {
                               final snackBar = SnackBar(
                                   elevation: 0,

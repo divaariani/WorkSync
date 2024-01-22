@@ -43,7 +43,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
     while (!finishScanning) {
       String barcodeGudangResult = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000',
-        'Finish',
+        AppLocalizations(globalLanguage).translate("finish"),
         true,
         ScanMode.BARCODE,
       );
@@ -71,7 +71,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Result: $barcodeGudangResult',
+                  '${AppLocalizations(globalLanguage).translate("result")}: $barcodeGudangResult',
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -168,9 +168,17 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("productList"),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -179,14 +187,6 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
               );
               globalBarcodeGudangResults.clear();
             },
-          ),
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("Product List"),
-            style: const TextStyle(
-              color: AppColors.deepGreen,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
         body: Stack(
@@ -206,9 +206,9 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Truck',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("truck"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -241,9 +241,9 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Stock List',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("productList"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -372,8 +372,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                 ),
                               ],
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 6,
                                 horizontal: 20,
                               ),
@@ -381,8 +381,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Add Stock',
-                                    style: TextStyle(
+                                    AppLocalizations(globalLanguage).translate("addProduct"),
+                                    style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -702,8 +702,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: AppLocalizations(globalLanguage).translate("Uploaded"),
-                                  message: AppLocalizations(globalLanguage).translate("Warehouse Drop Out successfully uploaded"),
+                                  title: AppLocalizations(globalLanguage).translate("uploaded"),
+                                  message: AppLocalizations(globalLanguage).translate("succesproductupload"),
                                   contentType: ContentType.success,
                                 ),
                               );
@@ -773,7 +773,7 @@ class EmptyData extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                'No Data Products',
+                AppLocalizations(globalLanguage).translate("noDataa"),
                 style: GoogleFonts.poppins(
                   color: AppColors.mainGrey,
                   fontSize: 12,

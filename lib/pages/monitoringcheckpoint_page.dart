@@ -265,10 +265,10 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                             },
                           );
                         } else {
-                          return const Center(
+                          return Center(
                             child: Text(
-                              'No data available',
-                              style: TextStyle(
+                              AppLocalizations(globalLanguage).translate("noDataa"),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

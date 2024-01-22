@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:get/get.dart';
 import 'package:worksync/controllers/stockopname_controller.dart';
 import 'refresh_page.dart';
@@ -49,7 +50,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     while (!finishScanning) {
       String barcodeBarangResult = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000',
-        'Finish',
+        AppLocalizations(globalLanguage).translate("finish"),
         true,
         ScanMode.BARCODE,
       );
@@ -71,65 +72,17 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
           return AlertDialog(
             contentPadding: EdgeInsets.all(16),
             title: Center(
-              child: Text(
-                AppLocalizations(globalLanguage).translate("barcodescanned"),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.deepGreen,
-                ),
-              ),
+              child: CircularProgressIndicator(color: AppColors.mainGreen)
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Result: $barcodeBarangResult',
+                  '$barcodeBarangResult',
                   style: TextStyle(
                     fontSize: 16,
                   ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  child: InkWell(
-                    onTap: () async {
-                      Navigator.pop(context);
-                      _navigateToStockLokasiPage();
-                      finishScanning = true;
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 50),
-                        child: Text(
-                          AppLocalizations(globalLanguage).translate("finish"),
-                          style: const TextStyle(
-                            color: AppColors.deepGreen,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                ),        
               ],
             ),
           );
@@ -137,7 +90,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       );
 
       if (!finishScanning) {
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
       }
     }
   }
@@ -170,7 +123,6 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   }
 
   Future<void> _submitStock() async {
-    //final int id = int.parse(idController.text);
     final String lokasi = lokasiController.text;
     List<String> errorMessages = [];
     bool success = true;
@@ -187,19 +139,31 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
 
         if (response.status == 1) {
           success = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RefreshStockTable()
+            ),
+          );
+
+          final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: AppLocalizations(globalLanguage).translate("Stock Uploaded"),
+                                  message: AppLocalizations(globalLanguage).translate("Stocks successfully uploaded"),
+                                  contentType: ContentType.success,
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
         } else if (response.status == 0) {
           errorMessages.add('Request gagal: ${response.message}');
         } else if (response.status != 1) {
           errorMessages.add('Terjadi kesalahan: Response tidak valid.');
-        }
-      }
-
-      if (success) {
-        print('Stock berhasil diupload');
-      } else {
-        print('Gagal mengupload stock. Kesalahan:');
-        for (String errorMessage in errorMessages) {
-          print('- $errorMessage');
         }
       }
 
@@ -239,9 +203,14 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("stocklist"),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+          ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -249,14 +218,6 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                     builder: (context) => const StockOpnamePage()),
               );
             },
-          ),
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("stocklist"),
-            style: const TextStyle(
-              color: AppColors.deepGreen,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
         body: Stack(
@@ -733,7 +694,7 @@ class EmptyData extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                'Tidak ada hasil scan barang',
+                AppLocalizations(globalLanguage).translate("noDataa"),
                 style: GoogleFonts.poppins(
                   color: AppColors.mainGrey,
                   fontSize: 12,

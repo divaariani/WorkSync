@@ -48,7 +48,7 @@ class _WarehouseScanPageState extends State<WarehouseScanPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          AppLocalizations(globalLanguage).translate("Choose Mobil"),
+          AppLocalizations(globalLanguage).translate("chooseTruck"),
           style: TextStyle(
             color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class _WarehouseScanPageState extends State<WarehouseScanPage> {
                           const SizedBox(height: 50),
                           Text(
                             textAlign: TextAlign.center,
-                            AppLocalizations(globalLanguage).translate("Scan Mobil"),
+                            AppLocalizations(globalLanguage).translate("scanTruck"),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,

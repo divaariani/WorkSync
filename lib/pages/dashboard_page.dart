@@ -277,14 +277,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 MaterialPageRoute(builder: (context) => const HomePage()),
                               );
                             },
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.refresh, color: AppColors.mainGreen),
-                                SizedBox(width: 8), 
+                                const Icon(Icons.refresh, color: AppColors.mainGreen),
+                                const SizedBox(width: 8), 
                                 Text(
-                                  'Refresh Data',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.mainGreen),
+                                  AppLocalizations(globalLanguage).translate("refreshData"),
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.mainGreen),
                                 ),
                               ],
                             ),
@@ -407,9 +407,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator(color: AppColors.mainGreen);
                     } else if (snapshot.hasError) {
-                      return const Text('No data');
+                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('No data');
+                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                     }
 
                     int itemCount = snapshot.data!.length > 5 ? 5 : snapshot.data!.length;

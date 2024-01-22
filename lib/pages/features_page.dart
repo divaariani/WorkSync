@@ -508,7 +508,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/warehouse.png',
-                  title: AppLocalizations(globalLanguage).translate("DO Picking"),
+                  title: AppLocalizations(globalLanguage).translate("doPicking"),
                   onTap: () {
                     if (actorWarehouse == '1') {
                       Navigator.push(

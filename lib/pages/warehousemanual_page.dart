@@ -53,7 +53,7 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations(globalLanguage).translate("Warehouse Form"),
+              AppLocalizations(globalLanguage).translate("productForm"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
                     ? AppColors.deepGreen
@@ -98,7 +98,7 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                      Text(
-                        AppLocalizations(globalLanguage).translate("Managed by"),
+                        AppLocalizations(globalLanguage).translate("managedBy"),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -128,7 +128,7 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        AppLocalizations(globalLanguage).translate("Truck"),
+                        AppLocalizations(globalLanguage).translate("truck"),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -162,7 +162,7 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        AppLocalizations(globalLanguage).translate("Product List"),
+                        AppLocalizations(globalLanguage).translate("productList"),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,

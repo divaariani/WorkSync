@@ -156,9 +156,9 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)));
                             } else if (snapshot.hasError) {
-                              return const Center(child: Text('No data available'));
+                              return Center(child: Text(AppLocalizations(globalLanguage).translate("noDataa"),));
                             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(child: Text('No data available'));
+                              return Center(child: Text(AppLocalizations(globalLanguage).translate("noDataa"),));
                             } else {
                               List<OvertimeData> overtimeList = snapshot.data ?? [];
 
@@ -463,33 +463,19 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 );
                               } else if (snapshot.hasError) {
-                                return const Text('No Data');
+                                return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                               } else {
-                                List<DatumApproveListLeave> approvedLeave =
-                                    snapshot.data?.data ?? [];
+                                List<DatumApproveListLeave> approvedLeave = snapshot.data?.data ?? [];
 
                                 if (searchControllerr.text.isNotEmpty) {
-                                  final String query =
-                                      searchControllerr.text.toLowerCase();
+                                  final String query = searchControllerr.text.toLowerCase();
                                   approvedLeave = approvedLeave.where((leave) {
-                                    return leave.actionStatusPost
-                                            .toLowerCase()
-                                            .contains(query) ||
-                                        (query == 'requested' &&
-                                            leave.actionStatusPost.toLowerCase() ==
-                                                'open/draft') ||
-                                        (query == 'approved' &&
-                                            leave.actionStatusPost.toLowerCase() ==
-                                                'manager signed') ||
-                                        formatLanguageFulllDate(leave.tglAjuan)
-                                            .toLowerCase()
-                                            .contains(query) ||
-                                        formatLanguageFulllDate(leave.dari)
-                                            .toLowerCase()
-                                            .contains(query) ||
-                                        leave.namaKaryawan
-                                            .toLowerCase()
-                                            .contains(query) ||
+                                    return leave.actionStatusPost.toLowerCase().contains(query) ||
+                                        (query == 'requested' && leave.actionStatusPost.toLowerCase() == 'open/draft') ||
+                                        (query == 'approved' && leave.actionStatusPost.toLowerCase() == 'manager signed') ||
+                                        formatLanguageFulllDate(leave.tglAjuan).toLowerCase().contains(query) ||
+                                        formatLanguageFulllDate(leave.dari).toLowerCase().contains(query) ||
+                                        leave.namaKaryawan.toLowerCase().contains(query) ||
                                         leave.leaveDesc.toLowerCase().contains(query);
                                   }).toList();
                                 }

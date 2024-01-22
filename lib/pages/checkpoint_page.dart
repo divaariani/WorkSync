@@ -38,22 +38,21 @@ class _CheckPointPageState extends State<CheckPointPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const HomePage(),
-                ),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 1)),
               );
             },
           ),
           centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("checkpoinTour"),
-            style: const TextStyle(
-              color: AppColors.deepGreen,
+            style: TextStyle(
+              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),

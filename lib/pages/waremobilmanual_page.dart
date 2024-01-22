@@ -22,7 +22,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("Truck Form"),
+            AppLocalizations(globalLanguage).translate("truckForm"),
             style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
           ),
           backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
@@ -56,7 +56,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      AppLocalizations(globalLanguage).translate("Managed by"),
+                      AppLocalizations(globalLanguage).translate("managedBy"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -85,7 +85,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations(globalLanguage).translate("Truck"),
+                      AppLocalizations(globalLanguage).translate("truck"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -106,7 +106,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
                               child: TextField(
                                 controller: mobilController,
                                 decoration: InputDecoration(
-                                  hintText: '${AppLocalizations(globalLanguage).translate("Truck")}...',
+                                  hintText: '${AppLocalizations(globalLanguage).translate("truck")}...',
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -152,7 +152,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                             child: Text(
-                              AppLocalizations(globalLanguage).translate("Next"),
+                              AppLocalizations(globalLanguage).translate("next"),
                               style: const TextStyle(
                                 color: AppColors.deepGreen,
                                 fontSize: 16,

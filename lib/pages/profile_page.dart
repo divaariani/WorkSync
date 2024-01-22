@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator(color: AppColors.mainGreen); 
                             } else if (snapshot.hasError) {
-                              return const Text('No Data');
+                              return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                             } else {
                               List<AttendanceData> data = snapshot.data!;
                               return Column(
