@@ -47,23 +47,23 @@ class SessionManager {
     return _prefs.getBool(_keyIsLoggedIn) ?? false;
   }
 
-  Future<void> saveUserInfo(Map<String, dynamic> userData) async {
-    await _prefs.setString(_keyUserId, userData['user_id']);
-    await _prefs.setString(_keyNamaUser, userData['Nama_User']);
-    await _prefs.setString(_keyDeptId, userData['DeptId']);
-    await _prefs.setString(_keyDeptFullName, userData['DeptFullName']);
-    await _prefs.setString(_keyDeptInisial, userData['DeptInisial']);
-    await _prefs.setString(_keyNoAbsen, userData['NoAbsen']);
-    await _prefs.setString(_keymAbsen, userData['mAbsen']);
-    await _prefs.setString(_keymLeave, userData['mLeave']);
-    await _prefs.setString(_keymOvt, userData['mOvt']);
-    await _prefs.setString(_keymITCP, userData['mITCP']);
-    await _prefs.setString(_keymTicket, userData['mTicket']);
-    await _prefs.setString(_keymAppL, userData['mAppL']);
-    await _prefs.setString(_keymAppO, userData['mAppO']);
-    await _prefs.setString(_keymMCP, userData['mMCP']);
-    await _prefs.setString(_keymSTO, userData['mSTO']);
-    await _prefs.setString(_keymWarehouse, userData['mChecker']);
+  Future<void> saveUserInfo(Map<String, dynamic>? userData) async {
+    await _prefs.setString(_keyUserId, userData?['user_id'] ?? '0');
+    await _prefs.setString(_keyNamaUser, userData?['Nama_User'] ?? 'Unknown');
+    await _prefs.setString(_keyDeptId, userData?['DeptId'] ?? 'Unknown');
+    await _prefs.setString(_keyDeptFullName, userData?['DeptFullName'] ?? 'Unknown');
+    await _prefs.setString(_keyDeptInisial, userData?['DeptInisial'] ?? 'Unknown');
+    await _prefs.setString(_keyNoAbsen, userData?['NoAbsen'] ?? '0');
+    await _prefs.setString(_keymAbsen, userData?['mAbsen'] ?? '0');
+    await _prefs.setString(_keymLeave, userData?['mLeave'] ?? '0');
+    await _prefs.setString(_keymOvt, userData?['mOvt'] ?? '0');
+    await _prefs.setString(_keymITCP, userData?['mITCP'] ?? '0');
+    await _prefs.setString(_keymTicket, userData?['mTicket'] ?? '0');
+    await _prefs.setString(_keymAppL, userData?['mAppL'] ?? '0');
+    await _prefs.setString(_keymAppO, userData?['mAppO'] ?? '0');
+    await _prefs.setString(_keymMCP, userData?['mMCP'] ?? '0');
+    await _prefs.setString(_keymSTO, userData?['mSTO'] ?? '0');
+    await _prefs.setString(_keymWarehouse, userData?['mChecker'] ?? '0');
   }
 
   String? getUserId() {
@@ -146,6 +146,16 @@ class SessionManager {
     _prefs.remove(_keyDeptFullName);
     _prefs.remove(_keyDeptInisial);
     _prefs.remove(_keyNoAbsen);
+    _prefs.remove(_keymAbsen);
+    _prefs.remove(_keymLeave);
+    _prefs.remove(_keymOvt);
+    _prefs.remove(_keymITCP);
+    _prefs.remove(_keymTicket);
+    _prefs.remove(_keymAppL);
+    _prefs.remove(_keymAppO);
+    _prefs.remove(_keymMCP);
+    _prefs.remove(_keymSTO);
+    _prefs.remove(_keymWarehouse);
     setLoggedIn(false);
   }
 }
