@@ -8,7 +8,7 @@ import 'pages/home_page.dart';
 import 'pages/nointernet_page.dart';
 import 'utils/session_manager.dart';
 import 'utils/globals.dart';
-import 'utils//firebase_options.dart';
+import 'utils/firebase_options.dart';
 import 'splash_screen.dart';
 
 void main() async {
