@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'app_colors.dart';
 import 'home_page.dart';
-import 'welcome_page.dart';
-import 'register_page.dart';
+import 'app_colors.dart';
 import '../controllers/login_controller.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
@@ -24,10 +22,29 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   String username = '';
   String password = '';
+  Locale _currentLocale = const Locale('en', 'US');
+
+  void _changeLanguage(Locale? newLocale) {
+    if (newLocale != null) {
+      setState(() {
+        _currentLocale = newLocale;
+        globalLanguage = newLocale; 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations(_currentLocale).translate("choose"), style: const TextStyle(color: AppColors.deepGreen)),
+        backgroundColor: Colors.white,
+        actions: <Widget>[
+          _buildLanguageDropdown(),
+        ],
+      ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -45,24 +62,8 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      globalLanguage = const Locale('en', 'US'); 
-                    });
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return const WelcomePage();
-                    }));
-                  },
-                  child: Image.asset(
-                    'assets/back.png',
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                const SizedBox(height: 20),
                 Text(
-                  AppLocalizations(globalLanguage).translate("welcome"),
+                  '${AppLocalizations(globalLanguage).translate("welcome")} !',
                   style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: AppLocalizations(globalLanguage).translate("enterUsername"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide.none,
                           ),
                         ),
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: AppLocalizations(globalLanguage).translate("enterPassword"),
                           contentPadding: const EdgeInsets.all(12),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide.none,
                           ),
                           suffixIcon: GestureDetector(
@@ -123,27 +124,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                          //   return ForgotPasswordPage();
-                          // }));
-                        },
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("forgotPassword"),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
+
                           if (formKey.currentState!.validate()) {
                             setState(() {
                               controller.isLoading = true;
@@ -200,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           elevation: 0,
                           primary: Colors.transparent,
@@ -219,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                               begin: Alignment(0.00, -1.00),
                               end: Alignment(0, 1),
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           child: Container(
                             constraints: const BoxConstraints(minHeight: 50, minWidth: 88),
@@ -234,105 +218,33 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    AppLocalizations(globalLanguage).translate("anotherLogin"),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle Google button press
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 20)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle Apple button press
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 20)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/apple.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 100),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations(globalLanguage).translate("dontHaveAccount"),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.deepGreen,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterPage(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        AppLocalizations(globalLanguage).translate("register"),
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLanguageDropdown() {
+    return DropdownButton<Locale>(
+      value: _currentLocale,
+      style: const TextStyle(color: AppColors.mainGreen), 
+      items: <DropdownMenuItem<Locale>>[
+        DropdownMenuItem(
+          value: const Locale('en', 'US'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageEn"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+        DropdownMenuItem(
+          value: const Locale('id', 'ID'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageId"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+        DropdownMenuItem(
+          value: const Locale('ko', 'KR'),
+          child: Text(AppLocalizations(_currentLocale).translate("languageKr"), style: const TextStyle(color: AppColors.mainGreen)),
+        ),
+      ],
+      onChanged: _changeLanguage, 
     );
   }
 }

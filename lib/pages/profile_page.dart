@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-import 'welcome_page.dart';
+import 'login_page.dart';
 import 'editprofile_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Card(
                       margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       color: AppColors.mainGreen,
                       child: Padding(
@@ -128,14 +128,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     Card(
                         margin: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         color: AppColors.grey,
                         child: FutureBuilder<List<AttendanceData>>(
                           future: controller.futureData,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const CircularProgressIndicator(); 
+                              return const CircularProgressIndicator(color: AppColors.mainGreen); 
                             } else if (snapshot.hasError) {
                               return const Text('No Data');
                             } else {
@@ -245,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(
-                                            builder: (context) => const WelcomePage()
+                                            builder: (context) => const LoginPage()
                                           )
                                       );
                                     },

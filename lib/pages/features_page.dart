@@ -575,7 +575,7 @@ class CardItem extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Container(
