@@ -182,6 +182,7 @@ class AppLocalizations {
       'finish' : "Finish",
       'barcodescanned': "Barcode Scanned",
       'stocklist' : "Stock List",
+      'stockform' : "Stock Form",
       'auditby' : "Audit By",
       'lotnumber' : "Lot Number",
       'namabarang' : "Item Name",
