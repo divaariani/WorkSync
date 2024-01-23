@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:get/get.dart';
 import 'package:worksync/controllers/stockopname_controller.dart';
 import 'refresh_page.dart';
 import '../utils/globals.dart';
@@ -28,8 +27,8 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   late DateTime currentTime;
   final SessionManager sessionManager = SessionManager();
   final idController = TextEditingController();
-  final hasilscanController = TextEditingController();
   final lokasiController = TextEditingController();
+  final hasilscanController = TextEditingController();
   String barcodeLokasiResult = globalBarcodeLokasiResult;
   String idInventory = '';
   String userid = "";
@@ -38,10 +37,10 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   void initState() {
     super.initState();
     _fetchUserId();
-    _fetchCurrentTime();
-    String hasilscan = widget.resultBarang.join('\n');
     lokasiController.text = barcodeLokasiResult;
+    String hasilscan = widget.resultBarang.join('\n');
     hasilscanController.text = hasilscan;
+    userid = sessionManager.getUserId() ?? '';
   }
 
   Future<void> _scanBarcode() async {
@@ -112,23 +111,12 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     setState(() {});
   }
 
-  Future<void> _fetchCurrentTime() async {
-    try {
-      setState(() {
-        currentTime = DateTime.now();
-      });
-    } catch (error) {
-      print(error);
-    }
-  }
-
   Future<void> _submitStock() async {
     final String lokasi = lokasiController.text;
     List<String> errorMessages = [];
     bool success = true;
 
     try {
-      await _fetchCurrentTime();
 
       for (String hasilscan in widget.resultBarang) {
         ResponseModel response = await StockOpnameController.postFormStock(
@@ -139,31 +127,19 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
 
         if (response.status == 1) {
           success = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RefreshStockTable()
-            ),
-          );
-
-          final snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                content: AwesomeSnackbarContent(
-                                  title: AppLocalizations(globalLanguage).translate("Stock Uploaded"),
-                                  message: AppLocalizations(globalLanguage).translate("Stocks successfully uploaded"),
-                                  contentType: ContentType.success,
-                                ),
-                              );
-
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
         } else if (response.status == 0) {
           errorMessages.add('Request gagal: ${response.message}');
         } else if (response.status != 1) {
           errorMessages.add('Terjadi kesalahan: Response tidak valid.');
+        }
+      }
+
+      if (success) {
+        print('Stock berhasil diupload');
+      } else {
+        print('Gagal mengupload Stock. Kesalahan:');
+        for (String errorMessage in errorMessages) {
+          print('- $errorMessage');
         }
       }
 
@@ -174,7 +150,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
           ),
         );
       } else {
-        Get.snackbar('Stock Berhasil Diupload', 'Congratulations');
+        // success upload
       }
 
       widget.resultBarang.clear();
@@ -359,115 +335,115 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     Visibility(
-  visible: widget.resultBarang.isNotEmpty,
-  child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            Container(
-              child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: widget.resultBarang.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = widget.resultBarang[index];
-                  return Column(
-                    children: [
-                      if (index == 0) const SizedBox(height: 22),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3),
-                            child: InkWell(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: AppColors.mainGrey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    content: Text(
-                                      AppLocalizations(globalLanguage)
-                                          .translate(
-                                              "suredelete $item?"),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          AppLocalizations(globalLanguage)
-                                              .translate("cancel"),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold,
+                      visible: widget.resultBarang.isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: ListView.builder(
+                                    physics: const ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: widget.resultBarang.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final item = widget.resultBarang[index];
+                                      return Column(
+                                        children: [
+                                          if (index == 0) const SizedBox(height: 22),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(3),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) => AlertDialog(
+                                                        backgroundColor: AppColors.mainGrey,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                        ),
+                                                        content: Text(
+                                                          AppLocalizations(globalLanguage)
+                                                              .translate(
+                                                                  "suredelete $item?"),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(globalLanguage)
+                                                                  .translate("cancel"),
+                                                              style: const TextStyle(
+                                                                color: Colors.grey,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                widget.resultBarang.removeAt(index);
+                                                              });
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(globalLanguage)
+                                                                  .translate("yes"),
+                                                              style: const TextStyle(
+                                                                color: Colors.red,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Image.asset(
+                                                    'assets/delete.png',
+                                                    width: 25,
+                                                    height: 25,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  item,
+                                                  textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                    color: AppColors.deepGreen,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.resultBarang.removeAt(index);
-                                          });
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          AppLocalizations(globalLanguage)
-                                              .translate("yes"),
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                          if (index == widget.resultBarang.length - 1)
+                                            const SizedBox(height: 22),
+                                        ],
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                              child: Image.asset(
-                                'assets/delete.png',
-                                width: 25,
-                                height: 25,
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              item,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                color: AppColors.deepGreen,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      if (index == widget.resultBarang.length - 1)
-                        const SizedBox(height: 22),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
+                    ),
 
                   ],
                 ),

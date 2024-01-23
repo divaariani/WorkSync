@@ -186,24 +186,15 @@ class _StockManualPageState extends State<StockManualPage> {
 
                           return Column(
                             children: [
-                              if (index == 0) const SizedBox(height: 16),
                               buildLotNumberCard(lotNumber),
                               if (index < listLength - 1) const SizedBox(height: 8),
                               if (index == listLength - 1)
-                                const SizedBox(height: 48),
+                                const SizedBox(height: 16),
                             ],
                           );
                         }).toList(),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 16,
-                left: 0,
-                right: 0,
-                child: Row(
+                      Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -290,6 +281,9 @@ class _StockManualPageState extends State<StockManualPage> {
                     ),
                   ],
                 ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 30),
             ],
@@ -312,7 +306,7 @@ class _StockManualPageState extends State<StockManualPage> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
+                  padding: const EdgeInsets.only(left: 16, right: 6),
                   child: TextFormField(
                     onChanged: (value) {
                       setState(() {
@@ -329,6 +323,7 @@ class _StockManualPageState extends State<StockManualPage> {
               ),
               const Spacer(),
               Image.asset('assets/fill.png', height: 24, width: 24),
+              const SizedBox(width: 10)
             ],
           ),
         ),
