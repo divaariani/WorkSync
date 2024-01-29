@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-import 'refresh_page.dart';
 import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
@@ -34,21 +33,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveChanges() async {
-    await Future.delayed(const Duration(seconds: 1));
-    await SessionManager().setTheme(currentTheme);
-    await SessionManager().setLanguage(currentLocale);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const RefreshHomepage(),
-      ),
-    );
-
     setState(() {
       globalLanguage = currentLocale;
       globalTheme = currentTheme;
     });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      ),
+    );
+    
+    await Future.delayed(const Duration(seconds: 1));
+    await SessionManager().setTheme(currentTheme);
+    await SessionManager().setLanguage(currentLocale);
   }
 
   @override
