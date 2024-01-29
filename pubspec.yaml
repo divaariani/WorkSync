@@ -57,4 +57,3 @@ flutter:
   assets:
     - assets/
     - assets/mobilefacenet.tflite
-    - assets/worksync.png
