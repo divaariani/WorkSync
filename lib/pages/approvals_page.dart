@@ -4,7 +4,6 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
-import 'nodata_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
