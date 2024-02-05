@@ -44,38 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDQeRYkhibV31XIfAKYTWKpgEli1zy3KG0',
-    appId: '1:566817271141:web:16768fdb7f1801c97c058c',
-    messagingSenderId: '566817271141',
-    projectId: 'addon2-622ba',
-    authDomain: 'addon2-622ba.firebaseapp.com',
-    storageBucket: 'addon2-622ba.appspot.com',
+    apiKey: 'AIzaSyC2xvEtA7qOmkptlzQlWfhXZ_D4NpRv6ck',
+    appId: '1:867819750191:android:9f912d528a3bf6bc7ad7da',
+    messagingSenderId: '867819750191',
+    projectId: 'sisap-ptski',
+    authDomain: 'sisap-ptski.appspot.com',
+    storageBucket: 'sisap-ptski.appspot.com',
     measurementId: 'G-8CGVFBC4GV',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCWsPbs3boa1b93DWaMu6JtYxaMBmv5F_A',
-    appId: '1:566817271141:android:cf045e8bf9f0a8d67c058c',
-    messagingSenderId: '566817271141',
-    projectId: 'addon2-622ba',
-    storageBucket: 'addon2-622ba.appspot.com',
+    apiKey: 'AIzaSyDSMCfO05VAAALzhiKOJIK6lbw74pIgF4o',
+    appId: '1:58992226470:android:1ffb7858ad4ea387f80467',
+    messagingSenderId: '58992226470',
+    projectId: 'sisap-ski',
+    storageBucket: 'sisap-ski.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC0_pMv6F9ibZfMaEiV2zJbu6aQquJr9uk',
-    appId: '1:566817271141:ios:3850b6863bf24a087c058c',
-    messagingSenderId: '566817271141',
-    projectId: 'addon2-622ba',
-    storageBucket: 'addon2-622ba.appspot.com',
-    iosBundleId: 'com.example.worksync',
+    apiKey: 'AIzaSyA87XmEvRD-Uf20z65alMhdz1YaFrhAQ8E',
+    appId: '1:58992226470:ios:bf3064aa82c9d21ef80467',
+    messagingSenderId: '58992226470',
+    projectId: 'sisap-ski',
+    storageBucket: 'sisap-ski.appspot.com',
+    iosBundleId: 'com.ski.sisap',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC0_pMv6F9ibZfMaEiV2zJbu6aQquJr9uk',
-    appId: '1:566817271141:ios:7828657bfb6636247c058c',
-    messagingSenderId: '566817271141',
-    projectId: 'addon2-622ba',
-    storageBucket: 'addon2-622ba.appspot.com',
-    iosBundleId: 'com.example.worksync.RunnerTests',
+    apiKey: 'AIzaSyA87XmEvRD-Uf20z65alMhdz1YaFrhAQ8E',
+    appId: '1:58992226470:ios:bf3064aa82c9d21ef80467',
+    messagingSenderId: '58992226470',
+    projectId: 'sisap-ski',
+    storageBucket: 'sisap-ski.appspot.com',
+    iosBundleId: 'com.ski.sisap.RunnerTests',
   );
 }
