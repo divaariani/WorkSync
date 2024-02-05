@@ -16,7 +16,6 @@ class StockLokasiScan extends StatefulWidget {
 }
 
 class _StockLokasiScanState extends State<StockLokasiScan> {
-  String _barcodeLokasiResult = '';
 
   Future<void> _scanBarcode() async {
     String barcodeLokasiResult = await FlutterBarcodeScanner.scanBarcode(
@@ -34,17 +33,13 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
       return;
     }
 
-    setState(() {
-      _barcodeLokasiResult = barcodeLokasiResult;
-    });
-
     setGlobalBarcodeLokasiResult(barcodeLokasiResult);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            StockLokasiPage(result: barcodeLokasiResult, resultBarang: [],),
+            StockLokasiPage(),
       ),
     );
   }

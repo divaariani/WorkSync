@@ -227,13 +227,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20), 
                                 ),
-                                content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
+                                content: Text(AppLocalizations(globalLanguage).translate("sureLogOut")),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(); 
                                     },
-                                    child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
+                                    child: Text(AppLocalizations(globalLanguage).translate("cancel"), 
                                       style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                                   ),
                                   TextButton(
@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           )
                                       );
                                     },
-                                    child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
+                                    child: Text(AppLocalizations(globalLanguage).translate("yes"), 
                                       style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
                                   ),
                                 ],

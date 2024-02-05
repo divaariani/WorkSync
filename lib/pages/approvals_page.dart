@@ -4,6 +4,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
+import 'nodata_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -156,9 +157,9 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)));
                             } else if (snapshot.hasError) {
-                              return Center(child: Text(AppLocalizations(globalLanguage).translate("noDataa"),));
+                              return Text(AppLocalizations(globalLanguage).translate("noDataa"));
                             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return Center(child: Text(AppLocalizations(globalLanguage).translate("noDataa"),));
+                              return Text(AppLocalizations(globalLanguage).translate("noDataa"));
                             } else {
                               List<OvertimeData> overtimeList = snapshot.data ?? [];
 
@@ -463,7 +464,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 );
                               } else if (snapshot.hasError) {
-                                return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
+                                return Text(AppLocalizations(globalLanguage).translate("noDataa"));
                               } else {
                                 List<DatumApproveListLeave> approvedLeave = snapshot.data?.data ?? [];
 

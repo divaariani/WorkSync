@@ -37,7 +37,7 @@ class _WarehouseScanPageState extends State<WarehouseScanPage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            WarehouseBarcodesPage(result: barcodeMobilResult, resultBarang: []),
+            WarehouseBarcodesPage(),
       ),
     );
   }
@@ -58,10 +58,7 @@ class _WarehouseScanPageState extends State<WarehouseScanPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const WarehousePage()),
-            );
+            Navigator.of(context).pop();
           },
         ),
       ),

@@ -41,12 +41,6 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  WarehouseBarcodesPage(result: '', resultBarang: [])),
-        );
         return false;
       },
       child: Scaffold(
@@ -64,18 +58,12 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
             backgroundColor:
                 globalTheme == 'Light Theme' ? Colors.white : Colors.black,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back,
-                  color: globalTheme == 'Light Theme'
-                      ? AppColors.deepGreen
-                      : Colors.white),
+              icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => WarehouseBarcodesPage(
-                            result: '',
-                            resultBarang: [],
-                          )),
+                      builder: (context) => const WarehouseBarcodesPage()),
                 );
               },
             ),
@@ -186,103 +174,95 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
                           );
                         }).toList(),
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, AppColors.lightGreen],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () async {
+                                addCard();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("+"),
+                                  style: const TextStyle(
+                                    color: AppColors.deepGreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, AppColors.lightGreen],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () async {
+                                globalBarcodeGudangResults.addAll(lotNumbers.where((lot) => lot.isNotEmpty));
+
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const WarehouseBarcodesPage(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("save"),
+                                  style: const TextStyle(
+                                    color: AppColors.deepGreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 16,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          addCard();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 30),
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("+"),
-                            style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          globalBarcodeGudangResults.addAll(lotNumbers.where((lot) => lot.isNotEmpty));
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WarehouseBarcodesPage(
-                                result: '',
-                                resultBarang: globalBarcodeGudangResults,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("save"),
-                            style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
             ],
-          )),
+          )
+      ),
     );
   }
 

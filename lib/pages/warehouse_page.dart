@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'home_page.dart';
 import 'warehousescan_page.dart';
 import 'waremobilmanual_page.dart';
+import 'warehousebarcodes_page.dart';
 import 'app_colors.dart';
 import '../controllers/warehouse_controller.dart';
 import '../utils/session_manager.dart';
@@ -427,7 +428,8 @@ class _CardTableState extends State<CardTable> {
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () async {
-                  showDialog(
+                  if (globalBarcodeGudangResults.isEmpty) {
+                    showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
@@ -477,7 +479,7 @@ class _CardTableState extends State<CardTable> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 30),
+                                      const SizedBox(height: 20),
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20),
@@ -525,6 +527,14 @@ class _CardTableState extends State<CardTable> {
                                 );
                               },
                             );
+                  } else {
+                    Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WarehouseBarcodesPage(),
+                            ),
+                          );
+                  }
                 },
                 child: Container(
                   height: 60,
@@ -694,7 +704,7 @@ class _CardTableState extends State<CardTable> {
                                     AppLocalizations(globalLanguage).translate("exportexcel"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
-                                      fontSize: 12,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

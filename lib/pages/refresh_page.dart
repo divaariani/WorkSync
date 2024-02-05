@@ -203,7 +203,7 @@ class _RefreshStockTableState extends State<RefreshStockTable> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const StockOpnamePage(),

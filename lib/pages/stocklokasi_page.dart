@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:worksync/controllers/stockopname_controller.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'stocklokasiscan_page.dart';
+import 'app_colors.dart';
+import 'stockopname_page.dart';
+import 'stockmanual_page.dart';
 import 'refresh_page.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
-import 'app_colors.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../utils/localizations.dart';
 import '../controllers/response_model.dart';
-import 'stockopname_page.dart';
-import 'stockmanual_page.dart';
+import '../controllers/stockopname_controller.dart';
 
 class StockLokasiPage extends StatefulWidget {
-  String result;
-  List<String> resultBarang;
 
-  StockLokasiPage({required this.result, required this.resultBarang, Key? key})
-      : super(key: key);
+  const StockLokasiPage({Key? key}) : super(key: key);
 
   @override
   State<StockLokasiPage> createState() => _StockLokasiPageState();
@@ -36,11 +34,18 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _fetchUserId();
     lokasiController.text = barcodeLokasiResult;
-    String hasilscan = widget.resultBarang.join('\n');
+    String hasilscan = globalBarcodeBarangResults.join('\n');
     hasilscanController.text = hasilscan;
     userid = sessionManager.getUserId() ?? '';
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    super.dispose();
   }
 
   Future<void> _scanBarcode() async {
@@ -98,10 +103,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StockLokasiPage(
-          result: '',
-          resultBarang: globalBarcodeBarangResults,
-        ),
+        builder: (context) => const StockLokasiPage(),
       ),
     );
   }
@@ -118,7 +120,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
 
     try {
 
-      for (String hasilscan in widget.resultBarang) {
+      for (String hasilscan in globalBarcodeBarangResults) {
         ResponseModel response = await StockOpnameController.postFormStock(
           hasilscan: hasilscan,
           lokasi: lokasi,
@@ -153,9 +155,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
         // success upload
       }
 
-      widget.resultBarang.clear();
+      globalBarcodeBarangResults.clear();
       setState(() {
-        widget.resultBarang = [];
+        globalBarcodeBarangResults = [];
       });
     } catch (e) {
       print('Terjadi kesalahan: $e');
@@ -171,10 +173,6 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const StockOpnamePage()),
-        );
         return false;
       },
       child: Scaffold(
@@ -221,30 +219,65 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/stocklokasi.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                barcodeLokasiResult,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style:
-                                    const TextStyle(color: AppColors.deepGreen),
+                    GestureDetector(
+                      onTap: (){
+                        showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: AppColors.mainGrey, 
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20), 
+                                ),
+                                content: Text(AppLocalizations(globalLanguage).translate("Apakah Anda ingin mengganti kode lokasi?")),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); 
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("cancel"), 
+                                      style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const StockLokasiScan(),
+                                          ),
+                                        );
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("yes"), 
+                                      style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            );
+                      },
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Image.asset('assets/stocklokasi.png', height: 24, width: 24),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  barcodeLokasiResult,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      const TextStyle(color: AppColors.deepGreen),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -260,7 +293,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                     Container(
                       alignment: Alignment.bottomCenter,
                       child: Visibility(
-                        visible: widget.resultBarang.isEmpty,
+                        visible: globalBarcodeBarangResults.isEmpty,
                         child: InkWell(
                           onTap: () async {
                             showDialog(
@@ -335,7 +368,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.resultBarang.isNotEmpty,
+                      visible: globalBarcodeBarangResults.isNotEmpty,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
                         child: Container(
@@ -351,9 +384,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                   child: ListView.builder(
                                     physics: const ClampingScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: widget.resultBarang.length,
+                                    itemCount: globalBarcodeBarangResults.length,
                                     itemBuilder: (BuildContext context, int index) {
-                                      final item = widget.resultBarang[index];
+                                      final item = globalBarcodeBarangResults[index];
                                       return Column(
                                         children: [
                                           if (index == 0) const SizedBox(height: 22),
@@ -372,9 +405,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                                           borderRadius: BorderRadius.circular(20),
                                                         ),
                                                         content: Text(
-                                                          AppLocalizations(globalLanguage)
-                                                              .translate(
-                                                                  "suredelete $item?"),
+                                                          '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
                                                         ),
                                                         actions: [
                                                           TextButton(
@@ -382,8 +413,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                                               Navigator.of(context).pop();
                                                             },
                                                             child: Text(
-                                                              AppLocalizations(globalLanguage)
-                                                                  .translate("cancel"),
+                                                              AppLocalizations(globalLanguage).translate("cancel"),
                                                               style: const TextStyle(
                                                                 color: Colors.grey,
                                                                 fontWeight: FontWeight.bold,
@@ -393,7 +423,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                                           TextButton(
                                                             onPressed: () {
                                                               setState(() {
-                                                                widget.resultBarang.removeAt(index);
+                                                                globalBarcodeBarangResults.removeAt(index);
                                                               });
                                                               Navigator.of(context).pop();
                                                             },
@@ -431,7 +461,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                               ),
                                             ],
                                           ),
-                                          if (index == widget.resultBarang.length - 1)
+                                          if (index == globalBarcodeBarangResults.length - 1)
                                             const SizedBox(height: 22),
                                         ],
                                       );
@@ -450,11 +480,11 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
               ),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeBarangResults.isNotEmpty,
               child: const SizedBox(height: 20),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeBarangResults.isNotEmpty,
               child: Positioned(
                 bottom: 20.0,
                 left: 0.0,

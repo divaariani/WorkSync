@@ -142,10 +142,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
 
                             Navigator.pushReplacement(
                               context, MaterialPageRoute(
-                                builder: (context) => WarehouseBarcodesPage(
-                                  result: '',
-                                  resultBarang: []
-                                )
+                                builder: (context) => const WarehouseBarcodesPage()
                               ),
                             );
                           },

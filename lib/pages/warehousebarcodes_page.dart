@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'refresh_page.dart';
 import 'app_colors.dart';
 import 'warehouse_page.dart';
+import 'warehousescan_page.dart';
+import 'waremobilmanual_page.dart';
 import 'warehousemanual_page.dart';
 import '../controllers/warehouse_controller.dart';
 import '../controllers/response_model.dart';
@@ -13,10 +16,8 @@ import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 
 class WarehouseBarcodesPage extends StatefulWidget {
-  String result;
-  List<String> resultBarang;
 
-  WarehouseBarcodesPage({required this.result, required this.resultBarang, Key? key}) : super(key: key);
+  const WarehouseBarcodesPage({Key? key}) : super(key: key);
 
   @override
   State<WarehouseBarcodesPage> createState() => _WarehouseBarcodesPageState();
@@ -31,10 +32,17 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
   @override
   void initState() {
     super.initState();
-    String hasilscan = widget.resultBarang.join('\n');
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    String hasilscan = globalBarcodeGudangResults.join('\n');
     mobilController.text = globalBarcodeMobilResult;
     hasilscanController.text = hasilscan;
     userid = sessionManager.getUserId() ?? '';
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    super.dispose();
   }
 
   Future<void> _scanBarcode() async {
@@ -65,7 +73,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
           return AlertDialog(
             contentPadding: EdgeInsets.all(16),
             title: Center(
-              child: CircularProgressIndicator(color: AppColors.deepGreen)
+              child: CircularProgressIndicator(color: AppColors.deepGreen),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -79,7 +87,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
               ],
             ),
           );
-        },
+        }
       );
 
       if (!finishScanning) {
@@ -92,10 +100,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WarehouseBarcodesPage(
-          result: '',
-          resultBarang: globalBarcodeGudangResults,
-        ),
+        builder: (context) => const WarehouseBarcodesPage(),
       ),
     );
   }
@@ -107,7 +112,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
 
     try {
 
-      for (String hasilscan in widget.resultBarang) {
+      for (String hasilscan in globalBarcodeGudangResults) {
         ResponseModel response = await WarehouseController.postGudangOut(
           hasilscan: hasilscan,
           mobil: mobil,
@@ -142,9 +147,9 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
         // success upload
       }
 
-      widget.resultBarang.clear();
+      globalBarcodeGudangResults.clear();
       setState(() {
-        widget.resultBarang = [];
+        globalBarcodeGudangResults = [];
       });
     } catch (e) {
       print('Terjadi kesalahan: $e');
@@ -160,10 +165,6 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const WarehousePage()),
-        );
         return false;
       },
       child: Scaffold(
@@ -185,7 +186,6 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                 MaterialPageRoute(
                     builder: (context) => const WarehousePage()),
               );
-              globalBarcodeGudangResults.clear();
             },
           ),
         ),
@@ -214,29 +214,132 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/mobil.png', height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                globalBarcodeMobilResult,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style:
-                                    const TextStyle(color: AppColors.deepGreen),
+                    GestureDetector(
+                      onTap: (){
+                        showDialog( context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  contentPadding: const EdgeInsets.all(30),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(AppLocalizations(globalLanguage).translate("Apakah Anda ingin mengganti kode truk?")),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          gradient: const LinearGradient(
+                                            colors: [Colors.white, AppColors.lightGreen],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context, MaterialPageRoute(
+                                                  builder: (context) => const WarehouseScanPage()),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations(globalLanguage).translate("scanbarcode"),
+                                                  style: const TextStyle(
+                                                    color: AppColors.deepGreen,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          gradient: const LinearGradient(
+                                            colors: [Colors.white, AppColors.lightGreen],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context, MaterialPageRoute(
+                                                  builder: (context) => const MobilManualPage()),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations(globalLanguage).translate("entermanually"),
+                                                  style: const TextStyle(
+                                                    color: AppColors.deepGreen,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                          );
+                      },
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Image.asset('assets/mobil.png', height: 24, width: 24),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  globalBarcodeMobilResult,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      const TextStyle(color: AppColors.deepGreen),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -252,7 +355,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                     Container(
                       alignment: Alignment.bottomCenter,
                       child: Visibility(
-                        visible: widget.resultBarang.isEmpty,
+                        visible: globalBarcodeGudangResults.isEmpty,
                         child: InkWell(
                           onTap: () async {
                             showDialog(
@@ -303,7 +406,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 30),
+                                      const SizedBox(height: 20),
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20),
@@ -396,7 +499,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.resultBarang.isNotEmpty,
+                      visible: globalBarcodeGudangResults.isNotEmpty,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
                         child: Container(
@@ -412,9 +515,9 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                   child: ListView.builder(
                                     physics: const ClampingScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: widget.resultBarang.length,
+                                    itemCount: globalBarcodeGudangResults.length,
                                     itemBuilder: (BuildContext context, int index) {
-                                      final item = widget.resultBarang[index];
+                                      final item = globalBarcodeGudangResults[index];
                                       return Column(
                                         children: [
                                           if (index == 0) const SizedBox(height: 22),
@@ -433,9 +536,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                                           borderRadius: BorderRadius.circular(20),
                                                         ),
                                                         content: Text(
-                                                          AppLocalizations(globalLanguage)
-                                                              .translate(
-                                                                  "suredelete $item?"),
+                                                          '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
                                                         ),
                                                         actions: [
                                                           TextButton(
@@ -443,8 +544,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                                               Navigator.of(context).pop();
                                                             },
                                                             child: Text(
-                                                              AppLocalizations(globalLanguage)
-                                                                  .translate("cancel"),
+                                                              AppLocalizations(globalLanguage).translate("cancel"),
                                                               style: const TextStyle(
                                                                 color: Colors.grey,
                                                                 fontWeight: FontWeight.bold,
@@ -454,7 +554,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                                           TextButton(
                                                             onPressed: () {
                                                               setState(() {
-                                                                widget.resultBarang.removeAt(index);
+                                                                globalBarcodeGudangResults.removeAt(index);
                                                               });
                                                               Navigator.of(context).pop();
                                                             },
@@ -492,7 +592,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                               ),
                                             ],
                                           ),
-                                          if (index == widget.resultBarang.length - 1)
+                                          if (index == globalBarcodeGudangResults.length - 1)
                                             const SizedBox(height: 22),
                                         ],
                                       );
@@ -505,17 +605,16 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeGudangResults.isNotEmpty,
               child: const SizedBox(height: 20),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeGudangResults.isNotEmpty,
               child: Positioned(
                 bottom: 20.0,
                 left: 0.0,
@@ -590,7 +689,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 30),
+                                      const SizedBox(height: 20),
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20),

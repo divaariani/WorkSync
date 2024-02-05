@@ -52,7 +52,7 @@ class _StockManualPageState extends State<StockManualPage> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  StockLokasiPage(result: '', resultBarang: [])),
+                  const StockLokasiPage()),
         );
         return false;
       },
@@ -79,10 +79,7 @@ class _StockManualPageState extends State<StockManualPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => StockLokasiPage(
-                            result: '',
-                            resultBarang: [],
-                          )),
+                      builder: (context) => const StockLokasiPage()),
                 );
               },
             ),
@@ -195,99 +192,95 @@ class _StockManualPageState extends State<StockManualPage> {
                         }).toList(),
                       ),
                       Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          addCard();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 30),
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("+"),
-                            style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, AppColors.lightGreen],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          globalBarcodeBarangResults.addAll(
-                              lotNumbers.where((lot) => lot.isNotEmpty));
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StockLokasiPage(
-                                result: '',
-                                resultBarang: globalBarcodeBarangResults,
+                            child: InkWell(
+                              onTap: () async {
+                                addCard();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 30),
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("+"),
+                                  style: const TextStyle(
+                                    color: AppColors.deepGreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 30),
-                          child: Text(
-                            AppLocalizations(globalLanguage).translate("save"),
-                            style: const TextStyle(
-                              color: AppColors.deepGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, AppColors.lightGreen],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () async {
+                                globalBarcodeBarangResults.addAll(lotNumbers.where((lot) => lot.isNotEmpty));
+
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const StockLokasiPage(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                                child: Text(
+                                  AppLocalizations(globalLanguage).translate("save"),
+                                  style: const TextStyle(
+                                    color: AppColors.deepGreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
             ],
-          )),
+          )
+        ),
     );
   }
 
