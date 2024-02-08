@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:worksync/pages/warehouse_page.dart';
+import 'machinemonitoring_page.dart';
+import 'machinestatus_page.dart';
+import 'machineoperatorscan_page.dart';
+import 'warehouse_page.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
@@ -478,6 +481,169 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   },
                 ),
                 CardItem(
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/machine.png',
+                  title: AppLocalizations(globalLanguage).translate("Machine"),
+                  onTap: () {
+                    if (actorWarehouse == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const MachinePage()),
+                      // );
+                      showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                          side: const BorderSide(
+                                              color: AppColors.mainGreen,
+                                              width: 2),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                          const MachineOperatorScanPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.presensi.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Operator Attendance',
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MachineStatusPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.mesin.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Machine Status',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MachineMonitoringPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.monitoring.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Production Monitoring',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) {
+                                    if (value != null) {
+                                      print(value);
+                                    }
+                                  });
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("machineFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
+                CardItem(
                   color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/opname.png',
                   title: AppLocalizations(globalLanguage).translate("stockopname"),
@@ -505,9 +671,71 @@ class _FeaturesPageState extends State<FeaturesPage> {
                     }
                   },
                 ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CardItem(
+                  color: actorTicketing == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/productreport.png',
+                  title: AppLocalizations(globalLanguage).translate("Report"),
+                  onTap: () {
+                    if (actorTicketing == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const ReportPage()),
+                      // );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("reportFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    } 
+                  },
+                ),
+                CardItem(
+                  color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/warehouse.png',
+                  title: AppLocalizations(globalLanguage).translate("Warehouse"),
+                  onTap: () {
+                    if (actorAuditor == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const WarehouseInPage()),
+                      // );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("warehouseInFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
                 CardItem(
                   color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
-                  imagePath: 'assets/warehouse.png',
+                  imagePath: 'assets/dopicking.png',
                   title: AppLocalizations(globalLanguage).translate("doPicking"),
                   onTap: () {
                     if (actorWarehouse == '1') {
