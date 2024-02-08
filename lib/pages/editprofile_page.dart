@@ -15,6 +15,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   String currentTheme = globalTheme;
   Locale currentLocale = globalLanguage;
+  bool isLoading = false;
   
   void _changeTheme(String? newTheme) {
     if (newTheme != null) {
@@ -34,20 +35,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _saveChanges() async {
     setState(() {
-      globalLanguage = currentLocale;
-      globalTheme = currentTheme;
+      isLoading = true;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
-      ),
-    );
-    
-    await Future.delayed(const Duration(seconds: 1));
-    await SessionManager().setTheme(currentTheme);
-    await SessionManager().setLanguage(currentLocale);
+    try {
+      setState(() {
+        globalLanguage = currentLocale;
+        globalTheme = currentTheme;
+        SessionManager().setTheme(globalTheme);
+        SessionManager().setLanguage(globalLanguage);
+      });
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -200,15 +213,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
-                            child: Text(
-                              AppLocalizations(globalLanguage).translate("save"),
-                              style: const TextStyle(
-                                color: AppColors.deepGreen,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: isLoading
+                                ? const CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.deepGreen),
+                                  )
+                                : Text(
+                                    AppLocalizations(globalLanguage).translate("save"),
+                                    style: const TextStyle(
+                                      color: AppColors.deepGreen,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                             ),
-                          ),
                         ),
                       ),
                     )
@@ -217,8 +234,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 

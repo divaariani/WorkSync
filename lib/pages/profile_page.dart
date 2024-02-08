@@ -179,8 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                             setState(() {
                                               if (globalTheme == 'Light Theme') {
                                                 globalTheme = 'Dark Theme';
+                                                SessionManager().setTheme(globalTheme);
                                               } else {
                                                 globalTheme = 'Light Theme';
+                                                SessionManager().setTheme(globalTheme);
                                               }
                                             });
                                             

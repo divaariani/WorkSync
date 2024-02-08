@@ -28,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
     if (newLocale != null) {
       setState(() {
         _currentLocale = newLocale;
-        globalLanguage = newLocale; 
+        globalLanguage = newLocale;
+        SessionManager().setLanguage(globalLanguage);
       });
     }
   }
