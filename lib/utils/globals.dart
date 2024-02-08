@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 const String apiBaseUrl = '{API}';
 const String apiBaseUrl2 = '{API}';
+const String apiBaseUrl3 = '{API}';
 String globalLat = '';
 String globalLong = '';
 String globalLocationName = '';
@@ -16,6 +17,7 @@ String globalBarcodeBarangResult = '';
 String globalBarcodeGudangResult = '';
 String globalBarcodeCheckpointResult = ''; 
 String globalBarcodeScanLokasiResult = '';
+String globalBarcodeMesinResult = '';
 List<String> globalBarcodeBarangResults = [];
 List<String> globalBarcodeGudangResults = [];
 List<String> globalBarcodeCheckpointResults = [];
@@ -38,4 +40,8 @@ void setGlobalBarcodeMobilResult(String barcodeMobilResult) {
 
 void setGlobalBarcodeGudangResult(String barcodeGudangResult) { 
   globalBarcodeGudangResult = barcodeGudangResult;
+}
+
+void setGlobalBarcodeResult(String barcodeMachineResult) {
+  globalBarcodeMesinResult = barcodeMachineResult;
 }
