@@ -32,7 +32,7 @@ android {
         disable 'InvalidPackage'
     }
 
-    namespace "com.example.sisap"
+    namespace "com.example.worksync"
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.sisap"
+        applicationId "com.example.worksync"
         minSdkVersion 26
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
