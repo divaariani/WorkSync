@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as imglib;
+import 'package:flutter/material.dart';
 
 typedef HandleDetection = Future<dynamic> Function(InputImage image);
 enum Choice { view, delete }
@@ -17,29 +18,29 @@ Future<CameraDescription> getCamera(CameraLensDirection dir) async {
   );
 }
 
-InputImageData buildMetaData(
+InputImage buildMetaData(
   CameraImage image,
   InputImageRotation rotation,
 ) {
-  return InputImageData(
-    size: Size(image.width.toDouble(), image.height.toDouble()),
-    imageRotation: rotation,
-    inputImageFormat: InputImageFormatMethods.fromRawValue(image.format.raw) ??
-        InputImageFormat.NV21,
-    planeData: image.planes.map(
-      (Plane plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: plane.height,
-          width: plane.width,
-        );
-      },
-    ).toList(),
+  Uint8List concatenatedBytes = Uint8List(image.planes.fold(0, (prev, plane) => prev + plane.bytes.length));
+  int offset = 0;
+  for (Plane plane in image.planes) {
+    concatenatedBytes.setRange(offset, offset + plane.bytes.length, plane.bytes);
+    offset += plane.bytes.length;
+  }
+
+  return InputImage.fromBytes(
+    bytes: concatenatedBytes, 
+    metadata: InputImageMetadata(
+      size: Size(image.width.toDouble(), image.height.toDouble()),
+      rotation: rotation,
+      format: InputImageFormat.nv21,
+      bytesPerRow: image.planes[0].bytesPerRow,
+    ),
   );
 }
 
-Future<dynamic> detect(
-    CameraImage image, HandleDetection handleDetection) async {
+Future<dynamic> detect(CameraImage image, HandleDetection handleDetection) async {
   try {
     CameraDescription description = await getCamera(CameraLensDirection.front);
     InputImageRotation rotation = rotationIntToImageRotation(
@@ -47,10 +48,7 @@ Future<dynamic> detect(
     );
 
     return handleDetection(
-      InputImage.fromBytes(
-        bytes: image.planes[0].bytes,
-        inputImageData: buildMetaData(image, rotation),
-      ),
+      buildMetaData(image, rotation),
     );
   } catch (e) {
     print({'detect': e});
@@ -60,19 +58,18 @@ Future<dynamic> detect(
 InputImageRotation rotationIntToImageRotation(int rotation) {
   switch (rotation) {
     case 0:
-      return InputImageRotation.Rotation_0deg;
+      return InputImageRotation.rotation0deg;
     case 90:
-      return InputImageRotation.Rotation_90deg;
+      return InputImageRotation.rotation90deg;
     case 180:
-      return InputImageRotation.Rotation_180deg;
+      return InputImageRotation.rotation180deg;
     default:
       assert(rotation == 270);
-      return InputImageRotation.Rotation_270deg;
+      return InputImageRotation.rotation270deg;
   }
 }
 
-Float32List imageToByteListFloat32(
-    imglib.Image image, int inputSize, double mean, double std) {
+Float32List imageToByteListFloat32(imglib.Image image, int inputSize, double mean, double std) {
   var convertedBytes = Float32List(1 * inputSize * inputSize * 3);
   var buffer = Float32List.view(convertedBytes.buffer);
   int pixelIndex = 0;
