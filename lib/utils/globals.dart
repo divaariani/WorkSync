@@ -14,8 +14,10 @@ String globalBarcodeLokasiResult = '';
 String globalBarcodeBarangResult = '';
 String globalBarcodeCheckpointResult = ''; 
 String globalBarcodeScanLokasiResult = '';
+String globalBarcodeBarangqcResult = ''; 
 List<String> globalBarcodeBarangResults = [];
 List<String> globalBarcodeCheckpointResults = [];
+List<String> globalBarcodeBarangQcResults = []; 
 
 void setGlobalBarcodeLokasiResult(String barcodeStockResult){
   globalBarcodeLokasiResult = barcodeStockResult;
@@ -27,4 +29,8 @@ void setGlobalBarcodeBarangResult(String barcodeBarangResult) {
 
 void setGlobalBarcodeCheckpointResult(String barcodeCheckpointResult) {
   globalBarcodeCheckpointResult = barcodeCheckpointResult;
+}
+
+void setGlobalBarcodeBarangqcResult(String barcodeBarangqcResult) {
+  globalBarcodeBarangqcResult = barcodeBarangqcResult;
 }
