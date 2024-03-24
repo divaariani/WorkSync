@@ -5,6 +5,7 @@ import 'app_colors.dart';
 import 'facerecognition_page.dart';
 import 'faceregister_page.dart';
 import 'refresh_page.dart';
+import 'home_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -43,8 +44,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Not Registered"),
-            message: AppLocalizations(globalLanguage).translate("You should register your face 3 times!"),
+            title: AppLocalizations(globalLanguage).translate("notRegistered"),
+            message: AppLocalizations(globalLanguage).translate("notRegistered3More"),
             contentType: ContentType.warning,
           ),
         );
@@ -64,8 +65,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 2 more times!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register2More"),
             contentType: ContentType.warning,
           ),
         );
@@ -85,8 +86,8 @@ class _DashboardPageState extends State<DashboardPage> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 1 more time!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register1More"),
             contentType: ContentType.warning,
           ),
         );
@@ -115,7 +116,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      AppLocalizations(globalLanguage).translate("Attention!"),
+                      AppLocalizations(globalLanguage).translate("attention"),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,
@@ -125,7 +126,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      AppLocalizations(globalLanguage).translate("1. Ensure that you are close to the Attendance Area / Finished Products Warehouse Area."),
+                      AppLocalizations(globalLanguage).translate("makeSureLocation"),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 14,
@@ -134,7 +135,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      AppLocalizations(globalLanguage).translate("2. Make sure you are in a well-lit environment for effective face detection."),
+                      AppLocalizations(globalLanguage).translate("makeSureCamera"),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 14,
@@ -150,7 +151,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                      AppLocalizations(globalLanguage).translate("Cancel"),
+                      AppLocalizations(globalLanguage).translate("cancel"),
                       style: const TextStyle(
                           color: Colors.grey, fontWeight: FontWeight.bold)),
                 ),
@@ -163,7 +164,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     );
                   },
-                  child: Text(AppLocalizations(globalLanguage).translate("Yes"),
+                  child: Text(AppLocalizations(globalLanguage).translate("yes"),
                       style: const TextStyle(
                           color: AppColors.mainGreen,
                           fontWeight: FontWeight.bold)),
@@ -235,7 +236,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           color: AppColors.mainGreen,
                           width: 3,
                         ),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
                         children: [
@@ -267,9 +268,27 @@ class _DashboardPageState extends State<DashboardPage> {
                   future: controller.futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularProgressIndicator(color: AppColors.mainGreen);
                     } else if (snapshot.hasError) {
-                      return const RefreshHomepage();
+                      return TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const HomePage()),
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.refresh, color: AppColors.mainGreen),
+                                const SizedBox(width: 8), 
+                                Text(
+                                  AppLocalizations(globalLanguage).translate("refreshData"),
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.mainGreen),
+                                ),
+                              ],
+                            ),
+                          );
                     }
 
                     return Row(
@@ -278,7 +297,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           child: Card(
                             elevation: 1,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             color: AppColors.grey,
                             child: Padding(
@@ -330,7 +349,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           child: Card(
                             elevation: 1,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             color: AppColors.grey,
                             child: Padding(
@@ -382,63 +401,68 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
                 const SizedBox(height: 30),
-                Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations(globalLanguage).translate("attendance"), 
-                    style: TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.bold,
-                      color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
-                    )
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    child: Text(
-                      AppLocalizations(globalLanguage).translate("seeAll"), 
-                      style: TextStyle(
-                        fontSize: 12, 
-                        color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
-                        shadows: const [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
-                      )
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const RefreshAttendanceList(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
               FutureBuilder<List<AttendanceData>>(
                 future: controller.futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularProgressIndicator(color: AppColors.mainGreen);
                     } else if (snapshot.hasError) {
-                      return const Text('No data');
+                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('No data available');
+                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                     }
 
                     int itemCount = snapshot.data!.length > 5 ? 5 : snapshot.data!.length;
 
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: itemCount,
-                      itemBuilder: (context, index) {
-                        return Column(
+                    return Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildAttendanceCard(snapshot.data![index]),
-                            const SizedBox(height: 8),
+                            Text(
+                              AppLocalizations(globalLanguage).translate("attendance"), 
+                              style: TextStyle(
+                                fontSize: 18, 
+                                fontWeight: FontWeight.bold,
+                                color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
+                              )
+                            ),
+                            const Spacer(),
+                            InkWell(
+                              child: Text(
+                                AppLocalizations(globalLanguage).translate("seeAll"), 
+                                style: TextStyle(
+                                  fontSize: 12, 
+                                  color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
+                                  shadows: const [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
+                                )
+                              ),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const RefreshAttendanceList(),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
-                        );
-                      },
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: itemCount,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                buildAttendanceCard(snapshot.data![index]),
+                                const SizedBox(height: 8),
+                              ],
+                            );
+                          },
+                        )
+                      ],
                     );
+
                   },
                 ),
               ],

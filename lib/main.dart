@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,12 +8,17 @@ import 'pages/home_page.dart';
 import 'pages/nointernet_page.dart';
 import 'utils/session_manager.dart';
 import 'utils/globals.dart';
+import 'utils/firebase_options.dart';
 import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   final sessionManager = SessionManager();
   await sessionManager.initPrefs();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final isLoggedIn = await sessionManager.isLoggedIn();
   final savedTheme = sessionManager.getTheme();
@@ -33,11 +39,11 @@ class WorkSyncApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', 'US'),
         Locale('id', 'ID'),
         Locale('ko', 'KR'),
@@ -45,6 +51,7 @@ class WorkSyncApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WorkSync',
       theme: ThemeData(
+        useMaterial3: false,
         primaryColor: AppColors.lightGreen,
         primarySwatch: const MaterialColor(
           0xFF93B1A6,
@@ -67,7 +74,7 @@ class WorkSyncApp extends StatelessWidget {
         future: isConnectedToInternet(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(color: AppColors.mainGreen);
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error checking internet connection'));
           } else {

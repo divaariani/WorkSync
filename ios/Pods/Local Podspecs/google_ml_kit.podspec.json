@@ -1,0 +1,63 @@
+{
+  "name": "google_ml_kit",
+  "version": "0.6.0",
+  "summary": "Flutter Plugin for ML Kit",
+  "description": "flutter plugin for google ml kit",
+  "homepage": "https://github.com/bharat-biradar/Google-Ml-Kit-plugin",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Your Company": "email@example.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "public_header_files": "Classes/**/*.h",
+  "dependencies": {
+    "Flutter": [
+
+    ],
+    "GoogleMLKit/FaceDetection": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/ImageLabeling": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/ImageLabelingCustom": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/LinkFirebase": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/BarcodeScanning": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/TextRecognition": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/PoseDetection": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/PoseDetectionAccurate": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/DigitalInkRecognition": [
+      "~> 2.2.0"
+    ],
+    "GoogleMLKit/LanguageID": [
+      "~> 2.2.0"
+    ]
+  },
+  "platforms": {
+    "ios": "10.0"
+  },
+  "static_framework": true,
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "i386"
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

@@ -5,10 +5,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'dart:async';
 import 'app_colors.dart';
-import 'home_page.dart';
 import 'attendanceform_page.dart';
 import 'attendance_page.dart';
+import 'stockopname_page.dart';
+import 'warehouse_page.dart';
 import '../utils/globals.dart';
+import '../utils/localizations.dart';
 
 class RefreshAttendance extends StatefulWidget {
   const RefreshAttendance({Key? key}) : super(key: key);
@@ -101,7 +103,7 @@ class _RefreshAttendanceState extends State<RefreshAttendance> {
           message = 'Outside the allowed area';
           globalLat = '';
           globalLong = '';
-          globalLocationName = 'Outside the allowed area';
+          globalLocationName = AppLocalizations(globalLanguage).translate("outsideArea");
         });
       }
     });
@@ -188,22 +190,67 @@ class _RefreshAttendanceListState extends State<RefreshAttendanceList> {
   }
 }
 
-class RefreshHomepage extends StatefulWidget {
-  const RefreshHomepage({Key? key}) : super(key: key);
+class RefreshStockTable extends StatefulWidget {
+  const RefreshStockTable({Key? key}) : super(key: key);
 
   @override
-  State<RefreshHomepage> createState() => _RefreshHomepageState();
+  State<RefreshStockTable> createState() => _RefreshStockTableState();
 }
 
-class _RefreshHomepageState extends State<RefreshHomepage> {
+class _RefreshStockTableState extends State<RefreshStockTable> {
+  
   @override
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 1), () {
-      Navigator.of(context).push(
+    Timer(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => const StockOpnamePage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: Lottie.asset('assets/loading.json'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RefreshWarehouseTable extends StatefulWidget {
+  const RefreshWarehouseTable({Key? key}) : super(key: key);
+
+  @override
+  State<RefreshWarehouseTable> createState() => _RefreshWarehouseTableState();
+}
+
+class _RefreshWarehouseTableState extends State<RefreshWarehouseTable> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const WarehousePage(),
         ),
       );
     });

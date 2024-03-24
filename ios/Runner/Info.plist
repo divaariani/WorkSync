@@ -57,5 +57,31 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera to capture photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow access to the microphone for video recording</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera to enable augmented reality features</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Allow access to motion sensors for augmented reality features</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location for...</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location for...</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location for...</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need your location for...</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 </dict>
 </plist>

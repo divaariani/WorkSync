@@ -33,7 +33,7 @@ android {
     }
 
     namespace "com.example.worksync"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -51,8 +51,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.worksync"
-        minSdkVersion 22
-        targetSdkVersion 30
+        minSdkVersion 26
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

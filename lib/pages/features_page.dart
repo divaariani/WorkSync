@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'machinemonitoring_page.dart';
+import 'machinestatus_page.dart';
+import 'machineoperatorscan_page.dart';
+import 'warehouse_page.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
 import 'leave_list_page.dart';
 import 'checkpoint_page.dart';
-import 'refresh_page.dart';
 import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
 import 'stockopname_page.dart';
+import 'facerecognition_page.dart';
+import 'faceregister_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 import '../service/approve_list_leave_service.dart';
 import '../service/approve_list_leave_model.dart';
 import '../controllers/overtime_controller.dart';
+import '../controllers/facerecognition_controller.dart';
 
 class FeaturesPage extends StatefulWidget {
   const FeaturesPage({Key? key}) : super(key: key);
@@ -25,7 +31,10 @@ class FeaturesPage extends StatefulWidget {
 
 class _FeaturesPageState extends State<FeaturesPage> {
   late OvertimeController overtimeController;
-
+  late FaceRecognitionController faceRecognitionController;
+  List<DatumApproveListLeave> approvedLeave = [];
+  int overtimeCount = 0;
+  int leaveCount = 0;
   String? actorAttendance = '';
   String? actorOvertime = '';
   String? actorLeave = '';
@@ -35,11 +44,13 @@ class _FeaturesPageState extends State<FeaturesPage> {
   String? actorTicketing = '';
   String? actorMonitoring = '';
   String? actorAuditor= '';
+  String? actorWarehouse= '';
 
   @override
   void initState() {
     super.initState();
     overtimeController = OvertimeController();
+    faceRecognitionController = FaceRecognitionController();
 
     SessionManager sessionManager = SessionManager();
     actorAttendance = sessionManager.getActorAttendance();
@@ -51,6 +62,185 @@ class _FeaturesPageState extends State<FeaturesPage> {
     actorTicketing = sessionManager.getActorTicketing();
     actorMonitoring = sessionManager.getActorMonitoring();
     actorAuditor= sessionManager.getActorAuditor();
+    actorWarehouse = sessionManager.getActorWarehouse();
+
+    fetchOvertimeData();
+    fetchApprovedLeaveData();
+    checkFaceCode;
+  }
+
+  Future<void> fetchApprovedLeaveData() async {
+    ApprovedListLeaveService service = ApprovedListLeaveService();
+    final result = await service.fetchData();
+    setState(() {
+      approvedLeave = result.data;
+      _updateLeaveCount();
+    });
+  }
+
+  Future<void> fetchOvertimeData() async {
+    final String? noAbsen = SessionManager().getNoAbsen();
+    try {
+      final List<OvertimeData> overtimeDataList = await overtimeController.fetchData(noAbsen);
+      setState(() {
+        overtimeCount = overtimeDataList.length;
+      });
+    } catch (error) {
+      print('Error fetching overtime data: $error');
+    }
+  }
+
+  void _updateLeaveCount() {
+    leaveCount = approvedLeave.length;
+  }
+
+  void checkFaceCode() async {
+    try {
+      List<FaceRecognitionData> faceRecognitionList = await faceRecognitionController.getFaceRecognition();
+
+      bool faceCodeNotFound = faceRecognitionList.any((data) => data.kodeFace == AppLocalizations(globalLanguage).translate("notRegistered"));
+      bool faceCodeTwoRegistered = faceRecognitionList.length == 2;
+      bool faceCodeOneRegistered = faceRecognitionList.length == 1;
+
+      if (faceCodeNotFound) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("notRegistered"),
+            message: AppLocalizations(globalLanguage).translate("notRegistered3More"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else if (faceCodeOneRegistered) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register2More"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else if (faceCodeTwoRegistered) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register1More"),
+            contentType: ContentType.warning,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceRegisterPage(),
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              content: Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      AppLocalizations(globalLanguage).translate("attention"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.deepGreen,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("makeSureLocation"),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("makeSureCamera"),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                      AppLocalizations(globalLanguage).translate("cancel"),
+                      style: const TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FaceRecognitionPage(),
+                      ),
+                    );
+                  },
+                  child: Text(AppLocalizations(globalLanguage).translate("yes"),
+                      style: const TextStyle(
+                          color: AppColors.mainGreen,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override
@@ -81,92 +271,18 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorAttendance == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/attendancefeature.png',
-                  title: AppLocalizations(globalLanguage).translate("attendanceForm"),
+                  title: AppLocalizations(globalLanguage).translate("attendanceTitle"),
                   onTap: () {
                     if (actorAttendance == '1') {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            content: Padding(
-                              padding: const EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    AppLocalizations(globalLanguage).translate("Attention!"),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.deepGreen,
-                                    ),
-                                  ),
-                                  Text(
-                                    AppLocalizations(globalLanguage).translate("Make sure you are at the specified location"),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.deepGreen,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    AppLocalizations(globalLanguage).translate("1. Finished Products Warehouse"),
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Text(
-                                    AppLocalizations(globalLanguage).translate("2. Area 1A10003000"),
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  AppLocalizations(globalLanguage).translate("Cancel"),
-                                  style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => const RefreshAttendance(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  AppLocalizations(globalLanguage).translate("Yes"),
-                                  style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      checkFaceCode();
                     } else {
                       final snackBar = SnackBar(
                         elevation: 0,
                         behavior: SnackBarBehavior.floating,
                         backgroundColor: Colors.transparent,
                         content: AwesomeSnackbarContent(
-                          title: AppLocalizations(globalLanguage).translate("Attendance Feature"),
-                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          title: AppLocalizations(globalLanguage).translate("attendanceFeature"),
+                          message: AppLocalizations(globalLanguage).translate("featureWarning"),
                           contentType: ContentType.warning,
                         ),
                       );
@@ -194,8 +310,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                         behavior: SnackBarBehavior.floating,
                         backgroundColor: Colors.transparent,
                         content: AwesomeSnackbarContent(
-                          title: AppLocalizations(globalLanguage).translate("Overtime Feature"),
-                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          title: AppLocalizations(globalLanguage).translate("overtimeFeature"),
+                          message: AppLocalizations(globalLanguage).translate("featureWarning"),
                           contentType: ContentType.warning,
                         ),
                       );
@@ -223,8 +339,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                         behavior: SnackBarBehavior.floating,
                         backgroundColor: Colors.transparent,
                         content: AwesomeSnackbarContent(
-                          title: AppLocalizations(globalLanguage).translate("Leave Feature"),
-                          message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                          title: AppLocalizations(globalLanguage).translate("leaveFeature"),
+                          message: AppLocalizations(globalLanguage).translate("featureWarning"),
                           contentType: ContentType.warning,
                         ),
                       );
@@ -241,27 +357,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                FutureBuilder<List<dynamic>>(
-                  future: Future.wait([overtimeController.futureData, ApprovedListLeaveService().fetchData()]),
-                  builder: (context, snapshot) {
-                    int overtimeCount = 0;
-                    int leaveCount = 0;
-
-                    if (snapshot.hasData) {
-                      List<dynamic> data = snapshot.data!;
-                      
-                      if (data.length > 0 && data[0] is List<OvertimeData>) {
-                        overtimeCount = (data[0] as List<OvertimeData>).length;
-                      }
-
-                      if (data.length > 1 && data[1] is ApproveListLeaveModel) {
-                        leaveCount = (data[1] as ApproveListLeaveModel).data.length;
-                      }
-                    }
-
-                    int totalCount = overtimeCount + leaveCount;
-
-                    return CardItem(
+                CardItem(
                       color: actorApprovalLeave == '1' || actorApprovalOvertime == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                       imagePath: 'assets/approval.png',
                       title: AppLocalizations(globalLanguage).translate("approvals"),
@@ -279,8 +375,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                             behavior: SnackBarBehavior.floating,
                             backgroundColor: Colors.transparent,
                             content: AwesomeSnackbarContent(
-                              title: AppLocalizations(globalLanguage).translate("Approval Feature"),
-                              message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                              title: AppLocalizations(globalLanguage).translate("approvalFeature"),
+                              message: AppLocalizations(globalLanguage).translate("featureWarning"),
                               contentType: ContentType.warning,
                             ),
                           );
@@ -290,10 +386,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                             ..showSnackBar(snackBar);
                         } 
                       },
-                      notificationCount: totalCount,
-                    );
-                  },
-                ),
+                      notificationCount: overtimeCount + leaveCount,
+                    ),
                 CardItem(
                   color: actorCheckpoint == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/checkpoint.png',
@@ -312,8 +406,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.transparent,
                           content: AwesomeSnackbarContent(
-                            title: AppLocalizations(globalLanguage).translate("Checkpoint Tour Feature"),
-                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            title: AppLocalizations(globalLanguage).translate("checkpointTourFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
                             contentType: ContentType.warning,
                           ),
                         );
@@ -327,7 +421,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorMonitoring == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/monitoring.png',
-                  title: AppLocalizations(globalLanguage).translate("Monitoring"),
+                  title: AppLocalizations(globalLanguage).translate("monitoring"),
                   onTap: () {
                     if (actorMonitoring == '1') {
                       Navigator.push(
@@ -340,8 +434,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.transparent,
                           content: AwesomeSnackbarContent(
-                            title: AppLocalizations(globalLanguage).translate("Monitoring Feature"),
-                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            title: AppLocalizations(globalLanguage).translate("monitoringFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
                             contentType: ContentType.warning,
                           ),
                         );
@@ -374,8 +468,233 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.transparent,
                           content: AwesomeSnackbarContent(
-                            title: AppLocalizations(globalLanguage).translate("Ticketing Feature"),
-                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            title: AppLocalizations(globalLanguage).translate("ticketingFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    } 
+                  },
+                ),
+                CardItem(
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/machine.png',
+                  title: AppLocalizations(globalLanguage).translate("Machine"),
+                  onTap: () {
+                    if (actorWarehouse == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const MachinePage()),
+                      // );
+                      showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                          side: const BorderSide(
+                                              color: AppColors.mainGreen,
+                                              width: 2),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                          const MachineOperatorScanPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.presensi.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Operator Attendance',
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MachineStatusPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.mesin.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Machine Status',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                height: 50,
+                                                width: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: AppColors.mainGreen,
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MachineMonitoringPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/icon.monitoring.png',
+                                                        width: 24,
+                                                        height: 24,
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Text(
+                                                        'Production Monitoring',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) {
+                                    if (value != null) {
+                                      print(value);
+                                    }
+                                  });
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("machineFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
+                CardItem(
+                  color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/opname.png',
+                  title: AppLocalizations(globalLanguage).translate("stockopname"),
+                  onTap: () {
+                    if (actorAuditor == '1') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const StockOpnamePage()),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("stockOpnameFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CardItem(
+                  color: actorTicketing == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/productreport.png',
+                  title: AppLocalizations(globalLanguage).translate("Report"),
+                  onTap: () {
+                    if (actorTicketing == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const ReportPage()),
+                      // );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("reportFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
                             contentType: ContentType.warning,
                           ),
                         );
@@ -388,13 +707,41 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 ),
                 CardItem(
                   color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
-                  imagePath: 'assets/opname.png',
-                  title: AppLocalizations(globalLanguage).translate("Stock Opname"),
+                  imagePath: 'assets/warehouse.png',
+                  title: AppLocalizations(globalLanguage).translate("Warehouse"),
                   onTap: () {
                     if (actorAuditor == '1') {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const WarehouseInPage()),
+                      // );
+                    } else {
+                      final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: AppLocalizations(globalLanguage).translate("warehouseInFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
+                            contentType: ContentType.warning,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                    }
+                  },
+                ),
+                CardItem(
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  imagePath: 'assets/dopicking.png',
+                  title: AppLocalizations(globalLanguage).translate("doPicking"),
+                  onTap: () {
+                    if (actorWarehouse == '1') {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const StockPage()),
+                        MaterialPageRoute(builder: (context) => const WarehousePage()),
                       );
                     } else {
                       final snackBar = SnackBar(
@@ -402,8 +749,8 @@ class _FeaturesPageState extends State<FeaturesPage> {
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.transparent,
                           content: AwesomeSnackbarContent(
-                            title: AppLocalizations(globalLanguage).translate("Stock Opname Feature"),
-                            message: AppLocalizations(globalLanguage).translate("You do not have access to this feature"),
+                            title: AppLocalizations(globalLanguage).translate("warehouseFeature"),
+                            message: AppLocalizations(globalLanguage).translate("featureWarning"),
                             contentType: ContentType.warning,
                           ),
                         );
@@ -456,7 +803,7 @@ class CardItem extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Container(

@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
-import 'package:worksync/controllers/stockopname_controller.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'stocklokasiscan_page.dart';
+import 'app_colors.dart';
+import 'stockopname_page.dart';
+import 'stockmanual_page.dart';
 import 'refresh_page.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
-import 'app_colors.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../utils/localizations.dart';
 import '../controllers/response_model.dart';
-import 'stockopname_page.dart';
-import 'stockmanual_page.dart';
+import '../controllers/stockopname_controller.dart';
 
 class StockLokasiPage extends StatefulWidget {
-  String result;
-  List<String> resultBarang;
 
-  StockLokasiPage({required this.result, required this.resultBarang, Key? key})
-      : super(key: key);
+  const StockLokasiPage({Key? key}) : super(key: key);
 
   @override
   State<StockLokasiPage> createState() => _StockLokasiPageState();
@@ -27,8 +25,8 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   late DateTime currentTime;
   final SessionManager sessionManager = SessionManager();
   final idController = TextEditingController();
-  final hasilscanController = TextEditingController();
   final lokasiController = TextEditingController();
+  final hasilscanController = TextEditingController();
   String barcodeLokasiResult = globalBarcodeLokasiResult;
   String idInventory = '';
   String userid = "";
@@ -36,11 +34,18 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _fetchUserId();
-    _fetchCurrentTime();
-    String hasilscan = widget.resultBarang.join('\n');
     lokasiController.text = barcodeLokasiResult;
+    String hasilscan = globalBarcodeBarangResults.join('\n');
     hasilscanController.text = hasilscan;
+    userid = sessionManager.getUserId() ?? '';
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    super.dispose();
   }
 
   Future<void> _scanBarcode() async {
@@ -49,7 +54,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     while (!finishScanning) {
       String barcodeBarangResult = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000',
-        'Finish',
+        AppLocalizations(globalLanguage).translate("finish"),
         true,
         ScanMode.BARCODE,
       );
@@ -71,65 +76,17 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
           return AlertDialog(
             contentPadding: EdgeInsets.all(16),
             title: Center(
-              child: Text(
-                AppLocalizations(globalLanguage).translate("barcodescanned"),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.deepGreen,
-                ),
-              ),
+              child: CircularProgressIndicator(color: AppColors.mainGreen)
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Result: $barcodeBarangResult',
+                  '$barcodeBarangResult',
                   style: TextStyle(
                     fontSize: 16,
                   ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  child: InkWell(
-                    onTap: () async {
-                      Navigator.pop(context);
-                      _navigateToStockLokasiPage();
-                      finishScanning = true;
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.lightGreen],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 50),
-                        child: Text(
-                          AppLocalizations(globalLanguage).translate("finish"),
-                          style: const TextStyle(
-                            color: AppColors.deepGreen,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                ),        
               ],
             ),
           );
@@ -137,7 +94,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       );
 
       if (!finishScanning) {
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
       }
     }
   }
@@ -146,10 +103,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StockLokasiPage(
-          result: '',
-          resultBarang: globalBarcodeBarangResults,
-        ),
+        builder: (context) => const StockLokasiPage(),
       ),
     );
   }
@@ -159,26 +113,14 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     setState(() {});
   }
 
-  Future<void> _fetchCurrentTime() async {
-    try {
-      setState(() {
-        currentTime = DateTime.now();
-      });
-    } catch (error) {
-      print(error);
-    }
-  }
-
   Future<void> _submitStock() async {
-    //final int id = int.parse(idController.text);
     final String lokasi = lokasiController.text;
     List<String> errorMessages = [];
     bool success = true;
 
     try {
-      await _fetchCurrentTime();
 
-      for (String hasilscan in widget.resultBarang) {
+      for (String hasilscan in globalBarcodeBarangResults) {
         ResponseModel response = await StockOpnameController.postFormStock(
           hasilscan: hasilscan,
           lokasi: lokasi,
@@ -197,7 +139,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       if (success) {
         print('Stock berhasil diupload');
       } else {
-        print('Gagal mengupload stock. Kesalahan:');
+        print('Gagal mengupload Stock. Kesalahan:');
         for (String errorMessage in errorMessages) {
           print('- $errorMessage');
         }
@@ -210,12 +152,12 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
           ),
         );
       } else {
-        Get.snackbar('Stock Berhasil Diupload', 'Congratulations');
+        // success upload
       }
 
-      widget.resultBarang.clear();
+      globalBarcodeBarangResults.clear();
       setState(() {
-        widget.resultBarang = [];
+        globalBarcodeBarangResults = [];
       });
     } catch (e) {
       print('Terjadi kesalahan: $e');
@@ -231,17 +173,18 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const StockOpnamePage()),
-        );
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("stocklist"),
+            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+          ),
+          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.deepGreen),
+            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -249,14 +192,6 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                     builder: (context) => const StockOpnamePage()),
               );
             },
-          ),
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("stocklist"),
-            style: const TextStyle(
-              color: AppColors.deepGreen,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
         body: Stack(
@@ -284,30 +219,65 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/stocklokasi.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                barcodeLokasiResult,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style:
-                                    const TextStyle(color: AppColors.deepGreen),
+                    GestureDetector(
+                      onTap: (){
+                        showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: AppColors.mainGrey, 
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20), 
+                                ),
+                                content: Text(AppLocalizations(globalLanguage).translate("Apakah Anda ingin mengganti kode lokasi?")),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); 
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("cancel"), 
+                                      style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const StockLokasiScan(),
+                                          ),
+                                        );
+                                    },
+                                    child: Text(AppLocalizations(globalLanguage).translate("yes"), 
+                                      style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            );
+                      },
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Image.asset('assets/stocklokasi.png', height: 24, width: 24),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  barcodeLokasiResult,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      const TextStyle(color: AppColors.deepGreen),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -323,7 +293,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                     Container(
                       alignment: Alignment.bottomCenter,
                       child: Visibility(
-                        visible: widget.resultBarang.isEmpty,
+                        visible: globalBarcodeBarangResults.isEmpty,
                         child: InkWell(
                           onTap: () async {
                             showDialog(
@@ -398,126 +368,123 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     Visibility(
-  visible: widget.resultBarang.isNotEmpty,
-  child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            Container(
-              child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: widget.resultBarang.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = widget.resultBarang[index];
-                  return Column(
-                    children: [
-                      if (index == 0) const SizedBox(height: 22),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3),
-                            child: InkWell(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: AppColors.mainGrey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    content: Text(
-                                      AppLocalizations(globalLanguage)
-                                          .translate(
-                                              "suredelete $item?"),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          AppLocalizations(globalLanguage)
-                                              .translate("cancel"),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold,
+                      visible: globalBarcodeBarangResults.isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: ListView.builder(
+                                    physics: const ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: globalBarcodeBarangResults.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final item = globalBarcodeBarangResults[index];
+                                      return Column(
+                                        children: [
+                                          if (index == 0) const SizedBox(height: 22),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(3),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) => AlertDialog(
+                                                        backgroundColor: AppColors.mainGrey,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                        ),
+                                                        content: Text(
+                                                          '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(globalLanguage).translate("cancel"),
+                                                              style: const TextStyle(
+                                                                color: Colors.grey,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                globalBarcodeBarangResults.removeAt(index);
+                                                              });
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(globalLanguage)
+                                                                  .translate("yes"),
+                                                              style: const TextStyle(
+                                                                color: Colors.red,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Image.asset(
+                                                    'assets/delete.png',
+                                                    width: 25,
+                                                    height: 25,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  item,
+                                                  textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                    color: AppColors.deepGreen,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.resultBarang.removeAt(index);
-                                          });
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          AppLocalizations(globalLanguage)
-                                              .translate("yes"),
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                          if (index == globalBarcodeBarangResults.length - 1)
+                                            const SizedBox(height: 22),
+                                        ],
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                              child: Image.asset(
-                                'assets/delete.png',
-                                width: 25,
-                                height: 25,
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              item,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                color: AppColors.deepGreen,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      if (index == widget.resultBarang.length - 1)
-                        const SizedBox(height: 22),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
+                    ),
 
                   ],
                 ),
               ),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeBarangResults.isNotEmpty,
               child: const SizedBox(height: 20),
             ),
             Visibility(
-              visible: widget.resultBarang.isNotEmpty,
+              visible: globalBarcodeBarangResults.isNotEmpty,
               child: Positioned(
                 bottom: 20.0,
                 left: 0.0,
@@ -733,7 +700,7 @@ class EmptyData extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                'Tidak ada hasil scan barang',
+                AppLocalizations(globalLanguage).translate("noDataa"),
                 style: GoogleFonts.poppins(
                   color: AppColors.mainGrey,
                   fontSize: 12,

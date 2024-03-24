@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
@@ -6,9 +8,12 @@ import 'utils.dart';
 
 Future<tfl.Interpreter?> loadModel() async {
   try {
-    return await tfl.Interpreter.fromAsset('mobilefacenet.tflite');
-  } on Exception {
-    print('Failed to load model.');
+    return await tfl.Interpreter.fromAsset('assets/mobilefacenet.tflite');
+  } on FileSystemException {
+    print('Failed to load model: File does not exist.');
+    return null;
+  } catch (e) {
+    print('Failed to load model: $e');
     return null;
   }
 }
@@ -46,7 +51,7 @@ imglib.Image convertCameraImage(CameraImage image, CameraLensDirection _dir) {
 
 HandleDetection getDetectionMethod() {
   final faceDetector = GoogleMlKit.vision.faceDetector(
-    const FaceDetectorOptions(mode: FaceDetectorMode.accurate),
+    FaceDetectorOptions(performanceMode: FaceDetectorMode.accurate)
   );
   return faceDetector.processImage;
 }

@@ -10,6 +10,7 @@ import 'package:quiver/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'home_page.dart';
+import 'app_colors.dart';
 import '../modules/detector.dart';
 import '../modules/utils.dart';
 import '../modules/model.dart';
@@ -61,8 +62,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 2 more times!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register2More"),
             contentType: ContentType.warning,
           ),
         );
@@ -81,8 +82,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Register Again"),
-            message: AppLocalizations(globalLanguage).translate("Register your face 1 more time!"),
+            title: AppLocalizations(globalLanguage).translate("registerAgain"),
+            message: AppLocalizations(globalLanguage).translate("register1More"),
             contentType: ContentType.warning,
           ),
         );
@@ -101,8 +102,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Registered"),
-            message: AppLocalizations(globalLanguage).translate("Successfully register your face recognition"),
+            title: AppLocalizations(globalLanguage).translate("registered"),
+            message: AppLocalizations(globalLanguage).translate("registerFaceSuccess"),
             contentType: ContentType.success,
           ),
         );
@@ -279,12 +280,6 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // IconButton(
-                //   icon: const Icon(Icons.cameraswitch, color: Colors.white),
-                //   onPressed: () {
-                //     // Camera switch
-                //   },
-                // ),
                 Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
                   style: const TextStyle(fontSize: 24, color: Colors.white)),
               ],
@@ -319,12 +314,12 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
   }
 
   Widget _buildResults() {
-    Center noResultsText = const Center(
-        child: Text('Please wait...',
-            style: TextStyle(
+    Center noResultsText = Center(
+        child: Text('${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Colors.white)));
+                color: AppColors.deepGreen)));
     if (_scanResults == null ||
         _camera == null ||
         !_camera!.value.isInitialized) {

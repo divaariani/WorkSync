@@ -34,7 +34,6 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
           scannedData = barcodeCheckpointResult;
         });
 
-        // Call the controller with the latest scanned data
         await CheckPointController.fetchDataScan(cp_barcode: scannedData);
       } catch (e) {
         print('Error: $e');

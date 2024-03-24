@@ -74,8 +74,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Recognized"),
-            message: "You are $matchingUsername",
+            title: AppLocalizations(globalLanguage).translate("recognized"),
+            message: '${AppLocalizations(globalLanguage).translate("youAre")} $matchingUsername',
             contentType: ContentType.success,
           ),
         );
@@ -102,8 +102,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: AppLocalizations(globalLanguage).translate("Not Recognized"),
-            message: AppLocalizations(globalLanguage).translate("No user face found."),
+            title: AppLocalizations(globalLanguage).translate("notRecognized"),
+            message: AppLocalizations(globalLanguage).translate("noFaceFound"),
             contentType: ContentType.warning,
           ),
         );
@@ -244,116 +244,125 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.only(top: 0, bottom: 0),
-            child: Builder(builder: (context) {
-              if ((_camera == null || !_camera!.value.isInitialized) || loading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              constraints: const BoxConstraints.expand(),
+              padding: const EdgeInsets.only(top: 0, bottom: 0),
+              child: Builder(builder: (context) {
+                if ((_camera == null || !_camera!.value.isInitialized) || loading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-              return _camera == null
-                  ? const Center(child: SizedBox())
-                  : Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        CameraPreview(_camera!),
-                        _buildResults(),
-                      ],
-                    );
-            }),
-          ),
-          Positioned(
-            top: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.cameraswitch, color: Colors.white),
-                  onPressed: () {
-                    // Camera switch
-                  },
-                ),
-                Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
-                  style: const TextStyle(fontSize: 24, color: Colors.white)),
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
-                    setState(() {
-                      globalFaceDetection = 'Not Recognized';
-                    });
-                    await _camera!.stopImageStream();
-                  },
-                ),
-              ],
+                return _camera == null
+                    ? const Center(child: SizedBox())
+                    : Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          CameraPreview(_camera!),
+                          _buildResults(),
+                        ],
+                      );
+              }),
             ),
-          ),
-          Positioned(
-            bottom: 16,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: const LinearGradient(
-                    colors: [Colors.white, AppColors.lightGreen],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+            Positioned(
+              top: 20,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.cameraswitch, color: Colors.white),
+                    onPressed: () {
+                      // Camera switch
+                    },
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 3),
+                  Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
+                    style: const TextStyle(fontSize: 24, color: Colors.white)),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
+                      setState(() {
+                        globalFaceDetection = 'Not Recognized';
+                      });
+                      await _camera!.stopImageStream();
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: const LinearGradient(
+                      colors: [Colors.white, AppColors.lightGreen],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
-                  ],
-                ),
-                child: InkWell(
-                  onTap: () {
-                    getDataFace();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                    child: Text(
-                      AppLocalizations(globalLanguage).translate("Detect"),
-                      style: const TextStyle(
-                        color: AppColors.deepGreen,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      getDataFace();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                      child: Text(
+                        AppLocalizations(globalLanguage).translate("detect"),
+                        style: const TextStyle(
+                          color: AppColors.deepGreen,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        ),
+      )
     );
   }
 
   Widget _buildResults() {
-    Center noResultsText = const Center(
-        child: Text('Please wait...',
-            style: TextStyle(
+    Center noResultsText = Center(
+        child: Text('${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Colors.white)));
+                color: AppColors.deepGreen)));
     if (_scanResults == null ||
         _camera == null ||
         !_camera!.value.isInitialized) {

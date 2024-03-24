@@ -59,9 +59,9 @@ class _AttendancePageState extends State<AttendancePage> {
             if (snapshot.hasData) {
               return buildAttendanceList(snapshot.data!);
             } else if (snapshot.hasError) {
-              return const Text('No data');
+              return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
             }
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(color: AppColors.mainGreen);
           },
         ),
       )

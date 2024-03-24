@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-import 'welcome_page.dart';
+import 'login_page.dart';
 import 'editprofile_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Card(
                       margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       color: AppColors.mainGreen,
                       child: Padding(
@@ -128,16 +128,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     Card(
                         margin: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         color: AppColors.grey,
                         child: FutureBuilder<List<AttendanceData>>(
                           future: controller.futureData,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const CircularProgressIndicator(); 
+                              return const CircularProgressIndicator(color: AppColors.mainGreen); 
                             } else if (snapshot.hasError) {
-                              return const Text('No Data');
+                              return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
                             } else {
                               List<AttendanceData> data = snapshot.data!;
                               return Column(
@@ -179,8 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                             setState(() {
                                               if (globalTheme == 'Light Theme') {
                                                 globalTheme = 'Dark Theme';
+                                                SessionManager().setTheme(globalTheme);
                                               } else {
                                                 globalTheme = 'Light Theme';
+                                                SessionManager().setTheme(globalTheme);
                                               }
                                             });
                                             
@@ -227,13 +229,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20), 
                                 ),
-                                content: Text(AppLocalizations(globalLanguage).translate("Are you sure you want to Log Out?")),
+                                content: Text(AppLocalizations(globalLanguage).translate("sureLogOut")),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(); 
                                     },
-                                    child: Text(AppLocalizations(globalLanguage).translate("Cancel"), 
+                                    child: Text(AppLocalizations(globalLanguage).translate("cancel"), 
                                       style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                                   ),
                                   TextButton(
@@ -245,11 +247,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(
-                                            builder: (context) => const WelcomePage()
+                                            builder: (context) => const LoginPage()
                                           )
                                       );
                                     },
-                                    child: Text(AppLocalizations(globalLanguage).translate("Yes"), 
+                                    child: Text(AppLocalizations(globalLanguage).translate("yes"), 
                                       style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)),
                                   ),
                                 ],
