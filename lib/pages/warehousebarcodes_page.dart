@@ -16,7 +16,6 @@ import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 
 class WarehouseBarcodesPage extends StatefulWidget {
-
   const WarehouseBarcodesPage({Key? key}) : super(key: key);
 
   @override
@@ -62,9 +61,42 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       }
 
       if (barcodeGudangResult.isNotEmpty) {
-        setState(() {
-          globalBarcodeGudangResults.add(barcodeGudangResult);
-        });
+        if (globalBarcodeGudangResults.contains(barcodeGudangResult)) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(16),
+                title: Center(
+                  child: CircularProgressIndicator(color: AppColors.deepGreen),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${AppLocalizations(globalLanguage).translate("result")}: $barcodeGudangResult',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Lot Number sudah discan.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          );
+        } else {
+          setState(() {
+            globalBarcodeGudangResults.add(barcodeGudangResult);
+          });
+        }
       }
 
       showDialog(
