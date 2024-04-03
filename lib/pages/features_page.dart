@@ -14,6 +14,8 @@ import 'monitoringcheckpoint_page.dart';
 import 'stockopname_page.dart';
 import 'facerecognition_page.dart';
 import 'faceregister_page.dart';
+import 'gudangin_page.dart';
+import 'report_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -486,10 +488,6 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   title: AppLocalizations(globalLanguage).translate("Machine"),
                   onTap: () {
                     if (actorWarehouse == '1') {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const MachinePage()),
-                      // );
                       showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -683,10 +681,10 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   title: AppLocalizations(globalLanguage).translate("Report"),
                   onTap: () {
                     if (actorTicketing == '1') {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const ReportPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ReportPage()),
+                      );
                     } else {
                       final snackBar = SnackBar(
                           elevation: 0,
@@ -711,10 +709,10 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   title: AppLocalizations(globalLanguage).translate("Warehouse"),
                   onTap: () {
                     if (actorAuditor == '1') {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const WarehouseInPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const GudanginPage()),
+                      );
                     } else {
                       final snackBar = SnackBar(
                           elevation: 0,
