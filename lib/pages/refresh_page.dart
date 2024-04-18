@@ -277,3 +277,91 @@ class _RefreshWarehouseTableState extends State<RefreshWarehouseTable> {
     );
   }
 }
+
+class RefreshLaporanTable extends StatefulWidget {
+  const RefreshLaporanTable({Key? key}) : super(key: key);
+
+  @override
+  State<RefreshLaporanTable> createState() => _RefreshLaporanTableState();
+}
+
+class _RefreshLaporanTableState extends State<RefreshLaporanTable> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ReportPage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: Lottie.asset('assets/loading.json'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RefreshGudangStatusTable extends StatefulWidget {
+  const RefreshGudangStatusTable({Key? key}) : super(key: key);
+
+  @override
+  State<RefreshGudangStatusTable> createState() => _RefreshGudangStatusTableState();
+}
+
+class _RefreshGudangStatusTableState extends State<RefreshGudangStatusTable> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const GudanginPage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.deepGreen, AppColors.lightGreen], 
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: Lottie.asset('assets/loading.json'),
+          ),
+        ),
+      ),
+    );
+  }
+}
