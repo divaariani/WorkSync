@@ -264,8 +264,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              //userName,
-                                              "diva",
+                                              userName,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 color: AppColors.mainGreen,
