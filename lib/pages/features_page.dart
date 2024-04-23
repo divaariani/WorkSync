@@ -485,7 +485,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/machine.png',
-                  title: AppLocalizations(globalLanguage).translate("Machine"),
+                  title: AppLocalizations(globalLanguage).translate("machine"),
                   onTap: () {
                     if (actorWarehouse == '1') {
                       showDialog(
@@ -530,10 +530,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
                                                         height: 24,
                                                       ),
                                                       const SizedBox(width: 10),
-                                                      const Text(
-                                                        'Operator Attendance',
-                                                        style: TextStyle(
-                                                            color: Colors.white),
+                                                      Text(
+                                                        AppLocalizations(globalLanguage).translate("operatorAttendance"),
+                                                        style: const TextStyle(
+                                                          color: Colors.white
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -566,9 +567,9 @@ class _FeaturesPageState extends State<FeaturesPage> {
                                                         height: 24,
                                                       ),
                                                       const SizedBox(width: 10),
-                                                      const Text(
-                                                        'Machine Status',
-                                                        style: TextStyle(
+                                                      Text(
+                                                        AppLocalizations(globalLanguage).translate("machineStatus"),
+                                                        style: const TextStyle(
                                                           color: Colors.white,
                                                         ),
                                                       ),
@@ -603,9 +604,9 @@ class _FeaturesPageState extends State<FeaturesPage> {
                                                         height: 24,
                                                       ),
                                                       const SizedBox(width: 10),
-                                                      const Text(
-                                                        'Production Monitoring',
-                                                        style: TextStyle(
+                                                      Text(
+                                                        AppLocalizations(globalLanguage).translate("machineMonitoring"),
+                                                        style: const TextStyle(
                                                           color: Colors.white,
                                                         ),
                                                       ),

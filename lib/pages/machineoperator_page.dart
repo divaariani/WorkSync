@@ -4,12 +4,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
-//import 'operatorstatus_view.dart';
+import 'machinestatus_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
 import '../controllers/response_model.dart';
-// import '../controllers/notification_controller.dart';
 import '../controllers/machine_controller.dart';
 
 class MachineOperatorPage extends StatefulWidget {
@@ -24,17 +23,16 @@ class MachineOperatorPage extends StatefulWidget {
 class _MachineOperatorPageState extends State<MachineOperatorPage> {
   late DateTime currentTime;
   final SessionManager sessionManager = SessionManager();
-  final SessionManager _sessionManager = SessionManager();
   final idwcController = TextEditingController();
   final tapController = TextEditingController();
   String userIdLogin = "";
   String userName = "";
   String barcodeMachineResult = globalBarcodeMesinResult;
-  String _machineName = '';
+  String machineName = '';
 
   Future<void> fetchUserId() async {
-    userIdLogin = await _sessionManager.getUserId() ?? "";
-    userName = await _sessionManager.getNamaUser() ?? "";
+    userIdLogin = await sessionManager.getUserId() ?? "";
+    userName = await sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
@@ -44,7 +42,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
         currentTime = DateTime.now();
       });
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -57,21 +55,22 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
 
       for (var item in dataList) {
         if (item['id'] == barcodeMachineResult.toString()) {
-          _machineName = item['name'];
+          machineName = item['name'];
           machineFound = true; 
           break;
         }
       }
 
       if (!machineFound) {
-        _machineName = "Machine not found";
+        machineName = "-";
       }
 
       setState(() {
-        _machineName;
+        machineName;
       });
+
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -81,7 +80,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
     fetchUserId();
     fetchMachineData();
     fetchCurrentTime();
-    currentTime = DateTime.now();
+    currentTime = DateTime.parse(DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()));
     idwcController.text = barcodeMachineResult;
   }
 
@@ -89,7 +88,6 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
     final int idwc = int.parse(idwcController.text);
     final int userId = int.parse(userIdLogin);
     final String tap = tapController.text;
-    final String date = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
 
     try {
       await fetchCurrentTime();
@@ -105,14 +103,14 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
         if (tap == "I") {
           Get.snackbar('IN Mesin', 'Operator $userName');
 
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (BuildContext context) {
-          //       return OperatorStatusView();
-          //     },
-          //   ),
-          // );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return MachineStatusPage();
+              },
+            ),
+          );
         } else if (tap == "O") {
           Get.snackbar('OUT Mesin', 'Operator $userName');
 
@@ -128,22 +126,14 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
       } else if (response.status == 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Request gagal: ${response.message}'),
+            content: Text(AppLocalizations(globalLanguage).translate("machineAttendanceFailed")),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Terjadi kesalahan: Response tidak valid.'),
-          ),
-        );
+        debugPrint('Terjadi kesalahan: Response tidak valid.');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-        ),
-      );
+      debugPrint('Terjadi kesalahan: $e');
     }
   }
 
@@ -161,7 +151,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
         appBar: AppBar(
         centerTitle: true,
         title: Text(
-          AppLocalizations(globalLanguage).translate("Operator Attendance"),
+          AppLocalizations(globalLanguage).translate("operatorAttendance"),
           style: TextStyle(
             color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             fontWeight: FontWeight.bold,
@@ -258,9 +248,9 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                             Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text(
-                                                  'Machine: ',
-                                                  style: TextStyle(
+                                                Text(
+                                                  '${AppLocalizations(globalLanguage).translate("machine")}: ',
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
                                                     color: AppColors.mainGreen,
@@ -268,7 +258,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                 ),
                                                 Flexible(
                                                   child: Text(
-                                                    _machineName,
+                                                    machineName,
                                                     overflow: TextOverflow.ellipsis,
                                                     maxLines: 2,
                                                     style: const TextStyle(
@@ -304,7 +294,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 tapController.text = "I";
-                                //_submitForm();
+                                _submitForm();
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.white,
@@ -336,7 +326,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                               ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: 50,
                             width: 100,
                             child: ElevatedButton(
@@ -349,14 +339,12 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       content: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10),
+                                              padding: const EdgeInsets.only(top: 10),
                                               child: Image.asset(
                                                 'assets/icon.warning.png',
                                                 width: 70,
@@ -365,7 +353,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                             ),
                                             const SizedBox(height: 10),
                                             Text(
-                                              'Apakah Anda telah selesai menggunakan mesin?',
+                                              '${AppLocalizations(globalLanguage).translate("machineOut")}?',
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.poppins(
                                                 fontSize: 12,
@@ -388,9 +376,9 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                       borderRadius: BorderRadius.circular(10),
                                                     ),
                                                   ),
-                                                  child: const Text(
-                                                    'Tidak',
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    AppLocalizations(globalLanguage).translate("cancel"),
+                                                    style: const TextStyle(
                                                       color: AppColors.mainGreen,
                                                     ),
                                                   ),
@@ -399,7 +387,7 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     tapController.text = "O";
-                                                    //_submitForm();
+                                                    _submitForm();
                                                   },
                                                   style: ElevatedButton.styleFrom(
                                                     backgroundColor: AppColors.mainGreen,
@@ -408,9 +396,9 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                       borderRadius: BorderRadius.circular(10),
                                                     ),
                                                   ),
-                                                  child: const Text(
-                                                    'Ya',
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    AppLocalizations(globalLanguage).translate("yes"),
+                                                    style: const TextStyle(
                                                       color: Colors.white,
                                                     ),
                                                   ),

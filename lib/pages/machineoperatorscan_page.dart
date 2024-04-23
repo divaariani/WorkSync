@@ -39,7 +39,7 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          AppLocalizations(globalLanguage).translate("Machine"),
+          AppLocalizations(globalLanguage).translate("machine"),
           style: TextStyle(
             color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
                           const SizedBox(height: 50),
                           Text(
                             textAlign: TextAlign.center,
-                            AppLocalizations(globalLanguage).translate("Scan Machine Code"),
+                            AppLocalizations(globalLanguage).translate("machineScan"),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
