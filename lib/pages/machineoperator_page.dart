@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
 import 'machinestatus_page.dart';
@@ -101,7 +101,20 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
 
       if (response.status == 1) {
         if (tap == "I") {
-          Get.snackbar('IN Mesin', 'Operator $userName');
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: "IN !",
+              message: "Mesin $machineName",
+              contentType: ContentType.success,
+            ),
+          );
+          
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
 
           Navigator.pushReplacement(
             context,
@@ -112,7 +125,20 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
             ),
           );
         } else if (tap == "O") {
-          Get.snackbar('OUT Mesin', 'Operator $userName');
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: "OUT !",
+              message: "Mesin $machineName",
+              contentType: ContentType.success,
+            ),
+          );
+          
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
 
           Navigator.pushReplacement(
             context,
@@ -238,7 +264,8 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              userName,
+                                              //userName,
+                                              "diva",
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 color: AppColors.mainGreen,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
@@ -9,6 +8,7 @@ import '../controllers/response_model.dart';
 import '../utils/session_manager.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
+import '../utils/notifications.dart';
 
 class MachineStatusPage extends StatefulWidget {
   const MachineStatusPage({Key? key}) : super(key: key);
@@ -442,33 +442,33 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
         final machineName = widget.entry.mesin;
 
         if (state == "Start") {
-          Get.snackbar('Mesin $machineName', 'started');
+          NotificationManager().showNotification(title: 'Started !', body: 'Mesin $machineName');
         } else if (state == "Pause (Naik WIP)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik WIP)');
         } else if (state == "Pause (Naik Bobin)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik Bobin)');
         } else if (state == "Pause (Setup Mesin)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Setup Mesin)');
         } else if (state == "Pause (Pergi/Istirahat)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Pergi/Istirahat)');
         } else if (state == "Pause (Lingkungan)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Lingkungan)');
         } else if (state == "Block (Material Availability)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Material Availability)');
         } else if (state == "Block (Equiment Failure)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Equiment Failure)');
         } else if (state == "Block (Setup Adjustments)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Setup Adjustments)');
         } else if (state == "Block (Reduced Speed)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Speed)');
         } else if (state == "Block (Process Defect)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Process Defect)');
         } else if (state == "Block (Reduced Yield)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Yield)');
         } else if (state == "Block (Fully Productive Time)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Fully Productive Time)');
         } else if (state == "End") {
-          Get.snackbar('Mesin $machineName', 'ended');
+          NotificationManager().showNotification(title: 'Ended !', body: 'Mesin $machineName');
         }
 
         Navigator.of(context).push(
