@@ -9,10 +9,12 @@ import 'pages/nointernet_page.dart';
 import 'utils/session_manager.dart';
 import 'utils/globals.dart';
 import 'utils/firebase_options.dart';
+import 'utils/notifications.dart';
 import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationManager().initNotification();
   
   final sessionManager = SessionManager();
   await sessionManager.initPrefs();
