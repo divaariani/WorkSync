@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
-import 'refresh_page.dart';
 import 'reportadd_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
@@ -46,7 +45,7 @@ class _ReportPageState extends State<ReportPage> {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations(globalLanguage).translate("Product Report"),
+              AppLocalizations(globalLanguage).translate("productreport"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
                     ? AppColors.deepGreen
@@ -141,32 +140,6 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              (entry.tgl_kp != null)
-                  ? DateFormat('yyyy-MM-dd').format(entry.tgl_kp!)
-                  : "",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        // DataCell(
-        //   Container(
-        //     alignment: Alignment.centerLeft,
-        //     child: Text(
-        //       entry.dibuatoleh ?? "",
-        //       style: const TextStyle(
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        DataCell(
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
               entry.dibuattgl != null
                   ? DateFormat('yyyy-MM-dd HH:mm').format(entry.dibuattgl!)
                   : "",
@@ -236,7 +209,7 @@ class _CardTableState extends State<CardTable> {
         int nomor_kp = int.tryParse(data['nomor_kp'].toString()) ?? 0;
         DateTime tgl_kp = DateTime.parse(data['tgl_kp']);
         int userid = int.tryParse(data['userid'].toString()) ?? 0;
-        String dibuatoleh = data['dibuatoleh'];
+        String dibuatoleh = data['dibuatoleh'] ?? "";
         DateTime dibuattgl = DateTime.parse(data['dibuattgl']);
 
         return MyData(
@@ -293,16 +266,6 @@ class _CardTableState extends State<CardTable> {
                         });
                       },
                     ),
-                    // trailing: IconButton(
-                    //   icon: const Icon(Icons.cancel),
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       controller.clear();
-                    //       _searchResult = '';
-                    //       fetchDataFromAPI();
-                    //     });
-                    //   },
-                    // ),
                   ),
                 ),
               ),
@@ -358,34 +321,16 @@ class _CardTableState extends State<CardTable> {
                             columns: [
                               DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("Nomor KP"),
+                                  AppLocalizations(globalLanguage).translate("Id"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
-                              DataColumn(
-                                label: Text(
-                                  AppLocalizations(globalLanguage).translate("Tanggal KP"),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.deepGreen,
-                                  ),
-                                ),
-                              ),
-                              // DataColumn(
-                              //   label: Text(
-                              //     AppLocalizations(globalLanguage).translate("Pembuat"),
-                              //     style: const TextStyle(
-                              //       fontSize: 12,
-                              //       color: AppColors.deepGreen,
-                              //     ),
-                              //   ),
-                              // ),
                                DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("Tanggal"),
+                                  AppLocalizations(globalLanguage).translate("date"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
