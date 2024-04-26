@@ -35,10 +35,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    _fetchUserId();
+    fetchUserId();
     lokasiController.text = barcodeLokasiResult;
-    String hasilscan = globalBarcodeBarangResults.join('\n');
-    hasilscanController.text = hasilscan;
+    hasilscanController.text = globalBarcodeBarangResults.join('\n');
     userid = sessionManager.getUserId() ?? '';
   }
 
@@ -82,7 +81,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '$barcodeBarangResult',
+                  barcodeBarangResult,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -108,12 +107,12 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     );
   }
 
-  Future<void> _fetchUserId() async {
+  Future<void> fetchUserId() async {
     userid = await sessionManager.getUserId() ?? "";
     setState(() {});
   }
 
-  Future<void> _submitStock() async {
+  Future<void> submitStock() async {
     final String lokasi = lokasiController.text;
     List<String> errorMessages = [];
     bool success = true;
@@ -211,9 +210,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Location',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("location"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -228,7 +227,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20), 
                                 ),
-                                content: Text(AppLocalizations(globalLanguage).translate("Apakah Anda ingin mengganti kode lokasi?")),
+                                content: Text(AppLocalizations(globalLanguage).translate("sureChangeLocation")),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -272,8 +271,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style:
-                                      const TextStyle(color: AppColors.deepGreen),
+                                  style: const TextStyle(color: AppColors.deepGreen),
                                 ),
                               ),
                             ],
@@ -282,9 +280,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Stock List',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations(globalLanguage).translate("stocklist"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
@@ -300,26 +298,28 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  contentPadding: EdgeInsets.all(16),
+                                  contentPadding: const EdgeInsets.all(16),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      _buildGradientButton('Scan Barcode',
-                                          () async {
-                                        Navigator.pop(context);
-                                        await _scanBarcode();
-                                      }),
-                                      SizedBox(height: 16),
-                                      _buildGradientButton('Enter Manually',
-                                          () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const StockManualPage(),
-                                          ),
-                                        );
-                                      }),
+                                      buildGradientButton(AppLocalizations(globalLanguage).translate("scanbarcode"),
+                                        () async {
+                                          Navigator.pop(context);
+                                          await _scanBarcode();
+                                        }
+                                      ),
+                                      const SizedBox(height: 16),
+                                      buildGradientButton(AppLocalizations(globalLanguage).translate("entermanually"),
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const StockManualPage(),
+                                            ),
+                                          );
+                                        }
+                                      ),
                                     ],
                                   ),
                                 );
@@ -344,17 +344,14 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                 ),
                               ],
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6,
-                                horizontal: 20,
-                              ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Add Stock',
-                                    style: TextStyle(
+                                    AppLocalizations(globalLanguage).translate("addstock"),
+                                    style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -428,8 +425,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                                                               Navigator.of(context).pop();
                                                             },
                                                             child: Text(
-                                                              AppLocalizations(globalLanguage)
-                                                                  .translate("yes"),
+                                                              AppLocalizations(globalLanguage).translate("yes"),
                                                               style: const TextStyle(
                                                                 color: Colors.red,
                                                                 fontWeight: FontWeight.bold,
@@ -515,25 +511,27 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  contentPadding: EdgeInsets.all(16),
+                                  contentPadding: const EdgeInsets.all(16),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      _buildGradientButton(AppLocalizations(globalLanguage).translate("scanbarcode"),
-                                          () async {
-                                        Navigator.pop(context);
-                                        await _scanBarcode();
-                                      }),
+                                      buildGradientButton(AppLocalizations(globalLanguage).translate("scanbarcode"),
+                                        () async {
+                                          Navigator.pop(context);
+                                          await _scanBarcode();
+                                        }
+                                      ),
                                       const SizedBox(height: 16),
-                                      _buildGradientButton(AppLocalizations(globalLanguage).translate("entermanually"),
-                                          () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const StockManualPage()),
-                                        );
-                                      }),
+                                      buildGradientButton(AppLocalizations(globalLanguage).translate("entermanually"),
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const StockManualPage()),
+                                          );
+                                        }
+                                      ),
                                     ],
                                   ),
                                 );
@@ -558,8 +556,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 30),
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                               child: Row(
                                 children: [
                                   Text(
@@ -595,16 +592,15 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                       ),
                       child: InkWell(
                         onTap: () async {
-                          _submitStock();
+                          submitStock();
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => RefreshStockTable(),
+                              builder: (context) => const RefreshStockTable(),
                             ),
                           );
                         },
                         child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                           child: Row(
                             children: [
                               Text(
@@ -631,7 +627,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   }
 }
 
-Widget _buildGradientButton(String text, Function() onPressed) {
+Widget buildGradientButton(String text, Function() onPressed) {
   return Container(
     height: 40,
     decoration: BoxDecoration(

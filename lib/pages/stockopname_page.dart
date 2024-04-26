@@ -13,9 +13,7 @@ import '../controllers/stockopname_controller.dart';
 import '../controllers/response_model.dart';
 
 class StockOpnamePage extends StatefulWidget {
-  final String? auditorData;
-
-  const StockOpnamePage({Key? key, this.auditorData}) : super(key: key);
+  const StockOpnamePage({Key? key}) : super(key: key);
 
   @override
   State<StockOpnamePage> createState() => _StockOpnamePageState();
@@ -25,14 +23,12 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
   final TextEditingController searchController = TextEditingController();
   String currentDate = "";
   String userId = '';
-  String? userText;
 
   @override
   void initState() {
     super.initState();
     currentDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(DateTime.now());
     userId = SessionManager().getUserId() ?? '';
-    userText = widget.auditorData;
   }
 
   @override
@@ -52,8 +48,8 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
               AppLocalizations(globalLanguage).translate("stockopname"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
-                    ? AppColors.deepGreen
-                    : Colors.white,
+                  ? AppColors.deepGreen
+                  : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -120,21 +116,21 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
-                                          AppLocalizations(globalLanguage).translate("cancel"),
-                                          style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold)),
+                                        AppLocalizations(globalLanguage).translate("cancel"),
+                                        style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () async {
                                         try {
-                                          ResponseModel response = await StockOpnameController.postConfirmStock(userid: userId);
+                                          ResponseModel response = await StockOpnameController.postConfirmStock();
+
                                           if (response.status == 1) {
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RefreshStockTable()),
+                                                builder: (context) => RefreshStockTable()
+                                              ),
                                             );
 
                                             final snackBar = SnackBar(
@@ -142,10 +138,8 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
                                               behavior: SnackBarBehavior.floating,
                                               backgroundColor: Colors.transparent,
                                               content: AwesomeSnackbarContent(
-                                                title:
-                                                    AppLocalizations(globalLanguage).translate("uploaded"),
-                                                message:
-                                                    AppLocalizations(globalLanguage).translate("succesupload"),
+                                                title: AppLocalizations(globalLanguage).translate("uploaded"),
+                                                message: AppLocalizations(globalLanguage).translate("succesupload"),
                                                 contentType: ContentType.success,
                                               ),
                                             );
@@ -154,19 +148,18 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
                                               ..hideCurrentSnackBar()
                                               ..showSnackBar(snackBar);
 
-                                            print('Draft posted successfully');
+                                            print('Confirm data posted successfully');
                                           } else {
-                                            print('Failed to post draft: ${response.message}');
+                                            print('Failed to confirm the draft: ${response.message}');
                                           }
                                         } catch (e) {
-                                          print('Error posting draft: $e userid nya $userId');
+                                          print('Error posting: $e userid nya $userId');
                                         }
                                       },
                                       child: Text(
-                                          AppLocalizations(globalLanguage).translate("confirm"),
-                                          style: const TextStyle(
-                                              color: AppColors.mainGreen,
-                                              fontWeight: FontWeight.bold)),
+                                        AppLocalizations(globalLanguage).translate("confirm"),
+                                        style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -198,16 +191,16 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
 }
 
 class MyData {
-  final String? Lokasi;
-  final String? NoLot;
-  final String? NamaBarang;
-  final String? Merk;
-  final String? Stock;
-  final String? Unit;
-  final String? Status;
+  final String? lokasi;
+  final String? noLot;
+  final String? namaBarang;
+  final String? merk;
+  final String? stock;
+  final String? unit;
+  final String? status;
 
 
-  MyData({required this.Lokasi, required this.NoLot, required this.NamaBarang, required this.Merk, required this.Stock, required this.Unit, required this.Status});
+  MyData({required this.lokasi, required this.noLot, required this.namaBarang, required this.merk, required this.stock, required this.unit, required this.status});
 }
 
 class MyDataTableSource extends DataTableSource {
@@ -229,7 +222,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.Lokasi ?? "",
+              entry.lokasi ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -241,7 +234,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.NoLot ?? "",
+              entry.noLot ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -253,7 +246,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.NamaBarang ?? "",
+              entry.namaBarang ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -265,7 +258,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.Merk ?? "",
+              entry.merk ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -277,7 +270,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.Stock ?? "",
+              entry.stock ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -289,7 +282,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.Unit ?? "",
+              entry.unit ?? "",
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -301,15 +294,15 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.Status == AppLocalizations(globalLanguage).translate("posted")
-                  ? AppLocalizations(globalLanguage).translate("confirm")
-                  : AppLocalizations(globalLanguage).translate("draft"),
+              entry.status == AppLocalizations(globalLanguage).translate("posted")
+                ? AppLocalizations(globalLanguage).translate("confirm")
+                : AppLocalizations(globalLanguage).translate("draft"),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: entry.Status == AppLocalizations(globalLanguage).translate("posted")
-                    ? Colors.green
-                    : Colors.orange,
+                color: entry.status == AppLocalizations(globalLanguage).translate("posted")
+                  ? Colors.green
+                  : Colors.orange,
               ),
             ),
           ),
@@ -359,36 +352,35 @@ class _CardTableState extends State<CardTable> {
         _isLoading = true;
       });
 
-      final response = await StockOpnameController.viewData(
-          Lokasi: '', NoLot: '', NamaBarang: '', Merk: '', Stock: '', Unit: '', Status:'');
+      final response = await StockOpnameController.viewData(lokasi: '', noLot: '', namaBarang: '', merk: '', stock: '', unit: '', status:'');
 
       final List<dynamic> nameDataList = response.data;
 
       final List<MyData> myDataList = nameDataList.map((data) {
-        String Lokasi = data['Lokasi'] ?? "";
+        String lokasi = data['Lokasi'] ?? "";
         String noLot = data['NoLot'] ?? "";
-        String NamaBarang = data['NamaBarang'] ?? "";
-        String Merk = data['Merk'] ?? "";
-        String Stock = data['Stock'] ?? "";
-        String Unit = data['Unit'] ?? "";
-        String Status = data['Status'] ?? "";
+        String namaBarang = data['NamaBarang'] ?? "";
+        String merk = data['Merk'] ?? "";
+        String stock = data['Stock'] ?? "";
+        String unit = data['Unit'] ?? "";
+        String status = data['Status'] ?? "";
 
         return MyData(
-          Lokasi: Lokasi,
-          NoLot: noLot,
-          NamaBarang: NamaBarang,
-          Merk: Merk,
-          Stock: Stock,
-          Unit: Unit,
-          Status: Status,
+          lokasi: lokasi,
+          noLot: noLot,
+          namaBarang: namaBarang,
+          merk: merk,
+          stock: stock,
+          unit: unit,
+          status: status,
         );
       }).toList();
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.Lokasi?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
-              (data.NoLot?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
-              (data.Merk?.toLowerCase() ?? "").contains(_searchResult.toLowerCase());
+          return (data.lokasi?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
+            (data.noLot?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
+            (data.merk?.toLowerCase() ?? "").contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
@@ -420,8 +412,7 @@ class _CardTableState extends State<CardTable> {
                     title: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                        hintText:
-                            '${AppLocalizations(globalLanguage).translate("search")}...',
+                        hintText: '${AppLocalizations(globalLanguage).translate("search")}...',
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
@@ -473,10 +464,7 @@ class _CardTableState extends State<CardTable> {
                   child: const Center(
                     child: Text(
                       '+',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: AppColors.mainGreen),
+                      style: TextStyle( fontWeight: FontWeight.bold, fontSize: 30, color: AppColors.mainGreen),
                     ),
                   ),
                 ),

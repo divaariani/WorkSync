@@ -18,12 +18,11 @@ class _StockManualPageState extends State<StockManualPage> {
   final TextEditingController searchController = TextEditingController();
   final SessionManager sessionManager = SessionManager();
   final String? userId = SessionManager().getNamaUser();
-  String barcodeLokasiResult = globalBarcodeLokasiResult;
   final lokasiController = TextEditingController();
   final nameController = TextEditingController();
+  String barcodeLokasiResult = globalBarcodeLokasiResult;
   String userName = "";
   String lotNumber = '';
-
   List<String> lotNumbers = [''];
 
   void addCard() {
@@ -36,10 +35,10 @@ class _StockManualPageState extends State<StockManualPage> {
   void initState() {
     super.initState();
     lokasiController.text = barcodeLokasiResult;
-    _fetchUser();
+    fetchUser();
   }
 
-  Future<void> _fetchUser() async {
+  Future<void> fetchUser() async {
     userName = await sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
@@ -51,8 +50,8 @@ class _StockManualPageState extends State<StockManualPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  const StockLokasiPage()),
+            builder: (context) => const StockLokasiPage()
+          ),
         );
         return false;
       },
@@ -63,23 +62,25 @@ class _StockManualPageState extends State<StockManualPage> {
               AppLocalizations(globalLanguage).translate("stockform"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
-                    ? AppColors.deepGreen
-                    : Colors.white,
+                  ? AppColors.deepGreen
+                  : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor:
-                globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+            backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back,
-                  color: globalTheme == 'Light Theme'
-                      ? AppColors.deepGreen
-                      : Colors.white),
+              icon: Icon(
+                Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white
+              ),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const StockLokasiPage()),
+                      builder: (context) => const StockLokasiPage()
+                  ),
                 );
               },
             ),
@@ -119,12 +120,12 @@ class _StockManualPageState extends State<StockManualPage> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Image.asset('assets/useradd.png',
-                                  height: 24, width: 24),
+                              Image.asset('assets/useradd.png', height: 24, width: 24),
                               const SizedBox(width: 10),
                               Text(
-                                '$userName',
-                                style: TextStyle(color: AppColors.deepGreen),
+                                //userName,
+                                "diva",
+                                style: const TextStyle(color: AppColors.deepGreen),
                               ),
                             ],
                           ),
@@ -149,8 +150,7 @@ class _StockManualPageState extends State<StockManualPage> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Image.asset('assets/stocklokasi.png',
-                                  height: 24, width: 24),
+                              Image.asset('assets/stocklokasi.png', height: 24, width: 24),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
@@ -158,8 +158,7 @@ class _StockManualPageState extends State<StockManualPage> {
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: const TextStyle(
-                                      color: AppColors.deepGreen),
+                                  style: const TextStyle(color: AppColors.deepGreen),
                                 ),
                               ),
                             ],
