@@ -5,29 +5,26 @@ import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 
 class StockOpnameController{
-  final String? userId = SessionManager().getUserId();
-
   static Future<ResponseModel> viewData({
-    required String Lokasi,
-    required String NoLot,
-    required String NamaBarang,
-    required String Merk,
-    required String Stock,
-    required String Unit,
-    required String Status,
-
+    required String lokasi,
+    required String noLot,
+    required String namaBarang,
+    required String merk,
+    required String stock,
+    required String unit,
+    required String status,
   }) async {
     final String? userId = SessionManager().getUserId();
     final response = await http.post(
       Uri.parse('$apiBaseUrl2?function=get_list_stockopname&userid=$userId'),
       body: {
-        'Lokasi': Lokasi,
-        'NoLot': NoLot,
-        'NamaBarang': NamaBarang,
-        'Merk': Merk,
-        'Stock': Stock,
-        'Unit': Unit,
-        'Status': Status,
+        'Lokasi': lokasi,
+        'NoLot': noLot,
+        'NamaBarang': namaBarang,
+        'Merk': merk,
+        'Stock': stock,
+        'Unit': unit,
+        'Status': status,
       },
     );
 
@@ -35,17 +32,17 @@ class StockOpnameController{
       final Map<String, dynamic> responseData = json.decode(response.body); 
       return ResponseModel.fromJson(responseData);
     } else {
-      throw Exception('Failed to view form data - Status Code: ${response.statusCode}');
+      throw Exception('Failed to view data - Status Code: ${response.statusCode}');
     }
   }
 
-  static Future<ResponseModel> postConfirmStock({
-    required String userid,
-  }) async {
+  static Future<ResponseModel> postConfirmStock() async {
+    final String? userId = SessionManager().getUserId();
+
     final response = await http.post(
       Uri.parse('$apiBaseUrl2?function=post_hasilopname'),
       body: {
-        'userid': userid,
+        'userid': userId,
       },
     );
 
@@ -53,7 +50,7 @@ class StockOpnameController{
       final Map<String, dynamic> responseData = json.decode(response.body); 
       return ResponseModel.fromJson(responseData);
     } else {
-      throw Exception('Failed to post form data');
+      throw Exception('Failed to post confirm data');
     }
   }
 
@@ -61,7 +58,6 @@ class StockOpnameController{
     required String hasilscan,
     required String userid,
     required String lokasi,
-
   }) async {
     final response = await http.post(
       Uri.parse('$apiBaseUrl2?function=post_stockopname'),
@@ -76,7 +72,7 @@ class StockOpnameController{
       final Map<String, dynamic> responseData = json.decode(response.body); 
       return ResponseModel.fromJson(responseData);
     } else {
-      throw Exception('Failed to view form data - Status Code: ${response.statusCode}');
+      throw Exception('Failed to post data - Status Code: ${response.statusCode}');
     }
   }
 }
