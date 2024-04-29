@@ -22,7 +22,7 @@ class MachineMonitoringPage extends StatelessWidget {
           ),
         ),
         title: Text(
-            AppLocalizations(globalLanguage).translate("Machine Monitoring"),
+            AppLocalizations(globalLanguage).translate("machineMonitoring"),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

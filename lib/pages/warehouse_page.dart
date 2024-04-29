@@ -121,8 +121,9 @@ class MyData {
 
 class MyDataTableSource extends DataTableSource {
   final List<MyData> data;
+  final BuildContext context;
 
-  MyDataTableSource(this.data);
+  MyDataTableSource(this.data, this.context);
 
   @override
   DataRow? getRow(int index) {
@@ -134,13 +135,22 @@ class MyDataTableSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              entry.mobil,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () async {
+              globalBarcodeMobilResult = entry.mobil;
+              Navigator.push(
+                context, MaterialPageRoute(
+                  builder: (context) => const WarehouseBarcodesPage()),
+              );
+            },
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                entry.mobil,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -648,7 +658,7 @@ class _CardTableState extends State<CardTable> {
                               ),
                             ),
                           ],
-                          source: MyDataTableSource(_data),
+                          source: MyDataTableSource(_data, context),
                           rowsPerPage: 5,
                         ),
             ]),

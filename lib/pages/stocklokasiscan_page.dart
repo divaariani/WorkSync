@@ -26,10 +26,12 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
     );
 
     if (barcodeLokasiResult == '-1') {
-       Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const StockOpnamePage()),
-            );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const StockOpnamePage()
+        ),
+      );
       return;
     }
 
@@ -38,8 +40,7 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            StockLokasiPage(),
+        builder: (context) => StockLokasiPage(),
       ),
     );
   }

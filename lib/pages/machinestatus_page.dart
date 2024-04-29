@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
 import 'machineoperatorscan_page.dart';
 import '../controllers/machine_controller.dart';
 import '../controllers/response_model.dart';
-//import '../controllers/notification_controller.dart';
 import '../utils/session_manager.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
+import '../utils/notifications.dart';
 
 class MachineStatusPage extends StatefulWidget {
   const MachineStatusPage({Key? key}) : super(key: key);
@@ -22,7 +20,7 @@ class MachineStatusPage extends StatefulWidget {
 class _MachineStatusPageState extends State<MachineStatusPage> {
   final SessionManager sessionManager = SessionManager();
   late DateTime currentTime;
-  List<MyData> _data = [];
+  List<MyData> mydata = [];
   
   Future<void> fetchCurrentTime() async {
     try {
@@ -57,7 +55,7 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
       }).toList();
 
       setState(() {
-        _data = myDataList;
+        mydata = myDataList;
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -85,7 +83,7 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("Machine Status"),
+            AppLocalizations(globalLanguage).translate("machineStatus"),
             style: TextStyle(
               color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
               fontWeight: FontWeight.bold,
@@ -125,7 +123,7 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    CardTable(data: _data),
+                    CardTable(data: mydata),
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -221,21 +219,16 @@ class CardTable extends StatefulWidget {
   const CardTable({Key? key, required this.data}) : super(key: key);
 
   @override
-  _CardTableState createState() => _CardTableState();
+  State<CardTable> createState() => _CardTableState();
 }
 
 class _CardTableState extends State<CardTable> {
   TextEditingController controller = TextEditingController();
-  String _searchResult = '';
-  bool _isLoading = false;
+  String searchResult = '';
   List<MyData> _data = [];
 
   Future<void> fetchDataFromAPI() async {
     try {
-      setState(() {
-        _isLoading = true;
-      });
-
       final response = await MachineController.postFormOperator(
         id: 1,
         name: '',
@@ -259,17 +252,13 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return data.mesin.toLowerCase().contains(_searchResult.toLowerCase()) ||
-              data.operator.toLowerCase().contains(_searchResult.toLowerCase()) ||
-              data.status.toLowerCase().contains(_searchResult.toLowerCase());
+          return data.mesin.toLowerCase().contains(searchResult.toLowerCase()) ||
+              data.operator.toLowerCase().contains(searchResult.toLowerCase()) ||
+              data.status.toLowerCase().contains(searchResult.toLowerCase());
         }).toList();
-        _isLoading = false;
       });
     } catch (e) {
       print('Error fetching data: $e');
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -311,7 +300,7 @@ class _CardTableState extends State<CardTable> {
                 ),
                 onChanged: (value) {
                   setState(() {
-                    _searchResult = value;
+                    searchResult = value;
                     fetchDataFromAPI();
                   });
                 },
@@ -321,7 +310,7 @@ class _CardTableState extends State<CardTable> {
                 onPressed: () {
                   setState(() {
                     controller.clear();
-                    _searchResult = '';
+                    searchResult = '';
                     fetchDataFromAPI();
                   });
                 },
@@ -340,12 +329,12 @@ class _CardTableState extends State<CardTable> {
           child: Padding(
             padding: const EdgeInsets.all(1),
             child: PaginatedDataTable(
-              columns: const [
+              columns: [
                 DataColumn(
                   label: Flexible(
                     child: Text(
-                      'Aksi',
-                      style: TextStyle(
+                      AppLocalizations(globalLanguage).translate("action"),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
                       ),
@@ -355,8 +344,8 @@ class _CardTableState extends State<CardTable> {
                 DataColumn(
                   label: Flexible(
                     child: Text(
-                      'Mesin',
-                      style: TextStyle(
+                      AppLocalizations(globalLanguage).translate("machine"),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
                       ),
@@ -366,8 +355,8 @@ class _CardTableState extends State<CardTable> {
                 DataColumn(
                   label: Flexible(
                     child: Text(
-                      'Operator',
-                      style: TextStyle(
+                      AppLocalizations(globalLanguage).translate("operator"),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
                       ),
@@ -377,8 +366,8 @@ class _CardTableState extends State<CardTable> {
                 DataColumn(
                   label: Flexible(
                     child: Text(
-                      'Status',
-                      style: TextStyle(
+                      AppLocalizations(globalLanguage).translate("status"),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
                       ),
@@ -413,7 +402,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
   String userIdLogin = "";
   String userName = '';
 
-  Future<void> _fetchUserId() async {
+  Future<void> fetchUserId() async {
     userIdLogin = await sessionManager.getUserId() ?? "";
     userName = await sessionManager.getNamaUser() ?? "";
     setState(() {});
@@ -433,14 +422,12 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
   void initState() {
     super.initState();
     currentTime = DateTime.now();
-    _fetchUserId();
+    fetchUserId();
   }
 
   Future<void> _submitState() async {
     final int id = int.parse(idController.text);
     final String state = stateController.text;
-    final int userId = int.parse(userIdLogin);
-    final String date = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
 
     try {
       await fetchCurrentTime();
@@ -455,84 +442,51 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
         final machineName = widget.entry.mesin;
 
         if (state == "Start") {
-          Get.snackbar('Mesin $machineName', 'started');
-          // try {
-          //   await NotificationController.postNotification(
-          //     userid: userId,
-          //     title: 'Mesin',
-          //     description: 'Anda melakukan start mesin $machineName',
-          //     date: date,
-          //   );
-          // } catch (e) {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(
-          //       content: Text('Terjadi kesalahan saat mengirim notifikasi: $e'),
-          //     ),
-          //   );
-          // }
+          NotificationManager().showNotification(title: 'Started !', body: 'Mesin $machineName');
         } else if (state == "Pause (Naik WIP)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik WIP)');
         } else if (state == "Pause (Naik Bobin)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik Bobin)');
         } else if (state == "Pause (Setup Mesin)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Setup Mesin)');
         } else if (state == "Pause (Pergi/Istirahat)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Pergi/Istirahat)');
         } else if (state == "Pause (Lingkungan)") {
-          Get.snackbar('Mesin $machineName', 'paused');
+          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Lingkungan)');
         } else if (state == "Block (Material Availability)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Material Availability)');
         } else if (state == "Block (Equiment Failure)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Equiment Failure)');
         } else if (state == "Block (Setup Adjustments)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Setup Adjustments)');
         } else if (state == "Block (Reduced Speed)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Speed)');
         } else if (state == "Block (Process Defect)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Process Defect)');
         } else if (state == "Block (Reduced Yield)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Yield)');
         } else if (state == "Block (Fully Productive Time)") {
-          Get.snackbar('Mesin $machineName', 'blocked');
+          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Fully Productive Time)');
         } else if (state == "End") {
-          Get.snackbar('Mesin $machineName', 'ended');
-          // try {
-          //   await NotificationController.postNotification(
-          //     userid: userId,
-          //     title: 'Mesin',
-          //     description: 'Anda melakukan end mesin $machineName',
-          //     date: date,
-          //   );
-          // } catch (e) {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(
-          //       content: Text('Terjadi kesalahan saat mengirim notifikasi: $e'),
-          //     ),
-          //   );
-          // }
+          NotificationManager().showNotification(title: 'Ended !', body: 'Mesin $machineName');
         }
 
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const MachineStatusPage()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MachineStatusPage()
+          )
+        );
       } else if (response.status == 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Request gagal: ${response.message}'),
+            content: Text('Gagal mengubah status mesin !'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Terjadi kesalahan: Response tidak valid.'),
-          ),
-        );
+        debugPrint('Terjadi kesalahan: Response tidak valid.');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-        ),
-      );
+      debugPrint('Terjadi kesalahan: $e');
     }
   }
 
@@ -562,7 +516,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Anda belum absen pada mesin',
+                              AppLocalizations(globalLanguage).translate("machineCodeRequire"),
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(fontSize: 12, color: AppColors.mainGreen),
                             ),
@@ -582,9 +536,9 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Start Saja',
-                                    style: TextStyle(color: AppColors.mainGreen),
+                                  child: Text(
+                                    AppLocalizations(globalLanguage).translate("startAnyway"),
+                                    style: const TextStyle(color: AppColors.mainGreen),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -602,9 +556,9 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Absen',
-                                    style: TextStyle(color: Colors.white),
+                                  child: Text(
+                                    AppLocalizations(globalLanguage).translate("scan"),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ],

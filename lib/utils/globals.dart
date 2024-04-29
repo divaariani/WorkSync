@@ -38,8 +38,9 @@ void setGlobalBarcodeCheckpointResult(String barcodeCheckpointResult) {
 
 void setGlobalBarcodeBarangqcResult(String barcodeBarangqcResult) {
   globalBarcodeBarangqcResult = barcodeBarangqcResult;
+}
 
-  void setGlobalBarcodeMobilResult(String barcodeMobilResult) {
+void setGlobalBarcodeMobilResult(String barcodeMobilResult) {
   globalBarcodeMobilResult = barcodeMobilResult;
 }
 
