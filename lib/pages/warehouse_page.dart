@@ -46,7 +46,7 @@ class _WarehousePageState extends State<WarehousePage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("DO Picking"),
+            AppLocalizations(globalLanguage).translate("doPicking"),
             style: TextStyle(
               color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
               fontWeight: FontWeight.bold,
@@ -422,16 +422,16 @@ class _CardTableState extends State<CardTable> {
                         });
                       },
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.cancel),
-                      onPressed: () {
-                        setState(() {
-                          controller.clear();
-                          _searchResult = '';
-                          fetchDataFromAPI();
-                        });
-                      },
-                    ),
+                    // trailing: IconButton(
+                    //   icon: const Icon(Icons.cancel),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       controller.clear();
+                    //       _searchResult = '';
+                    //       fetchDataFromAPI();
+                    //     });
+                    //   },
+                    // ),
                   ),
                 ),
               ),

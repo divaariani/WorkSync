@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'reportmanual_page.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
@@ -17,8 +17,7 @@ class ReportAddPage extends StatefulWidget {
   String result;
   List<String> resultBarangQc;
 
-  ReportAddPage({required this.result, required this.resultBarangQc, Key? key})
-      : super(key: key);
+  ReportAddPage({required this.result, required this.resultBarangQc, Key? key}) : super(key: key);
 
   @override
   State<ReportAddPage> createState() => _ReportAddPageState();
@@ -123,25 +122,6 @@ class _ReportAddPageState extends State<ReportAddPage> {
     }
   }
 
-  // void _showReScanDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text("Please Re-Scan Barcode"),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(); 
-  //             },
-  //             child: Text('OK'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   void _navigateToreportAddPage() {
     Navigator.push(
       context,
@@ -199,7 +179,6 @@ class _ReportAddPageState extends State<ReportAddPage> {
   }
 
   Future<void> _submitStock() async {
-    String successMessage = 'Selamat';
     List<String> errorMessages = [];
 
     try {
@@ -220,7 +199,20 @@ class _ReportAddPageState extends State<ReportAddPage> {
           .toList();
 
       if (inventoryDetails.isEmpty) {
-        Get.snackbar('Peringatan', 'Tidak ada data yang ingin disubmit.');
+        final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: "Peringatan !",
+              message: "Tidak ada data yang ingin disubmit.",
+              contentType: ContentType.warning,
+            ),
+          );
+          
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
         return;
       }
 
@@ -245,10 +237,21 @@ class _ReportAddPageState extends State<ReportAddPage> {
           ),
         );
       } else {
-        Get.snackbar('Stok Berhasil Diunggah', successMessage);
+        final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: "Berhasil !",
+              message: "Stok berhasil diunggah.",
+              contentType: ContentType.success,
+            ),
+          );
+          
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
       }
-
-      //_submitNotif();
 
       widget.resultBarangQc.clear();
       _dateController.clear();
@@ -258,11 +261,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
         widget.resultBarangQc = [];
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-        ),
-      );
+      print('Terjadi kesalahan: $e');
     }
   }
 
@@ -280,7 +279,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations(globalLanguage).translate("Add Product Report"),
+              AppLocalizations(globalLanguage).translate("addProduct"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
                     ? AppColors.deepGreen
@@ -318,49 +317,8 @@ class _ReportAddPageState extends State<ReportAddPage> {
                 child: SafeArea(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: [                
                       const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Tanggal Kp',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: fontSize,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: TextField(
-                                readOnly: true,
-                                controller: _dateController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 19),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
@@ -524,7 +482,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Detail Laporan Hasil Produksi',
+                                AppLocalizations(globalLanguage).translate("detailProduct"),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: fontSize,
@@ -557,7 +515,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        'Lot Number',
+                                        AppLocalizations(globalLanguage).translate("lotnumber"),
                                         style: TextStyle(
                                           fontSize: fontSize,
                                           color: Color.fromARGB(
@@ -662,14 +620,16 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                               return AlertDialog(
                                                 title: Text("Warning"),
                                                 content: Text(
-                                                    "Are you sure you want to delete this item?"),
+                                                    AppLocalizations(globalLanguage)
+                                            .translate("suredelete")),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
-                                                    child: Text("No"),
+                                                    child: Text(AppLocalizations(globalLanguage)
+                                            .translate("cancel")),
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
@@ -677,7 +637,8 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
-                                                    child: Text("Yes"),
+                                                    child: Text(AppLocalizations(globalLanguage)
+                                            .translate("yes")),
                                                   ),
                                                 ],
                                               );

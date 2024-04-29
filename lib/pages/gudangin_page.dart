@@ -1,22 +1,21 @@
-//import 'dart:html';
+import 'dart:ui' as ui;
+import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:worksync/pages/refresh_page.dart';
+import 'refresh_page.dart';
 import 'home_page.dart';
 import 'app_colors.dart';
 import '../controllers/gudangin_controller.dart';
 import '../utils/session_manager.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
-import 'package:get/get.dart';
-import 'package:flutter/material.dart' hide VoidCallback;
-import 'dart:ui' as ui;
-import 'dart:io' as io;
+
 
 class GudanginPage extends StatefulWidget {
   const GudanginPage({Key? key}) : super(key: key);
@@ -51,14 +50,13 @@ class _GudanginPageState extends State<GudanginPage> {
 
     if (barcodeGudangBarangResult.isNotEmpty) {
       try {
-        await GudangInController.updateWarehouseInScan(
-            lotnumber: barcodeGudangBarangResult);
+        await GudangInController.updateWarehouseInScan(lotnumber: barcodeGudangBarangResult);
         
         Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const RefreshGudangInTable()),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (context) => const RefreshGudangStatusTable()),
+        );
       
       } catch (e) {
         print('Error: $e');
@@ -106,7 +104,7 @@ class _GudanginPageState extends State<GudanginPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("warehousein"),
+            AppLocalizations(globalLanguage).translate("warehouse"),
             style: TextStyle(
               color: globalTheme == 'Light Theme'
                   ? AppColors.deepGreen
@@ -317,8 +315,7 @@ class CardTable extends StatefulWidget {
 
 class _CardTableState extends State<CardTable> {
   TextEditingController controller = TextEditingController();
-  final GudangInController _gudangUploadController =
-      Get.put(GudangInController());
+  final GudangInController _gudangUploadController = GudangInController();
   List<MyData> _data = [];
   List<MyData> _fetchedData = [];
   bool _isLoading = false;
@@ -345,30 +342,6 @@ class _CardTableState extends State<CardTable> {
       });
     } catch (error) {
       print(error);
-    }
-  }
-
-  Future<void> submitStock() async {
-    try {
-      await _fetchCurrentTime();
-      final response = await _gudangUploadController.uploadDataToGudang();
-      if (response['status'] == 1) {
-        Get.snackbar(
-          'Success',
-          response['message'],
-        );
-        // _submitNotif();
-      } else {
-        Get.snackbar(
-          'Upload Failed',
-          'Upload failed: ${response['message']}',
-        );
-      }
-    } catch (error) {
-      Get.snackbar(
-        'Error',
-        'Terjadi kesalahan: $error',
-      );
     }
   }
 
@@ -414,20 +387,13 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.checked?.toLowerCase() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.id?.toString() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.qty?.toString() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.namabarang?.toLowerCase() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.lotnumber?.toLowerCase() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.uom?.toLowerCase() ?? "")
-                  .contains(_searchResult.toLowerCase()) ||
-              (data.namabarang?.toLowerCase() ?? "")
-                  .contains(_searchResult.toLowerCase());
+          return (data.checked.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+              (data.id.toString()).contains(_searchResult.toLowerCase()) ||
+              (data.qty.toString()).contains(_searchResult.toLowerCase()) ||
+              (data.namabarang.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+              (data.lotnumber.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+              (data.uom.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+              (data.namabarang.toLowerCase()).contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
@@ -483,7 +449,7 @@ class _CardTableState extends State<CardTable> {
     }
 
     final excelFile =
-        io.File('${(await getTemporaryDirectory()).path}/WarehouseIn.xlsx');
+        io.File('${(await getTemporaryDirectory()).path}/Warehouse.xlsx');
     final excelData = excel.encode()!;
 
     await excelFile.writeAsBytes(excelData);
@@ -604,7 +570,7 @@ class _CardTableState extends State<CardTable> {
                             DataColumn(
                               label: Text(
                                 AppLocalizations(globalLanguage)
-                                    .translate('Tanggal Kp'),
+                                    .translate('date'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -634,7 +600,7 @@ class _CardTableState extends State<CardTable> {
                             DataColumn(
                               label: Text(
                                 AppLocalizations(globalLanguage)
-                                    .translate('Quantity'),
+                                    .translate('quantity'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -730,66 +696,103 @@ class _CardTableState extends State<CardTable> {
                 Column(
                   children: [
                     Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: const LinearGradient(
-                            colors: [Colors.white, AppColors.lightGreen],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: const LinearGradient(
+                              colors: [Colors.white, AppColors.lightGreen],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            submitStock();
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const RefreshGudangInTable()),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: const LinearGradient(
-                                colors: [Colors.white, AppColors.lightGreen],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
+                            boxShadow: [
+                              BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
                                   blurRadius: 5,
                                   spreadRadius: 2,
                                   offset: const Offset(0, 3),
                                 ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 30),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    AppLocalizations(globalLanguage)
-                                        .translate("upload"),
-                                    style: const TextStyle(
-                                      color: AppColors.deepGreen,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            ],
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: AppColors.mainGrey,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                ],
+                                  content: Text(AppLocalizations(globalLanguage).translate("surestock")),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                          AppLocalizations(globalLanguage).translate("cancel"),
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        try {
+                                          await _fetchCurrentTime();
+                                          final response = await _gudangUploadController.uploadDataToGudang();
+                                          if (response['status'] == 1) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RefreshGudangStatusTable()),
+                                            );
+
+                                            final snackBar = SnackBar(
+                                              elevation: 0,
+                                              behavior: SnackBarBehavior.floating,
+                                              backgroundColor: Colors.transparent,
+                                              content: AwesomeSnackbarContent(
+                                                title:
+                                                    AppLocalizations(globalLanguage).translate("uploaded"),
+                                                message:
+                                                    AppLocalizations(globalLanguage).translate("succesupload"),
+                                                contentType: ContentType.success,
+                                              ),
+                                            );
+
+                                            ScaffoldMessenger.of(context)
+                                              ..hideCurrentSnackBar()
+                                              ..showSnackBar(snackBar);
+
+                                            print('Draft posted successfully');
+                                          } else {
+                                            print('Failed to upload: ${response}');
+                                          }
+                                        } catch (e) {
+                                          print('Error upload: $e ');
+                                        }
+                                      },
+                                      child: Text(
+                                          AppLocalizations(globalLanguage).translate("confirm"),
+                                          style: const TextStyle(
+                                              color: AppColors.mainGreen,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                              child: Text(
+                                AppLocalizations(globalLanguage).translate("upload"),
+                                style: const TextStyle(
+                                  color: AppColors.deepGreen,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
                         ),
                   ],
                 ),

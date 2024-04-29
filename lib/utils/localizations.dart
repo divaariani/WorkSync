@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AppLocalizations {
@@ -213,6 +213,14 @@ class AppLocalizations {
       'succesproductupload' : "Successfully product uploaded",
       'result' : "Result",
       'ticketing' : "Ticketing",
+      'productreport' : "Product Report",
+      'number' : "Number",
+      'date' : "Date",
+      'username' : "Username",
+      'detailProduct' : "Detail Product Report",
+      'quantity' : "Quantity",
+      'reportform' : "Report Form",
+      'warehouseform' : "Warehouse Form",
       'machineScan' : "Scan Machine Code",
       'machine' : "Machine",
       'machineOut' : "Are you sure want to Out the machine",
@@ -431,6 +439,14 @@ class AppLocalizations {
       'succesproductupload' : "Produk berhasil diupload",
       'result' : "Hasil",
       'ticketing' : "Laporan",
+      'productreport' : "Laporan Produksi",
+      'number' : "Nomor",
+      'date' : "Tanggal",
+      'username' : "Nama",
+      'detailProduct' : "Detail Laporan Hasil Produksi",
+      'quantity' : "Kuantitas",
+      'reportform' : "Form Laporan",
+      'warehouseform' : "Form Stok Gudang",
       'machineScan' : "Pindai Kode Mesin",
       'machine' : "Mesin",
       'machineOut' : "Apakah Anda telah selesai menggunakan mesin",
