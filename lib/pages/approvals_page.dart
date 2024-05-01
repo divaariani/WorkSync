@@ -8,9 +8,7 @@ import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 import '../controllers/overtime_controller.dart';
-import '../service/approve_list_leave_model.dart';
-import '../service/approval_leave_service.dart';
-import '../service/approve_list_leave_service.dart';
+import '../controllers/approvals_controller.dart';
 
 class ApprovalsPage extends StatefulWidget {
   const ApprovalsPage({Key? key}) : super(key: key);
@@ -23,6 +21,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController searchLeaveControllerr = TextEditingController();
   late OvertimeController overtimeController;
+  late ApprovalsController approvalsController;
   String currentDate = "";
   int overtimeCount = 0;
   int leaveCount = 0;
@@ -38,13 +37,13 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
 
   final TextEditingController searchControllerr = TextEditingController();
   
-  List<DatumApproveListLeave> approvedLeave = [];
+  List<LeaveApprovalData> approvedLeave = [];
   String formatLanguageFulllDate(DateTime date) {
     return DateFormat('E, d MMM yyyy', 'id_ID').format(date);
   }
 
   Future<void> _handleApproval(String attLeaveId, int nstatrecord) async {
-    final service = ApiApproveLeave();
+    final service = ApprovalsController();
     await service.approveData(attLeaveId, nstatrecord);
 
     approvedLeave.removeWhere((leave) => leave.attLeaveId == attLeaveId);
@@ -52,7 +51,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
   }
 
   Future<void> _fetchApprovedLeaveData() async {
-    ApprovedListLeaveService service = ApprovedListLeaveService();
+    ApprovalsController service = ApprovalsController();
     final result = await service.fetchData();
     setState(() {
       approvedLeave = result.data;
@@ -277,7 +276,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                               TextButton(
                                                                 onPressed: () async {
                                                                   try {
-                                                                    await overtimeController.postRejectOvertime(data.ovtId.toString());
+                                                                    await approvalsController.postRejectOvertime(data.ovtId.toString());
 
                                                                     setState(() {
                                                                       OvertimeController().futureData = OvertimeController().fetchData(SessionManager().getNoAbsen());
@@ -349,7 +348,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                     GestureDetector(
                                                       onTap: () async {
                                                         try {
-                                                          await OvertimeController().postApproveOvertime(data.ovtId.toString());
+                                                          await ApprovalsController().postApproveOvertime(data.ovtId.toString());
                                                           setState(() {
                                                             OvertimeController().futureData = OvertimeController().fetchData(SessionManager().getNoAbsen());
                                                           });
@@ -431,7 +430,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                            padding: const EdgeInsets.only(top: 16, left: 20, right: 20, bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -455,8 +454,8 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                               ),
                             ),
                           ),
-                          FutureBuilder<ApproveListLeaveModel>(
-                            future: ApprovedListLeaveService().fetchData(),
+                          FutureBuilder<ApprovalsStatusController>(
+                            future: ApprovalsController().fetchData(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const CircularProgressIndicator(
@@ -465,26 +464,39 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                               } else if (snapshot.hasError) {
                                 return Text(AppLocalizations(globalLanguage).translate("noDataa"));
                               } else {
-                                List<DatumApproveListLeave> approvedLeave = snapshot.data?.data ?? [];
+                                List<LeaveApprovalData> approvedLeave =
+                                    snapshot.data?.data ?? [];
 
                                 if (searchControllerr.text.isNotEmpty) {
-                                  final String query = searchControllerr.text.toLowerCase();
+                                  final String query =
+                                      searchControllerr.text.toLowerCase();
                                   approvedLeave = approvedLeave.where((leave) {
-                                    return leave.actionStatusPost.toLowerCase().contains(query) ||
-                                        (query == 'requested' && leave.actionStatusPost.toLowerCase() == 'open/draft') ||
-                                        (query == 'approved' && leave.actionStatusPost.toLowerCase() == 'manager signed') ||
-                                        formatLanguageFulllDate(leave.tglAjuan).toLowerCase().contains(query) ||
-                                        formatLanguageFulllDate(leave.dari).toLowerCase().contains(query) ||
-                                        leave.namaKaryawan.toLowerCase().contains(query) ||
+                                    return leave.actionStatusPost
+                                            .toLowerCase()
+                                            .contains(query) ||
+                                        (query == 'requested' &&
+                                            leave.actionStatusPost.toLowerCase() ==
+                                                'open/draft') ||
+                                        (query == 'approved' &&
+                                            leave.actionStatusPost.toLowerCase() ==
+                                                'manager signed') ||
+                                        formatLanguageFulllDate(leave.tglAjuan)
+                                            .toLowerCase()
+                                            .contains(query) ||
+                                        formatLanguageFulllDate(leave.dari)
+                                            .toLowerCase()
+                                            .contains(query) ||
+                                        leave.namaKaryawan
+                                            .toLowerCase()
+                                            .contains(query) ||
                                         leave.leaveDesc.toLowerCase().contains(query);
                                   }).toList();
                                 }
 
                                 return Expanded(
                                   child: ListView.separated(
-                                    padding: const EdgeInsets.all(16),
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 16),
+                                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                                    separatorBuilder: (context, index) => const SizedBox(height: 16),
                                     itemCount: approvedLeave.length,
                                     itemBuilder: (context, index) {
                                       return Card(
