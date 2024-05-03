@@ -10,6 +10,8 @@ class AppLocalizations {
     'en': {
       'languageEn': 'English',
       'languageId': 'Indonesian',
+      'lightTheme': 'Light Theme',
+      'darkTheme': 'Dark Theme',
       'choose': 'Choose Language :',
       'hello': 'Hello',
       'helloDesc': 'Welcome to the app to monitor your work activity',
@@ -230,6 +232,8 @@ class AppLocalizations {
     'id': {
       'languageEn': 'Inggris',
       'languageId': 'Indonesia',
+      'lightTheme': 'Tema Terang',
+      'darkTheme': 'Tema Gelap',
       'choose': 'Pilih Bahasa :',
       'hello': 'Hai',
       'helloDesc': 'Selamat datang di aplikasi monitoring aktivitas kerja Anda',
