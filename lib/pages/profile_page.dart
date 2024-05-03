@@ -26,10 +26,8 @@ class _ProfilePageState extends State<ProfilePage> {
       language = 'English';
     } else if (globalLanguage == const Locale('id', 'ID')) {
       language = 'Bahasa Indonesia';
-    } else if (globalLanguage == const Locale('ko', 'KR')) {
-      language = '한국';
     } else {
-      language = '';
+      language = '-';
     }
 
     controller = AttendanceController();
@@ -170,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(AppLocalizations(globalLanguage).translate("switchTheme"), style: const TextStyle(color: AppColors.deepGreen, fontWeight: FontWeight.bold)),
-                                            Text('${AppLocalizations(globalLanguage).translate("current")}: $globalTheme', style: const TextStyle(color: AppColors.deepGrey)),
+                                            Text('${AppLocalizations(globalLanguage).translate("current")}: ${globalTheme == "Light Theme" ? AppLocalizations(globalLanguage).translate("lightTheme") : AppLocalizations(globalLanguage).translate("darkTheme")}', style: const TextStyle(color: AppColors.deepGrey)),
                                           ],
                                         ),
                                         const Spacer(),
@@ -241,9 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   TextButton(
                                     onPressed: () {
                                       SessionManager().logout();
-                                      setState(() {
-                                        globalLanguage = const Locale('en', 'US'); 
-                                      });
+                                      SessionManager().setTheme(const Locale('en', 'US').toString());
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(

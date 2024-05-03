@@ -586,7 +586,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                 context: context,
                 builder: (BuildContext context) {
                   return Dialog(
-                    backgroundColor: AppColors.mainGreen,
+                    backgroundColor: const Color(0xFFFF8A00),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -621,7 +621,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Naik WIP',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -643,7 +643,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Set Up Mesin',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -665,7 +665,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Naik Bobin',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -687,7 +687,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Pergi/Istirahat',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -709,7 +709,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Lingkungan',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -739,7 +739,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                 context: context,
                 builder: (BuildContext context) {
                   return Dialog(
-                    backgroundColor: AppColors.mainGreen,
+                    backgroundColor: const Color(0xFFFF3D3D),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -774,7 +774,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Material Availability',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -796,7 +796,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Equipment Failure',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -818,7 +818,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Setup and Adjustments',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -840,7 +840,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Reduced Speed',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -862,7 +862,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Process Defect',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -884,7 +884,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Reduced Yield',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
@@ -906,7 +906,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 child: const Text(
                                   'Fully Productive Time',
                                   style: TextStyle(
-                                    color: AppColors.mainGreen,
+                                    color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),

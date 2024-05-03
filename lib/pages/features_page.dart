@@ -12,8 +12,8 @@ import 'checkpoint_page.dart';
 import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
 import 'stockopname_page.dart';
-import 'facerecognition_page.dart';
-import 'faceregister_page.dart';
+// import 'facerecognition_page.dart';
+// import 'faceregister_page.dart';
 import 'gudangin_page.dart';
 import 'report_page.dart';
 import '../utils/localizations.dart';
@@ -118,12 +118,12 @@ class _FeaturesPageState extends State<FeaturesPage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => FaceRegisterPage(),
+        //   ),
+        // );
       } else if (faceCodeOneRegistered) {
         final snackBar = SnackBar(
           elevation: 0,
@@ -139,12 +139,12 @@ class _FeaturesPageState extends State<FeaturesPage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => FaceRegisterPage(),
+        //   ),
+        // );
       } else if (faceCodeTwoRegistered) {
         final snackBar = SnackBar(
           elevation: 0,
@@ -160,12 +160,12 @@ class _FeaturesPageState extends State<FeaturesPage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => FaceRegisterPage(),
+        //   ),
+        // );
       } else {
         showDialog(
           context: context,
@@ -222,12 +222,12 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FaceRecognitionPage(),
-                      ),
-                    );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => FaceRecognitionPage(),
+                    //   ),
+                    // );
                   },
                   child: Text(AppLocalizations(globalLanguage).translate("yes"),
                       style: const TextStyle(
@@ -676,11 +676,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CardItem(
-                  color: actorTicketing == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/productreport.png',
                   title: AppLocalizations(globalLanguage).translate("report"),
                   onTap: () {
-                    if (actorTicketing == '1') {
+                    if (actorWarehouse == '1') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const ReportPage()),
@@ -704,11 +704,11 @@ class _FeaturesPageState extends State<FeaturesPage> {
                   },
                 ),
                 CardItem(
-                  color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
+                  color: actorWarehouse == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/warehouse.png',
                   title: AppLocalizations(globalLanguage).translate("warehousein"),
                   onTap: () {
-                    if (actorAuditor == '1') {
+                    if (actorWarehouse == '1') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const GudanginPage()),

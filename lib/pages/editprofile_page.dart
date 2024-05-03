@@ -246,13 +246,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       items: <DropdownMenuItem<String>>[
         DropdownMenuItem(
           value: 'Light Theme',
-          child: Text(AppLocalizations(globalLanguage).translate("Light Theme"),
-              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
+          child: Text(
+            AppLocalizations(globalLanguage).translate("lightTheme"),
+            style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)
+          ),
         ),
         DropdownMenuItem(
           value: 'Dark Theme',
-          child: Text(AppLocalizations(globalLanguage).translate("Dark Theme"),
-              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
+          child: Text(
+            AppLocalizations(globalLanguage).translate("darkTheme"),
+            style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)
+          ),
         ),
       ],
       onChanged: _changeTheme,
@@ -272,11 +276,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         DropdownMenuItem(
           value: const Locale('id', 'ID'),
           child: Text(AppLocalizations(globalLanguage).translate("languageId"),
-              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
-        ),
-        DropdownMenuItem(
-          value: const Locale('ko', 'KR'),
-          child: Text(AppLocalizations(globalLanguage).translate("languageKr"),
               style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
       ],
