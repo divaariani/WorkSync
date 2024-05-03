@@ -4,7 +4,6 @@ import 'app_colors.dart';
 import 'dashboard_page.dart';
 import 'features_page.dart';
 import 'profile_page.dart';
-import '../utils/globals.dart';
 
 class HomePage extends StatefulWidget {
   final int initialIndex;
@@ -16,8 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState(this._currentIndex);
   int _currentIndex = 0;
+  _HomePageState(this._currentIndex);
   DateTime? currentBackPressTime;
 
   final List<Widget> _tabs = [
@@ -51,7 +50,8 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         body: _tabs[_currentIndex],
         bottomNavigationBar: Container(
-          color: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          padding: const EdgeInsets.only(bottom: 16),
+          color: AppColors.deepGreen,
           child: MoltenBottomNavigationBar(
             domeCircleColor: Colors.white,
             barColor: AppColors.deepGreen,
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
+      )
     );
   }
 }

@@ -11,6 +11,7 @@ import '../controllers/leave_controller.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
+import '../utils/photos.dart';
 
 class LeaveFormPage extends StatefulWidget {
   final LeaveData? data;

@@ -7,7 +7,7 @@ import 'warehouse_page.dart';
 import 'app_colors.dart';
 import 'approvals_page.dart';
 import 'overtimelist_page.dart';
-import 'leave_list_page.dart';
+import 'leavelist_page.dart';
 import 'checkpoint_page.dart';
 import 'ticketing_page.dart';
 import 'monitoringcheckpoint_page.dart';
@@ -19,8 +19,7 @@ import 'report_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
-import '../service/approve_list_leave_service.dart';
-import '../service/approve_list_leave_model.dart';
+import '../controllers/approvals_controller.dart';
 import '../controllers/overtime_controller.dart';
 import '../controllers/facerecognition_controller.dart';
 
@@ -34,7 +33,7 @@ class FeaturesPage extends StatefulWidget {
 class _FeaturesPageState extends State<FeaturesPage> {
   late OvertimeController overtimeController;
   late FaceRecognitionController faceRecognitionController;
-  List<DatumApproveListLeave> approvedLeave = [];
+  List<LeaveApprovalData> approvedLeave = [];
   int overtimeCount = 0;
   int leaveCount = 0;
   String? actorAttendance = '';
@@ -72,7 +71,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
   }
 
   Future<void> fetchApprovedLeaveData() async {
-    ApprovedListLeaveService service = ApprovedListLeaveService();
+    ApprovalsController service = ApprovalsController();
     final result = await service.fetchData();
     setState(() {
       approvedLeave = result.data;
@@ -679,7 +678,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorTicketing == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/productreport.png',
-                  title: AppLocalizations(globalLanguage).translate("Report"),
+                  title: AppLocalizations(globalLanguage).translate("report"),
                   onTap: () {
                     if (actorTicketing == '1') {
                       Navigator.push(
@@ -707,7 +706,7 @@ class _FeaturesPageState extends State<FeaturesPage> {
                 CardItem(
                   color: actorAuditor == '1' ? AppColors.mainGreen : Colors.grey.withOpacity(0.5),
                   imagePath: 'assets/warehouse.png',
-                  title: AppLocalizations(globalLanguage).translate("Warehouse"),
+                  title: AppLocalizations(globalLanguage).translate("warehousein"),
                   onTap: () {
                     if (actorAuditor == '1') {
                       Navigator.push(
