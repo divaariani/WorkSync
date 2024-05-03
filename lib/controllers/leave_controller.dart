@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:http/http.dart' as http;
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
+import '../utils/photos.dart';
 
 class LeaveUrlController {
   late final String? noAbsen;
@@ -273,11 +274,4 @@ class ApiProvider {
       throw Exception('Gagal mengambil data tipe cuti');
     }
   }
-}
-
-class CustomFile {
-  final String path;
-  final String name;
-
-  CustomFile(this.path, this.name);
 }
