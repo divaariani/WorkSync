@@ -239,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   TextButton(
                                     onPressed: () {
                                       SessionManager().logout();
-                                      SessionManager().setTheme(const Locale('en', 'US').toString());
+                                      SessionManager().setLanguage(const Locale('en', 'US'));
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(
