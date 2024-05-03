@@ -123,8 +123,7 @@ class _StockManualPageState extends State<StockManualPage> {
                               Image.asset('assets/useradd.png', height: 24, width: 24),
                               const SizedBox(width: 10),
                               Text(
-                                //userName,
-                                "diva",
+                                userName,
                                 style: const TextStyle(color: AppColors.deepGreen),
                               ),
                             ],
