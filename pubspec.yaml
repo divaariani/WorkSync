@@ -21,6 +21,7 @@ dependencies:
   dropdown_search: ^5.0.6
   excel: ^2.0.4
   file_picker: ^6.1.1
+  firebase_core: ^2.32.0
   firebase_storage: ^11.6.0
   flutter_barcode_scanner: ^2.0.0
   flutter_calendar_carousel: ^2.4.2
@@ -44,7 +45,7 @@ dependencies:
   tflite_flutter: ^0.10.4
   tflite_flutter_helper_plus: ^0.0.2
   webview_flutter: ^2.0.12
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
