@@ -23,23 +23,25 @@ class _WarehouseScanPageState extends State<WarehouseScanPage> {
       ScanMode.BARCODE,
     );
 
-    if (barcodeMobilResult == '-1') {
+    if (barcodeMobilResult == '-1' && mounted) {
        Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => WarehousePage()),
+        MaterialPageRoute(builder: (context) => const WarehousePage()),
       );
       return;
     }
 
     setGlobalBarcodeMobilResult(barcodeMobilResult);
 
-    Navigator.push(
+    if (mounted) {
+      Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            WarehouseBarcodesPage(),
+            const WarehouseBarcodesPage(),
       ),
     );
+    }
   }
 
   @override

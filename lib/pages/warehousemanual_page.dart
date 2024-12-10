@@ -33,15 +33,15 @@ class _WarehouseManualPageState extends State<WarehouseManualPage> {
   }
 
   Future<void> _fetchUser() async {
-    userName = await sessionManager.getNamaUser() ?? "";
+    userName = sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
+    return PopScope(
+      onPopInvoked: (bool _) async {
+        return Future.sync(() => false);
       },
       child: Scaffold(
           appBar: AppBar(

@@ -40,7 +40,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     super.dispose();
   }
 
@@ -61,8 +62,47 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       }
 
       if (barcodeGudangResult.isNotEmpty) {
-        if (globalBarcodeGudangResults.contains(barcodeGudangResult) && mounted) {
+        if (globalBarcodeGudangResults.contains(barcodeGudangResult) &&
+            mounted) {
           showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  contentPadding: const EdgeInsets.all(16),
+                  title: const Center(
+                    child:
+                        CircularProgressIndicator(color: AppColors.deepGreen),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${AppLocalizations(globalLanguage).translate("result")}: $barcodeGudangResult',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Lot Number sudah discan.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+        } else {
+          setState(() {
+            globalBarcodeGudangResults.add(barcodeGudangResult);
+          });
+        }
+      }
+
+      if (mounted) {
+        showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -75,52 +115,15 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                   children: [
                     Text(
                       '${AppLocalizations(globalLanguage).translate("result")}: $barcodeGudangResult',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Lot Number sudah discan.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.red,
                       ),
                     ),
                   ],
                 ),
               );
-            }
-          );
-        } else {
-          setState(() {
-            globalBarcodeGudangResults.add(barcodeGudangResult);
-          });
-        }
+            });
       }
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(16),
-            title: Center(
-              child: CircularProgressIndicator(color: AppColors.deepGreen),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${AppLocalizations(globalLanguage).translate("result")}: $barcodeGudangResult',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      );
 
       if (!finishScanning) {
         await Future.delayed(const Duration(seconds: 1));
@@ -143,7 +146,6 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
     bool success = true;
 
     try {
-
       for (String hasilscan in globalBarcodeGudangResults) {
         ResponseModel response = await WarehouseController.postGudangOut(
           hasilscan: hasilscan,
@@ -169,7 +171,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
         }
       }
 
-      if (errorMessages.isNotEmpty) {
+      if (errorMessages.isNotEmpty && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessages.join('\n')),
@@ -185,19 +187,21 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       });
     } catch (e) {
       debugPrint('Terjadi kesalahan: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi kesalahan: $e'),
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
+    return PopScope(
+      onPopInvoked: (bool _) async {
+        return Future.sync(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -205,18 +209,23 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
           title: Text(
             AppLocalizations(globalLanguage).translate("productList"),
             style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const WarehousePage()),
+                MaterialPageRoute(builder: (context) => const WarehousePage()),
               );
             },
           ),
@@ -247,106 +256,124 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                     ),
                     const SizedBox(height: 5),
                     GestureDetector(
-                      onTap: (){
-                        showDialog( context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(30),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(AppLocalizations(globalLanguage).translate("Apakah Anda ingin mengganti kode truk?")),
-                                      const SizedBox(height: 20),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
-                                              blurRadius: 5,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 3),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: const EdgeInsets.all(30),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(AppLocalizations(globalLanguage).translate(
+                                      "Apakah Anda ingin mengganti kode truk?")),
+                                  const SizedBox(height: 20),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          AppColors.lightGreen
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const WarehouseScanPage()),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 30),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations(globalLanguage)
+                                                  .translate("scanbarcode"),
+                                              style: const TextStyle(
+                                                color: AppColors.deepGreen,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ],
                                         ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context, MaterialPageRoute(
-                                                  builder: (context) => const WarehouseScanPage()),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  AppLocalizations(globalLanguage).translate("scanbarcode"),
-                                                  style: const TextStyle(
-                                                    color: AppColors.deepGreen,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
                                       ),
-                                      const SizedBox(height: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
-                                              blurRadius: 5,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 3),
-                                            ),
-                                          ],
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context, MaterialPageRoute(
-                                                  builder: (context) => const MobilManualPage()),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  AppLocalizations(globalLanguage).translate("entermanually"),
-                                                  style: const TextStyle(
-                                                    color: AppColors.deepGreen,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                );
-                              },
-                          );
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          AppColors.lightGreen
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MobilManualPage()),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 30),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations(globalLanguage)
+                                                  .translate("entermanually"),
+                                              style: const TextStyle(
+                                                color: AppColors.deepGreen,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       },
                       child: Card(
                         margin: EdgeInsets.zero,
@@ -358,7 +385,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Image.asset('assets/mobil.png', height: 24, width: 24),
+                              Image.asset('assets/mobil.png',
+                                  height: 24, width: 24),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
@@ -366,8 +394,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style:
-                                      const TextStyle(color: AppColors.deepGreen),
+                                  style: const TextStyle(
+                                      color: AppColors.deepGreen),
                                 ),
                               ),
                             ],
@@ -400,15 +428,20 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
+                                            colors: [
+                                              Colors.white,
+                                              AppColors.lightGreen
+                                            ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
                                               blurRadius: 5,
                                               spreadRadius: 2,
                                               offset: const Offset(0, 3),
@@ -421,12 +454,16 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                             await _scanBarcode();
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 30),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  AppLocalizations(globalLanguage).translate("scanbarcode"),
+                                                  AppLocalizations(
+                                                          globalLanguage)
+                                                      .translate("scanbarcode"),
                                                   style: const TextStyle(
                                                     color: AppColors.deepGreen,
                                                     fontSize: 12,
@@ -441,15 +478,20 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                       const SizedBox(height: 20),
                                       Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
+                                            colors: [
+                                              Colors.white,
+                                              AppColors.lightGreen
+                                            ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
                                               blurRadius: 5,
                                               spreadRadius: 2,
                                               offset: const Offset(0, 3),
@@ -459,19 +501,24 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                         child: InkWell(
                                           onTap: () async {
                                             Navigator.pushReplacement(
-                                              context, MaterialPageRoute(
-                                                builder: (context) =>
-                                                  const WarehouseManualPage()
-                                              ),
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const WarehouseManualPage()),
                                             );
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 30),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  AppLocalizations(globalLanguage).translate("entermanually"),
+                                                  AppLocalizations(
+                                                          globalLanguage)
+                                                      .translate(
+                                                          "entermanually"),
                                                   style: const TextStyle(
                                                     color: AppColors.deepGreen,
                                                     fontSize: 12,
@@ -516,7 +563,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("addProduct"),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("addProduct"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 14,
@@ -533,7 +581,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                     Visibility(
                       visible: globalBarcodeGudangResults.isNotEmpty,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 1),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -543,93 +592,120 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               children: [
-                                Container(
-                                  child: ListView.builder(
-                                    physics: const ClampingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: globalBarcodeGudangResults.length,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      final item = globalBarcodeGudangResults[index];
-                                      return Column(
-                                        children: [
-                                          if (index == 0) const SizedBox(height: 22),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.all(3),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) => AlertDialog(
-                                                        backgroundColor: AppColors.mainGrey,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(20),
-                                                        ),
-                                                        content: Text(
-                                                          '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            child: Text(
-                                                              AppLocalizations(globalLanguage).translate("cancel"),
-                                                              style: const TextStyle(
-                                                                color: Colors.grey,
-                                                                fontWeight: FontWeight.bold,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                globalBarcodeGudangResults.removeAt(index);
-                                                              });
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            child: Text(
-                                                              AppLocalizations(globalLanguage)
-                                                                  .translate("yes"),
-                                                              style: const TextStyle(
-                                                                color: Colors.red,
-                                                                fontWeight: FontWeight.bold,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
+                                ListView.builder(
+                                  physics: const ClampingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: globalBarcodeGudangResults.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final item =
+                                        globalBarcodeGudangResults[index];
+                                    return Column(
+                                      children: [
+                                        if (index == 0)
+                                          const SizedBox(height: 22),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(3),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      backgroundColor:
+                                                          AppColors.mainGrey,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
                                                       ),
-                                                    );
-                                                  },
-                                                  child: Image.asset(
-                                                    'assets/delete.png',
-                                                    width: 25,
-                                                    height: 25,
-                                                  ),
+                                                      content: Text(
+                                                        '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text(
+                                                            AppLocalizations(
+                                                                    globalLanguage)
+                                                                .translate(
+                                                                    "cancel"),
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              globalBarcodeGudangResults
+                                                                  .removeAt(
+                                                                      index);
+                                                            });
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text(
+                                                            AppLocalizations(
+                                                                    globalLanguage)
+                                                                .translate(
+                                                                    "yes"),
+                                                            style:
+                                                                const TextStyle(
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                                child: Image.asset(
+                                                  'assets/delete.png',
+                                                  width: 25,
+                                                  height: 25,
                                                 ),
                                               ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Text(
-                                                  item,
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  style: const TextStyle(
-                                                    color: AppColors.deepGreen,
-                                                  ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                item,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: const TextStyle(
+                                                  color: AppColors.deepGreen,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          if (index == globalBarcodeGudangResults.length - 1)
-                                            const SizedBox(height: 22),
-                                        ],
-                                      );
-                                    },
-                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        if (index ==
+                                            globalBarcodeGudangResults.length -
+                                                1)
+                                          const SizedBox(height: 22),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -683,15 +759,20 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
+                                            colors: [
+                                              Colors.white,
+                                              AppColors.lightGreen
+                                            ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
                                               blurRadius: 5,
                                               spreadRadius: 2,
                                               offset: const Offset(0, 3),
@@ -704,12 +785,16 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                             await _scanBarcode();
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 30),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  AppLocalizations(globalLanguage).translate("scanbarcode"),
+                                                  AppLocalizations(
+                                                          globalLanguage)
+                                                      .translate("scanbarcode"),
                                                   style: const TextStyle(
                                                     color: AppColors.deepGreen,
                                                     fontSize: 12,
@@ -724,15 +809,20 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                       const SizedBox(height: 20),
                                       Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
+                                            colors: [
+                                              Colors.white,
+                                              AppColors.lightGreen
+                                            ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
                                               blurRadius: 5,
                                               spreadRadius: 2,
                                               offset: const Offset(0, 3),
@@ -742,19 +832,24 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                                         child: InkWell(
                                           onTap: () async {
                                             Navigator.pushReplacement(
-                                              context, MaterialPageRoute(
-                                                builder: (context) =>
-                                                  const WarehouseManualPage()
-                                              ),
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const WarehouseManualPage()),
                                             );
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 30),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  AppLocalizations(globalLanguage).translate("entermanually"),
+                                                  AppLocalizations(
+                                                          globalLanguage)
+                                                      .translate(
+                                                          "entermanually"),
                                                   style: const TextStyle(
                                                     color: AppColors.deepGreen,
                                                     fontSize: 12,
@@ -795,7 +890,8 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    AppLocalizations(globalLanguage).translate("add"),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("add"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 12,
@@ -829,33 +925,37 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
                         onTap: () async {
                           _submitStock();
                           final snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                content: AwesomeSnackbarContent(
-                                  title: AppLocalizations(globalLanguage).translate("uploaded"),
-                                  message: AppLocalizations(globalLanguage).translate("succesproductupload"),
-                                  contentType: ContentType.success,
-                                ),
-                              );
-
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-                                
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const RefreshWarehouseTable(),
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            content: AwesomeSnackbarContent(
+                              title: AppLocalizations(globalLanguage)
+                                  .translate("uploaded"),
+                              message: AppLocalizations(globalLanguage)
+                                  .translate("succesproductupload"),
+                              contentType: ContentType.success,
                             ),
                           );
-                          
+
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RefreshWarehouseTable(),
+                            ),
+                          );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 30),
                           child: Row(
                             children: [
                               Text(
-                                AppLocalizations(globalLanguage).translate("upload"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("upload"),
                                 style: const TextStyle(
                                   color: AppColors.deepGreen,
                                   fontSize: 12,
