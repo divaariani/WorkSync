@@ -20,6 +20,24 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
   int _rating = 0;
   int scoreTicketing = 0;
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
+  void _navigateBack() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -451,19 +469,12 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                                                       ),
                                                     );
 
-                                                    ScaffoldMessenger.of(
-                                                        context)
-                                                      ..hideCurrentSnackBar()
-                                                      ..showSnackBar(snackBar);
+                                                    _snackbar(snackBar);
+
+                                                    _navigateToPage(const TicketingPage());
 
                                                     debugPrint(
                                                         'Rating submitted successfully');
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const TicketingPage()),
-                                                    );
                                                   } catch (error) {
                                                     debugPrint(
                                                         'Error submitting rating: $error');
@@ -488,12 +499,9 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                                                       ),
                                                     );
 
-                                                    ScaffoldMessenger.of(
-                                                        context)
-                                                      ..hideCurrentSnackBar()
-                                                      ..showSnackBar(snackBar);
+                                                    _snackbar(snackBar);
                                                   }
-                                                  Navigator.of(context).pop();
+                                                  _navigateBack();
                                                 },
                                                 child: const Padding(
                                                   padding: EdgeInsets.symmetric(

@@ -20,6 +20,14 @@ class CheckpointDonePage extends StatefulWidget {
 class _CheckpointDonePageState extends State<CheckpointDonePage> {
   TextEditingController noteController = TextEditingController();
 
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,13 +195,11 @@ class _CheckpointDonePageState extends State<CheckpointDonePage> {
                             await CheckPointController.fetchDataScan(
                                 cpBarcode: widget.cpName,
                                 cpNote: noteController.text);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CheckPointPage(
-                                  result: '',
-                                  resultCheckpoint: [],
-                                ),
+
+                            _navigateToPage(
+                              const CheckPointPage(
+                                result: '',
+                                resultCheckpoint: [],
                               ),
                             );
                           },

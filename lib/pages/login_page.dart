@@ -34,6 +34,20 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,14 +170,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
 
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const HomePage()),
-                              );
+                              _snackbar(snackBar);
+                              _navigateToPage(const HomePage());
                             } else {
                               final snackBar = SnackBar(
                                 elevation: 0,
@@ -176,9 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
 
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
+                              _snackbar(snackBar);
                             }
                           }
                         },

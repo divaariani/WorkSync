@@ -141,6 +141,14 @@ class _LeaveFormPageState extends State<LeaveFormPage> {
     }
   }
 
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -439,13 +447,7 @@ class _LeaveFormPageState extends State<LeaveFormPage> {
                             pickedFile,
                           );
 
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const LeaveListPage(),
-                            ),
-                          );
+                          _navigateToPage(const LeaveListPage());
                         } catch (error) {
                           debugPrint('Error posting leave: $noAbsen $error');
                         }

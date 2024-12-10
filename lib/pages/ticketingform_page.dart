@@ -162,6 +162,21 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
     fetchSubCategoryOptions(selectedCategoryType);
   }
 
+   void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -598,16 +613,8 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                                   ),
                                 );
 
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const TicketingPage(),
-                                  ),
-                                );
+                                _snackbar(snackBar);
+                                _navigateToPage(const TicketingPage());
 
                             } catch (e) {
                               final snackBar = SnackBar(
@@ -621,9 +628,7 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                                   ),
                                 );
 
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
+                                _snackbar(snackBar);
                               debugPrint("Error posting ticket: $e");
                             }
                           },

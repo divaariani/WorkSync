@@ -32,6 +32,20 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
     userId = SessionManager().getUserId() ?? '';
   }
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -135,13 +149,7 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
                                                 .postConfirmStock();
 
                                         if (response.status == 1) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RefreshStockTable(),
-                                            ),
-                                          );
+                                          _navigateToPage(const RefreshStockTable());
 
                                           final snackBar = SnackBar(
                                             elevation: 0,
@@ -158,9 +166,7 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
                                             ),
                                           );
 
-                                          ScaffoldMessenger.of(context)
-                                            ..hideCurrentSnackBar()
-                                            ..showSnackBar(snackBar);
+                                          _snackbar(snackBar);
 
                                           debugPrint(
                                               'Confirm data posted successfully');

@@ -67,6 +67,20 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
     });
   }
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,16 +305,8 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                                   ),
                                 );
 
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const OvertimeListPage(),
-                                  ),
-                                );
+                                _snackbar(snackBar);
+                                _navigateToPage(const OvertimeListPage());
                               }
                             } else {
                               debugPrint('No noAbsen available');

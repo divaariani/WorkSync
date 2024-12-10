@@ -11,12 +11,11 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState(initialIndex);
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late int _currentIndex = 0;
-  _HomePageState(this._currentIndex);
+  late int _currentIndex;
   DateTime? currentBackPressTime;
 
   final List<Widget> _tabs = [

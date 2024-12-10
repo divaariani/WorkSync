@@ -26,6 +26,20 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
   }
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (selectedType ==
@@ -302,15 +316,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                     ),
                                   );
 
-                                  ScaffoldMessenger.of(context)
-                                    ..hideCurrentSnackBar()
-                                    ..showSnackBar(snackBar);
+                                  _snackbar(snackBar);
 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const HomePage()),
-                                  );
+                                  _navigateToPage(const HomePage());
 
                                   await Future.delayed(
                                       const Duration(seconds: 2));
@@ -332,15 +340,9 @@ class _AttendanceFormPageState extends State<AttendanceFormPage> {
                                     ),
                                   );
 
-                                  ScaffoldMessenger.of(context)
-                                    ..hideCurrentSnackBar()
-                                    ..showSnackBar(snackBar);
+                                  _snackbar(snackBar);
 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const HomePage()),
-                                  );
+                                  _navigateToPage(const HomePage());
                                 }
                               },
                               child: Container(

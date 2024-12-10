@@ -77,6 +77,24 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
     leaveCount = approvedLeave.length;
   }
 
+  void _snackbar(var snackBar) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void _navigateToPage(Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
+  void _navigateBack() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -391,22 +409,11 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                                     ),
                                                                   );
 
-                                                                  ScaffoldMessenger
-                                                                      .of(
-                                                                          context)
-                                                                    ..hideCurrentSnackBar()
-                                                                    ..showSnackBar(
-                                                                        snackBar);
+                                                                  _snackbar(
+                                                                      snackBar);
 
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .push(
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              const ApprovalsPage(),
-                                                                    ),
-                                                                  );
+                                                                  _navigateToPage(
+                                                                      const ApprovalsPage());
                                                                 } catch (error) {
                                                                   debugPrint(
                                                                       'Error rejecting overtime: $error');
@@ -516,19 +523,10 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                           ),
                                                         );
 
-                                                        ScaffoldMessenger.of(
-                                                            context)
-                                                          ..hideCurrentSnackBar()
-                                                          ..showSnackBar(
-                                                              snackBar);
+                                                        _snackbar(snackBar);
 
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const ApprovalsPage(),
-                                                          ),
-                                                        );
+                                                        _navigateToPage(
+                                                            const ApprovalsPage());
                                                       } catch (error) {
                                                         debugPrint(
                                                             'Error approving overtime: $error');
@@ -931,9 +929,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                                                                             index]
                                                                         .attLeaveId,
                                                                     22);
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
+                                                                _navigateBack();
                                                               },
                                                               child: Text(
                                                                   AppLocalizations(
