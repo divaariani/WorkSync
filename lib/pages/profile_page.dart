@@ -84,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
+                                        //"diva", 
                                         SessionManager().getNamaUser() ?? 'Unknown',
                                         style: const TextStyle(
                                           color: Colors.white,

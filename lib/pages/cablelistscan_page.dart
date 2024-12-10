@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'stocklokasiscan_page.dart';
+import 'cablescan_page.dart';
 import 'app_colors.dart';
 import 'stockopname_page.dart';
 import 'stockmanual_page.dart';
@@ -11,20 +11,19 @@ import '../utils/globals.dart';
 import '../utils/session_manager.dart';
 import '../utils/localizations.dart';
 import '../controllers/response_model.dart';
-import '../controllers/stockopname_controller.dart';
+import '../controllers/cable_controller.dart';
 
-class StockLokasiPage extends StatefulWidget {
-  const StockLokasiPage({Key? key}) : super(key: key);
+class CableListScanPage extends StatefulWidget {
+  const CableListScanPage({Key? key}) : super(key: key);
 
   @override
-  State<StockLokasiPage> createState() => _StockLokasiPageState();
+  State<CableListScanPage> createState() => _CableListScanPageState();
 }
 
-class _StockLokasiPageState extends State<StockLokasiPage> {
+class _CableListScanPageState extends State<CableListScanPage> {
   late DateTime currentTime;
   final SessionManager sessionManager = SessionManager();
   final idController = TextEditingController();
-  final lokasiController = TextEditingController();
   final hasilscanController = TextEditingController();
   String barcodeLokasiResult = globalBarcodeLokasiResult;
   String idInventory = '';
@@ -33,18 +32,9 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     fetchUserId();
-    lokasiController.text = barcodeLokasiResult;
     hasilscanController.text = globalBarcodeBarangResults.join('\n');
     userid = sessionManager.getUserId() ?? '';
-  }
-
-  @override
-  void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
-    super.dispose();
   }
 
   Future<void> _scanBarcode() async {
@@ -59,7 +49,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       );
 
       if (barcodeBarangResult == '-1') {
-        _navigateToStockLokasiPage();
+        navigateBack();
         return;
       }
 
@@ -69,29 +59,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
         });
       }
 
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              contentPadding: const EdgeInsets.all(16),
-              title: const Center(
-                  child: CircularProgressIndicator(color: AppColors.mainGreen)),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    barcodeBarangResult,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      }
+      dialogHasil(barcodeBarangResult);
 
       if (!finishScanning) {
         await Future.delayed(const Duration(seconds: 1));
@@ -99,11 +67,43 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
     }
   }
 
-  void _navigateToStockLokasiPage() {
+  void navigateBack() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const StockLokasiPage(),
+        builder: (context) => const CableScanPage(),
+      ),
+    );
+  }
+
+  void dialogHasil(String barcodeBarang) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16),
+          title: const Center(
+              child: CircularProgressIndicator(color: AppColors.mainGreen)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                barcodeBarang,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void snackbar(String e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Terjadi kesalahan: $e'),
       ),
     );
   }
@@ -114,15 +114,13 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
   }
 
   Future<void> submitStock() async {
-    final String lokasi = lokasiController.text;
     List<String> errorMessages = [];
     bool success = true;
 
     try {
       for (String hasilscan in globalBarcodeBarangResults) {
-        ResponseModel response = await StockOpnameController.postFormStock(
+        ResponseModel response = await CableController.postFormStock(
           hasilscan: hasilscan,
-          lokasi: lokasi,
           userid: userid,
         );
 
@@ -144,12 +142,8 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
         }
       }
 
-      if (errorMessages.isNotEmpty && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessages.join('\n')),
-          ),
-        );
+      if (errorMessages.isNotEmpty) {
+        snackbar('');
       } else {
         // success upload
       }
@@ -160,13 +154,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
       });
     } catch (e) {
       debugPrint('Terjadi kesalahan: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Terjadi kesalahan: $e'),
-          ),
-        );
-      }
+      snackbar(e.toString());
     }
   }
 
@@ -180,7 +168,7 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("stocklist"),
+            AppLocalizations(globalLanguage).translate("Scan Stock"),
             style: TextStyle(
               color: globalTheme == 'Light Theme'
                   ? AppColors.deepGreen
@@ -402,116 +390,120 @@ class _StockLokasiPageState extends State<StockLokasiPage> {
                             child: Column(
                               children: [
                                 ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: globalBarcodeBarangResults.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final item =
-                                        globalBarcodeBarangResults[index];
-                                    return Column(
-                                      children: [
-                                        if (index == 0)
-                                          const SizedBox(height: 22),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(3),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      backgroundColor:
-                                                          AppColors.mainGrey,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      content: Text(
-                                                        '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text(
-                                                            AppLocalizations(
-                                                                    globalLanguage)
-                                                                .translate(
-                                                                    "cancel"),
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                    physics: const ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        globalBarcodeBarangResults.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      final item =
+                                          globalBarcodeBarangResults[index];
+                                      return Column(
+                                        children: [
+                                          if (index == 0)
+                                            const SizedBox(height: 22),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          AlertDialog(
+                                                        backgroundColor:
+                                                            AppColors.mainGrey,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        content: Text(
+                                                          '${AppLocalizations(globalLanguage).translate("suredelete")} $item?',
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(
+                                                                      globalLanguage)
+                                                                  .translate(
+                                                                      "cancel"),
+                                                              style:
+                                                                  const TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              globalBarcodeBarangResults
-                                                                  .removeAt(
-                                                                      index);
-                                                            });
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text(
-                                                            AppLocalizations(
-                                                                    globalLanguage)
-                                                                .translate(
-                                                                    "yes"),
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                globalBarcodeBarangResults
+                                                                    .removeAt(
+                                                                        index);
+                                                              });
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations(
+                                                                      globalLanguage)
+                                                                  .translate(
+                                                                      "yes"),
+                                                              style:
+                                                                  const TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                                child: Image.asset(
-                                                  'assets/delete.png',
-                                                  width: 25,
-                                                  height: 25,
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Image.asset(
+                                                    'assets/delete.png',
+                                                    width: 25,
+                                                    height: 25,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(
-                                                item,
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: const TextStyle(
-                                                  color: AppColors.deepGreen,
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  item,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                    color: AppColors.deepGreen,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
                               ],
                             ),
                           ),

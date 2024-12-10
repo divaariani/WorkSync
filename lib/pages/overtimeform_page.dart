@@ -127,6 +127,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                             Image.asset('assets/useradd.png', height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
+                              //"diva", 
                               SessionManager().getNamaUser() ?? 'Unknown',
                               style: const TextStyle(color: AppColors.deepGreen),
                             ),
@@ -277,7 +278,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                                   noteController.text,
                                 );
                               } catch (error) {
-                                print('Error posting overtime: $noAbsen $error');
+                                debugPrint('Error posting overtime: $noAbsen $error');
 
                                 final snackBar = SnackBar(
                                   elevation: 0,
@@ -302,7 +303,7 @@ class _OvertimeFormPageState extends State<OvertimeFormPage> {
                                 );
                               }
                             } else {
-                              print('No noAbsen available');
+                              debugPrint('No noAbsen available');
                             }
                           },
                           child: Padding(

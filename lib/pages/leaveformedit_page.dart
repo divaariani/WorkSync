@@ -48,9 +48,8 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
     if (result == null) return;
 
     setState(() {
-      pickedFile = CustomFile(
-          result.files.first.path ?? '', result.files.first.name);
-          
+      pickedFile =
+          CustomFile(result.files.first.path ?? '', result.files.first.name);
     });
   }
 
@@ -68,10 +67,10 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
       setState(() {
         attachment = urlDownload;
       });
-      
-      print('Direct Image Link: $urlDownload');
+
+      debugPrint('Direct Image Link: $urlDownload');
     } else {
-      print('No file selected');
+      debugPrint('No file selected');
     }
   }
 
@@ -129,12 +128,12 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
   @override
   void initState() {
     super.initState();
-    _initAsync();    
+    _initAsync();
   }
 
   Future<void> _initAsync() async {
     await _updateLeaveTypes();
-    
+
     setState(() {
       startDate = widget.data?.dari != null
           ? DateFormat('dd MMM yyyy').format(widget.data!.dari)
@@ -176,30 +175,30 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
           attachment,
         );
 
-        Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const LeaveListPage(),
-                            ),
-                          );
-
-      } finally {
-        
-      }
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const LeaveListPage(),
+            ),
+          );
+        }
+      } finally {}
     } else {
       final snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                content: AwesomeSnackbarContent(
-                                  title: AppLocalizations(globalLanguage).translate("Failed"),
-                                  message: AppLocalizations(globalLanguage).translate("Attachment can not be empty"),
-                                  contentType: ContentType.failure,
-                                ),
-                              );
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: AppLocalizations(globalLanguage).translate("Failed"),
+          message: AppLocalizations(globalLanguage)
+              .translate("Attachment can not be empty"),
+          contentType: ContentType.failure,
+        ),
+      );
 
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
     }
   }
 
@@ -207,18 +206,26 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor:
+            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: true,
+        title: Text(
+          AppLocalizations(globalLanguage).translate("leave"),
+          style: TextStyle(
+            color: globalTheme == 'Light Theme'
+                ? AppColors.deepGreen
+                : Colors.white,
           ),
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("leave"),
-            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
-          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -259,6 +266,7 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
                               height: 24, width: 24),
                           const SizedBox(width: 10),
                           Text(
+                            //"diva",
                             SessionManager().getNamaUser() ?? 'Unknown',
                             style: const TextStyle(color: AppColors.deepGreen),
                           ),
@@ -288,7 +296,7 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
                       previousSelectedLeaveType = data;
                     },
                     selectedItem: LeaveTypeData(
-                      id: widget.data?.workTimeStatusId ?? "", 
+                      id: widget.data?.workTimeStatusId ?? "",
                       statusAbsensi: widget.data?.keterangan ?? "",
                     ),
                     dropdownDecoratorProps: DropDownDecoratorProps(
@@ -509,7 +517,8 @@ class _EditLeaveFormPageState extends State<EditLeaveFormPage> {
                             horizontal: 50,
                           ),
                           child: isLoading
-                              ? const CircularProgressIndicator(color: AppColors.mainGreen)
+                              ? const CircularProgressIndicator(
+                                  color: AppColors.mainGreen)
                               : Text(
                                   AppLocalizations(globalLanguage)
                                       .translate("submit"),

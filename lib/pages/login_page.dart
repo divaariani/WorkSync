@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => HomePage()),
+                                MaterialPageRoute(builder: (context) => const HomePage()),
                               );
                             } else {
                               final snackBar = SnackBar(
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           elevation: 0,
-                          primary: Colors.transparent,
+                          backgroundColor: Colors.transparent,
                         ),
                         child: controller.isLoading
                           ? const CircularProgressIndicator(
@@ -239,10 +239,6 @@ class _LoginPageState extends State<LoginPage> {
         DropdownMenuItem(
           value: const Locale('id', 'ID'),
           child: Text(AppLocalizations(_currentLocale).translate("languageId"), style: const TextStyle(color: AppColors.mainGreen)),
-        ),
-        DropdownMenuItem(
-          value: const Locale('ko', 'KR'),
-          child: Text(AppLocalizations(_currentLocale).translate("languageKr"), style: const TextStyle(color: AppColors.mainGreen)),
         ),
       ],
       onChanged: _changeLanguage, 

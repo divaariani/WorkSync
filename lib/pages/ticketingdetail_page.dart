@@ -28,13 +28,19 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
         title: Text(
           AppLocalizations(globalLanguage).translate("ticketingDetail"),
           style: TextStyle(
-            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+            color: globalTheme == 'Light Theme'
+                ? AppColors.deepGreen
+                : Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        backgroundColor:
+            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+          icon: Icon(Icons.arrow_back,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -81,63 +87,79 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10), 
+                          const SizedBox(height: 10),
                           CustomPaint(
                             painter: DashedLinePainter(),
                             child: Container(
-                              height: 1, 
+                              height: 1,
                             ),
                           ),
-                          const SizedBox(height: 10), 
+                          const SizedBox(height: 10),
                           Row(
                             children: [
                               Expanded(
-                                flex: 4,
-                                child:  Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(AppLocalizations(globalLanguage).translate("priority"), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Text(AppLocalizations(globalLanguage).translate("category"), style: const TextStyle( fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Text(AppLocalizations(globalLanguage).translate("subCategory"), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Text(AppLocalizations(globalLanguage).translate("status"), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  ],
-                                )
-                              ),
+                                  flex: 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("priority"),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("category"),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("subCategory"),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("status"),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  )),
                               const SizedBox(width: 10),
                               const Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(':'),
-                                    SizedBox(height: 5),
-                                    Text(':'),
-                                    SizedBox(height: 5),
-                                    Text(':'),
-                                    SizedBox(height: 5),
-                                    Text(':'),
-                                  ],
-                                )
-                              ),
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(':'),
+                                      SizedBox(height: 5),
+                                      Text(':'),
+                                      SizedBox(height: 5),
+                                      Text(':'),
+                                      SizedBox(height: 5),
+                                      Text(':'),
+                                    ],
+                                  )),
                               const SizedBox(width: 10),
                               Expanded(
-                                flex: 7,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(widget.ticket.prioritas!),
-                                    const SizedBox(height: 5),
-                                    Text(widget.ticket.kategori!),
-                                    const SizedBox(height: 5),
-                                    Text(widget.ticket.subkategori!),
-                                    const SizedBox(height: 5),
-                                    Text(widget.ticket.status!),
-                                  ],
-                                )
-                              )
+                                  flex: 7,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.ticket.prioritas!),
+                                      const SizedBox(height: 5),
+                                      Text(widget.ticket.kategori!),
+                                      const SizedBox(height: 5),
+                                      Text(widget.ticket.subkategori!),
+                                      const SizedBox(height: 5),
+                                      Text(widget.ticket.status!),
+                                    ],
+                                  ))
                             ],
                           ),
                           const SizedBox(height: 5),
@@ -149,8 +171,10 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      AppLocalizations(globalLanguage).translate("remark"),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                      AppLocalizations(globalLanguage)
+                                          .translate("remark"),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -185,8 +209,10 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      AppLocalizations(globalLanguage).translate("attachment"),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                      AppLocalizations(globalLanguage)
+                                          .translate("attachment"),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -213,20 +239,22 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              content: Container(
-                                                child: Image.network(
-                                                  widget.ticket.attachment!, 
-                                                  fit: BoxFit.cover,
-                                                ),
+                                              content: Image.network(
+                                                widget.ticket.attachment!,
+                                                fit: BoxFit.cover,
                                               ),
                                             );
                                           },
                                         );
-                                        print(widget.ticket.attachment);
+                                        debugPrint(widget.ticket.attachment);
                                       },
                                       child: Text(
-                                        AppLocalizations(globalLanguage).translate("viewPhoto"),
-                                          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                                        AppLocalizations(globalLanguage)
+                                            .translate("viewPhoto"),
+                                        style: const TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
                                       ),
                                     ),
                                   ],
@@ -239,229 +267,291 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (widget.ticket.status != 'Completed') Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: const LinearGradient(
-                                  colors: [Colors.white, AppColors.lightGreen],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0, 3),
+                  if (widget.ticket.status != 'Completed')
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            colors: [Colors.white, AppColors.lightGreen],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  backgroundColor: AppColors.mainGreen,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
                                   ),
-                                ],
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                        backgroundColor: AppColors.mainGreen,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20.0),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          'Rate your satisfaction in this ticket system',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
                                         ),
-                                        child: Container(
-                                          padding: EdgeInsets.all(20),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              SizedBox(height: 20),
-                                              Text(
-                                                'Rate your satisfaction in this ticket system',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
+                                        const SizedBox(height: 10),
+                                        StarRating(
+                                          onRatingChanged: (rating) {
+                                            setState(() {
+                                              _rating = rating;
+                                              updateScoreTicketing();
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+                                        TextField(
+                                          maxLines: 3,
+                                          controller: noteController,
+                                          onChanged: (text) {
+                                            noteController.text = text;
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                'Add your satisfaction note...',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: const BorderSide(
+                                                  color: AppColors.lightGreen),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                gradient: const LinearGradient(
+                                                  colors: [
+                                                    Colors.white,
+                                                    AppColors.mainGrey
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
                                                 ),
-                                              ),
-                                              SizedBox(height: 10),
-                                              StarRating(
-                                                onRatingChanged: (rating) {
-                                                  setState(() {
-                                                    _rating = rating;
-                                                    updateScoreTicketing();
-                                                  });
-                                                },
-                                              ),
-                                              SizedBox(height: 20),
-                                              TextField(
-                                                maxLines: 3,
-                                                controller: noteController,  
-                                                onChanged: (text) {
-                                                  noteController.text = text;
-                                                },
-                                                decoration: InputDecoration(
-                                                  hintText: 'Add your satisfaction note...',
-                                                  border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(12),
-                                                    borderSide: BorderSide(color: Colors.grey), 
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(12),
-                                                    borderSide: BorderSide(color: AppColors.lightGreen), 
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: <Widget>[
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(20),
-                                                      gradient: const LinearGradient(
-                                                        colors: [Colors.white, AppColors.mainGrey],
-                                                        begin: Alignment.topCenter,
-                                                        end: Alignment.bottomCenter,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black.withOpacity(0.2),
-                                                          blurRadius: 5,
-                                                          spreadRadius: 2,
-                                                          offset: const Offset(0, 3),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                                                        child: Text(
-                                                          'Cancel',
-                                                          style: const TextStyle(
-                                                            color: AppColors.deepGreen,
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(20),
-                                                      gradient: const LinearGradient(
-                                                        colors: [Colors.white, AppColors.lightGreen],
-                                                        begin: Alignment.topCenter,
-                                                        end: Alignment.bottomCenter,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black.withOpacity(0.2),
-                                                          blurRadius: 5,
-                                                          spreadRadius: 2,
-                                                          offset: const Offset(0, 3),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        String ticketingId = widget.ticket.lineUID!;
-                                                        String score = '$scoreTicketing'; 
-                                                        String note = noteController.text;
-
-                                                        try {
-                                                          await TicketingController().postRateTicketing(ticketingId, score, note);
-                                                          final snackBar = SnackBar(
-                                                            elevation: 0,
-                                                            behavior: SnackBarBehavior.floating,
-                                                            backgroundColor: Colors.transparent,
-                                                            content: AwesomeSnackbarContent(
-                                                              title: AppLocalizations(globalLanguage).translate("Rated"),
-                                                              message: AppLocalizations(globalLanguage).translate("Successfully rate the ticketing"),
-                                                              contentType: ContentType.success,
-                                                            ),
-                                                          );
-
-                                                          ScaffoldMessenger.of(context)
-                                                            ..hideCurrentSnackBar()
-                                                            ..showSnackBar(snackBar);
-
-                                                          print('Rating submitted successfully');
-                                                          Navigator.pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(builder: (context) => const TicketingPage()),
-                                                          );
-                                                        } catch (error) {
-                                                          print('Error submitting rating: $error');
-                                                          final snackBar = SnackBar(
-                                                            elevation: 0,
-                                                            behavior: SnackBarBehavior.floating,
-                                                            backgroundColor: Colors.transparent,
-                                                            content: AwesomeSnackbarContent(
-                                                              title: AppLocalizations(globalLanguage).translate("Failed"),
-                                                              message: AppLocalizations(globalLanguage).translate("Failed rate the ticketing"),
-                                                              contentType: ContentType.failure,
-                                                            ),
-                                                          );
-
-                                                          ScaffoldMessenger.of(context)
-                                                            ..hideCurrentSnackBar()
-                                                            ..showSnackBar(snackBar);
-                                                        }
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                                                        child: Text(
-                                                          'Submit',
-                                                          style: const TextStyle(
-                                                            color: AppColors.deepGreen,
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    blurRadius: 5,
+                                                    spreadRadius: 2,
+                                                    offset: const Offset(0, 3),
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6,
+                                                      horizontal: 30),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      color:
+                                                          AppColors.deepGreen,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                gradient: const LinearGradient(
+                                                  colors: [
+                                                    Colors.white,
+                                                    AppColors.lightGreen
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    blurRadius: 5,
+                                                    spreadRadius: 2,
+                                                    offset: const Offset(0, 3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  String ticketingId =
+                                                      widget.ticket.lineUID!;
+                                                  String score =
+                                                      '$scoreTicketing';
+                                                  String note =
+                                                      noteController.text;
+
+                                                  try {
+                                                    await TicketingController()
+                                                        .postRateTicketing(
+                                                            ticketingId,
+                                                            score,
+                                                            note);
+                                                    final snackBar = SnackBar(
+                                                      elevation: 0,
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      content:
+                                                          AwesomeSnackbarContent(
+                                                        title: AppLocalizations(
+                                                                globalLanguage)
+                                                            .translate("Rated"),
+                                                        message: AppLocalizations(
+                                                                globalLanguage)
+                                                            .translate(
+                                                                "Successfully rate the ticketing"),
+                                                        contentType:
+                                                            ContentType.success,
+                                                      ),
+                                                    );
+
+                                                    ScaffoldMessenger.of(
+                                                        context)
+                                                      ..hideCurrentSnackBar()
+                                                      ..showSnackBar(snackBar);
+
+                                                    debugPrint(
+                                                        'Rating submitted successfully');
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const TicketingPage()),
+                                                    );
+                                                  } catch (error) {
+                                                    debugPrint(
+                                                        'Error submitting rating: $error');
+                                                    final snackBar = SnackBar(
+                                                      elevation: 0,
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      content:
+                                                          AwesomeSnackbarContent(
+                                                        title: AppLocalizations(
+                                                                globalLanguage)
+                                                            .translate(
+                                                                "Failed"),
+                                                        message: AppLocalizations(
+                                                                globalLanguage)
+                                                            .translate(
+                                                                "Failed rate the ticketing"),
+                                                        contentType:
+                                                            ContentType.failure,
+                                                      ),
+                                                    );
+
+                                                    ScaffoldMessenger.of(
+                                                        context)
+                                                      ..hideCurrentSnackBar()
+                                                      ..showSnackBar(snackBar);
+                                                  }
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6,
+                                                      horizontal: 30),
+                                                  child: Text(
+                                                    'Submit',
+                                                    style: TextStyle(
+                                                      color:
+                                                          AppColors.deepGreen,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                                  child: Text(
-                                    AppLocalizations(globalLanguage).translate("Rate"),
-                                    style: const TextStyle(
-                                      color: AppColors.deepGreen,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      ],
                                     ),
                                   ),
-                                ),
+                                );
+                              },
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 30),
+                            child: Text(
+                              AppLocalizations(globalLanguage)
+                                  .translate("Rate"),
+                              style: const TextStyle(
+                                color: AppColors.deepGreen,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                  if (widget.ticket.status == 'Completed') Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          buildScoreIcon(int.parse(widget.ticket.score!)),
-                        ],
+                        ),
                       ),
-                      Text(widget.ticket.note!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
-                    ]
-                  ),
+                    ),
+                  if (widget.ticket.status == 'Completed')
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              buildScoreIcon(int.parse(widget.ticket.score!)),
+                            ],
+                          ),
+                          Text(widget.ticket.note!,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))
+                        ]),
                 ],
               ),
             ),
@@ -489,16 +579,16 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
 
   Widget buildScoreIcon(int score) {
     if (score >= 20 && score < 40) {
-      return Icon(Icons.star_rounded, color: Colors.amber);
+      return const Icon(Icons.star_rounded, color: Colors.amber);
     } else if (score >= 40 && score < 60) {
-      return Row(
+      return const Row(
         children: [
           Icon(Icons.star_rounded, color: Colors.amber),
           Icon(Icons.star_rounded, color: Colors.amber),
         ],
       );
     } else if (score >= 60 && score < 80) {
-      return Row(
+      return const Row(
         children: [
           Icon(Icons.star_rounded, color: Colors.amber),
           Icon(Icons.star_rounded, color: Colors.amber),
@@ -506,7 +596,7 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
         ],
       );
     } else if (score >= 80 && score < 100) {
-      return Row(
+      return const Row(
         children: [
           Icon(Icons.star_rounded, color: Colors.amber),
           Icon(Icons.star_rounded, color: Colors.amber),
@@ -515,7 +605,7 @@ class _TicketingDetailPageState extends State<TicketingDetailPage> {
         ],
       );
     } else if (score == 100) {
-      return Row(
+      return const Row(
         children: [
           Icon(Icons.star_rounded, color: Colors.amber),
           Icon(Icons.star_rounded, color: Colors.amber),
@@ -563,10 +653,10 @@ class DashedLinePainter extends CustomPainter {
 class StarRating extends StatefulWidget {
   final Function(int) onRatingChanged;
 
-  StarRating({required this.onRatingChanged});
+  const StarRating({Key? key, required this.onRatingChanged}) : super(key: key);
 
   @override
-  _StarRatingState createState() => _StarRatingState();
+  State<StarRating> createState() => _StarRatingState();
 }
 
 class _StarRatingState extends State<StarRating> {
@@ -586,7 +676,7 @@ class _StarRatingState extends State<StarRating> {
           onPressed: () {
             setState(() {
               _rating = index + 1;
-              widget.onRatingChanged(_rating); 
+              widget.onRatingChanged(_rating);
             });
           },
         );

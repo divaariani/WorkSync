@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:worksync/main.dart';
 import 'app_colors.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
+import '../main.dart';
 
 class NoInternetPage extends StatefulWidget {
   const NoInternetPage({Key? key}) : super(key: key);

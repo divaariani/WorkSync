@@ -16,7 +16,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String currentTheme = globalTheme;
   Locale currentLocale = globalLanguage;
   bool isLoading = false;
-  
+
   void _changeTheme(String? newTheme) {
     if (newTheme != null) {
       setState(() {
@@ -24,7 +24,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
     }
   }
-  
+
   void _changeLanguage(Locale? newLocale) {
     if (newLocale != null) {
       setState(() {
@@ -48,14 +48,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     } finally {
       setState(() {
         isLoading = false;
@@ -65,28 +67,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 2)),
+          MaterialPageRoute(
+              builder: (context) => const HomePage(initialIndex: 2)),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("editProfile"),
-            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
+            ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 2)),
+                MaterialPageRoute(
+                    builder: (context) => const HomePage(initialIndex: 2)),
               );
             },
           ),
@@ -126,11 +138,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-                            Image.asset('assets/useradd.png', height: 24, width: 24),
+                            Image.asset('assets/useradd.png',
+                                height: 24, width: 24),
                             const SizedBox(width: 10),
                             Text(
+                              //"diva",
                               SessionManager().getNamaUser() ?? 'Unknown',
-                              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16),
+                              style: const TextStyle(
+                                  color: AppColors.deepGreen, fontSize: 16),
                             ),
                           ],
                         ),
@@ -152,10 +167,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
-                            Image.asset('assets/attendancetype.png', height: 24, width: 24),
+                            Image.asset('assets/attendancetype.png',
+                                height: 24, width: 24),
                             const SizedBox(width: 10),
                             _buildThemeDropdown()
                           ],
@@ -178,10 +195,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 5),
                         child: Row(
                           children: [
-                            Image.asset('assets/language.png', height: 24, width: 24),
+                            Image.asset('assets/language.png',
+                                height: 24, width: 24),
                             const SizedBox(width: 10),
                             _buildLanguageDropdown(),
                           ],
@@ -212,20 +231,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             _saveChanges();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 50),
                             child: isLoading
                                 ? const CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.deepGreen),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.deepGreen),
                                   )
                                 : Text(
-                                    AppLocalizations(globalLanguage).translate("save"),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("save"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                            ),
+                          ),
                         ),
                       ),
                     )
@@ -246,17 +268,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       items: <DropdownMenuItem<String>>[
         DropdownMenuItem(
           value: 'Light Theme',
-          child: Text(
-            AppLocalizations(globalLanguage).translate("lightTheme"),
-            style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)
-          ),
+          child: Text(AppLocalizations(globalLanguage).translate("lightTheme"),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
         DropdownMenuItem(
           value: 'Dark Theme',
-          child: Text(
-            AppLocalizations(globalLanguage).translate("darkTheme"),
-            style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)
-          ),
+          child: Text(AppLocalizations(globalLanguage).translate("darkTheme"),
+              style: const TextStyle(color: AppColors.deepGreen, fontSize: 16)),
         ),
       ],
       onChanged: _changeTheme,

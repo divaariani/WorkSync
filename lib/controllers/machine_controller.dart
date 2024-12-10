@@ -15,7 +15,7 @@ class MachineController{
       Uri.parse('$apiBaseUrl3?function=absensi_operator_id_2'),
       body: {
         'idwc': idwc.toString(),
-        'userid': userId.toString(),
+        'userid': "20",
         'oprtap': oprTap,
         'tap': tap,
       },
@@ -41,8 +41,8 @@ class MachineController{
       body: {
         'id': id.toString(),
         'name': name,
-        'userid': userId.toString(),
-        'namaoperator': namaoperator,
+        'userid': "20",
+        'namaoperator': "diva",
         'statusmesin': statusmesin,
       },
     );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -19,8 +20,8 @@ class TicketingController {
         throw Exception('Failed to load ticketingUser');
       }
     } catch (error) {
-      print('Error fetching ticketingUser data: $error');
-      throw error;
+      debugPrint('Error fetching ticketingUser data: $error');
+      rethrow;
     }
   }
 
@@ -86,7 +87,7 @@ class TicketingController {
 
         if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
           if (responseData['status'] == 1) {
-            print('Rate posted successfully');
+            debugPrint('Rate posted successfully');
           } else {
             throw Exception('Failed to rate ticketing: ${responseData['message']}');
           }
@@ -97,7 +98,7 @@ class TicketingController {
         throw Exception('Failed to rate ticketing. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error posting rate: $error');
+      debugPrint('Error posting rate: $error');
       rethrow;
     }
   }

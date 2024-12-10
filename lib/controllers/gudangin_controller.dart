@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'response_model.dart';
@@ -9,7 +10,7 @@ class GudangInController{
   static Future<ResponseModel> viewGudangIn({
     required String checked,
     required int id,
-    required DateTime tgl_kp,
+    required DateTime tglKp,
     required String lotnumber,
     required String namabarang,
     required int qty,
@@ -22,7 +23,7 @@ class GudangInController{
       body: {
         'checked': checked,
         'id': id.toString(),
-        'tgl_kp': tgl_kp.toIso8601String(),
+        'tgl_kp': tglKp.toIso8601String(),
         'lotnumber': lotnumber,
         'name': namabarang,
         'qty': qty.toString(),
@@ -30,10 +31,10 @@ class GudangInController{
       },
     );
     
-    print('${response.body}');
+    debugPrint(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body); 
-      print("=======================");
+      debugPrint("=======================");
       return ResponseModel.fromJson(responseData);
     } else {
       throw Exception('Failed to view gudang data');
@@ -49,7 +50,7 @@ class GudangInController{
       },
     );
 
-    print('${response.body}');
+    debugPrint(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       return ResponseModel.fromJson(responseData);

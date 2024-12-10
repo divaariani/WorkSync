@@ -11,8 +11,8 @@ import 'ticketing_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
-import '../controllers/ticketing_controller.dart';
 import '../utils/photos.dart';
+import '../controllers/ticketing_controller.dart';
 
 class TicketingFormPage extends StatefulWidget {
   const TicketingFormPage({Key? key}) : super(key: key);
@@ -71,9 +71,9 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
         attachment = urlDownload;
       });
       
-      print('Direct Image Link: $urlDownload');
+      debugPrint('Direct Image Link: $urlDownload');
     } else {
-      print('No file selected');
+      debugPrint('No file selected');
     }
   }
 
@@ -87,10 +87,10 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
           ticketingToOptions = List<Map<String, dynamic>>.from(data);
         });
       } else {
-        print('API Error: ${responseData['message']}');
+        debugPrint('API Error: ${responseData['message']}');
       }
     } else {
-      print('HTTP Request Error: ${response.statusCode}');
+      debugPrint('HTTP Request Error: ${response.statusCode}');
     }
   }
 
@@ -107,10 +107,10 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
           }
         });
       } else {
-        print('API Error: ${responseData['message']}');
+        debugPrint('API Error: ${responseData['message']}');
       }
     } else {
-      print('HTTP Request Error: ${response.statusCode}');
+      debugPrint('HTTP Request Error: ${response.statusCode}');
     }
   }
 
@@ -124,10 +124,10 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
           categoryOptions = List<Map<String, dynamic>>.from(data);
         });
       } else {
-        print('API Error: ${responseData['message']}');
+        debugPrint('API Error: ${responseData['message']}');
       }
     } else {
-      print('HTTP Request Error: ${response.statusCode}');
+      debugPrint('HTTP Request Error: ${response.statusCode}');
     }
   }
 
@@ -144,10 +144,10 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
           } 
         });
       } else {
-        print('API Error: ${responseData['message']}');
+        debugPrint('API Error: ${responseData['message']}');
       }
     } else {
-      print('HTTP Request Error: ${response.statusCode}');
+      debugPrint('HTTP Request Error: ${response.statusCode}');
     }
   }
 
@@ -563,15 +563,15 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            print('tiket kepada dept $selectedTicketingType');
-                            print('kepada $selectedAssignedType');
-                            print('subyek  ${subjectController.text}');
-                            print('deskripsi  ${descriptionController.text}');
-                            print('userid  $userId');
-                            print('kategori  $selectedCategoryType');
-                            print('sub kategori $selectedSubCategoryType');
-                            print('[prioritas] $selectedPriorityType');
-                            print('[attachment] $attachment');
+                            debugPrint('tiket kepada dept $selectedTicketingType');
+                            debugPrint('kepada $selectedAssignedType');
+                            debugPrint('subyek  ${subjectController.text}');
+                            debugPrint('deskripsi  ${descriptionController.text}');
+                            debugPrint('userid  $userId');
+                            debugPrint('kategori  $selectedCategoryType');
+                            debugPrint('sub kategori $selectedSubCategoryType');
+                            debugPrint('[prioritas] $selectedPriorityType');
+                            debugPrint('[attachment] $attachment');
 
                             try {
                               await controller.postTicketing(
@@ -605,7 +605,7 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => TicketingPage(),
+                                    builder: (context) => const TicketingPage(),
                                   ),
                                 );
 
@@ -624,7 +624,7 @@ class _TicketingFormPageState extends State<TicketingFormPage> {
                                 ScaffoldMessenger.of(context)
                                   ..hideCurrentSnackBar()
                                   ..showSnackBar(snackBar);
-                              print("Error posting ticket: $e");
+                              debugPrint("Error posting ticket: $e");
                             }
                           },
                           child: Padding(

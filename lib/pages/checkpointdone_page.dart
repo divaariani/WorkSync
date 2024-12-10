@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'checkpoint_page.dart';
 import 'app_colors.dart';
-import 'warehouse_page.dart';
-import 'warehousebarcodes_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
-import '../utils/session_manager.dart';
+import '../controllers/checkpoint_controller.dart';
 
-class MobilManualPage extends StatefulWidget {
-  const MobilManualPage({Key? key}) : super(key: key);
+class CheckpointDonePage extends StatefulWidget {
+  final String cpCode;
+  final String cpName;
+
+  const CheckpointDonePage(
+      {required this.cpCode, required this.cpName, Key? key})
+      : super(key: key);
 
   @override
-  State<MobilManualPage> createState() => _MobilManualPageState();
+  State<CheckpointDonePage> createState() => _CheckpointDonePageState();
 }
 
-class _MobilManualPageState extends State<MobilManualPage> {
-  TextEditingController mobilController = TextEditingController();
+class _CheckpointDonePageState extends State<CheckpointDonePage> {
+  TextEditingController noteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +26,28 @@ class _MobilManualPageState extends State<MobilManualPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("truckForm"),
-            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+            AppLocalizations(globalLanguage).translate("Checkpoint Done"),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
+            ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const WarehousePage()
-                ),
+                    builder: (context) => const CheckPointPage(
+                          result: '',
+                          resultCheckpoint: [],
+                        )),
               );
             },
           ),
@@ -56,37 +70,7 @@ class _MobilManualPageState extends State<MobilManualPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      AppLocalizations(globalLanguage).translate("managedBy"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/useradd.png', height: 24, width: 24),
-                            const SizedBox(width: 10),
-                            Text(
-                              //"diva", 
-                              SessionManager().getNamaUser() ?? 'Unknown',
-                              style: const TextStyle(color: AppColors.deepGreen),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("truck"),
+                      AppLocalizations(globalLanguage).translate("name"),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -96,24 +80,85 @@ class _MobilManualPageState extends State<MobilManualPage> {
                     Container(
                       margin: EdgeInsets.zero,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/book_check.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 10),
+                            Text(
+                              widget.cpName,
+                              style:
+                                  const TextStyle(color: AppColors.deepGreen),
+                            ),
+                          ],
+                        ),
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("Code"),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/book_check.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 10),
+                            Text(
+                              widget.cpCode,
+                              style:
+                                  const TextStyle(color: AppColors.deepGreen),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations(globalLanguage).translate("remark"),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
                             Expanded(
                               child: TextField(
-                                controller: mobilController,
+                                controller: noteController,
                                 decoration: InputDecoration(
-                                  hintText: '${AppLocalizations(globalLanguage).translate("truck")}...',
+                                  hintText:
+                                      '${AppLocalizations(globalLanguage).translate("remark")}...',
                                   border: InputBorder.none,
                                 ),
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Image.asset('assets/fill.png', height: 24, width: 24),
+                            Image.asset('assets/fill.png',
+                                height: 24, width: 24),
                           ],
                         ),
                       ),
@@ -139,18 +184,25 @@ class _MobilManualPageState extends State<MobilManualPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            globalBarcodeMobilResult = mobilController.text;
-
-                            Navigator.pushReplacement(
-                              context, MaterialPageRoute(
-                                builder: (context) => const WarehouseBarcodesPage()
+                            await CheckPointController.fetchDataScan(
+                                cpBarcode: widget.cpName,
+                                cpNote: noteController.text);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CheckPointPage(
+                                  result: '',
+                                  resultCheckpoint: [],
+                                ),
                               ),
                             );
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 50),
                             child: Text(
-                              AppLocalizations(globalLanguage).translate("next"),
+                              AppLocalizations(globalLanguage)
+                                  .translate("submit"),
                               style: const TextStyle(
                                 color: AppColors.deepGreen,
                                 fontSize: 16,
@@ -166,7 +218,6 @@ class _MobilManualPageState extends State<MobilManualPage> {
               ),
             ),
           ],
-        )
-      );
+        ));
   }
 }

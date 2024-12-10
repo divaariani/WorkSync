@@ -39,7 +39,7 @@ class OvertimeController extends ChangeNotifier {
         throw Exception('Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error fetching data: $error');
+      debugPrint('Error fetching data: $error');
       rethrow;
     }
   }
@@ -58,15 +58,15 @@ class OvertimeController extends ChangeNotifier {
           final List<Map<String, dynamic>> overtimeList = List.from(data['data']);
           return overtimeList;
         } else {
-          print('API Error: ${data['message']}');
+          debugPrint('API Error: ${data['message']}');
           return [];
         }
       } else {
-        print('HTTP Error: ${response.statusCode}');
+        debugPrint('HTTP Error: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
+      debugPrint('Exception: $e');
       return [];
     }
   }
@@ -94,7 +94,7 @@ class OvertimeController extends ChangeNotifier {
 
         if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
           if (responseData['status'] == 1) {
-            print('Overtime posted successfully');
+            debugPrint('Overtime posted successfully');
           } else {
             throw Exception('Failed to post overtime: ${responseData['message']}');
           }
@@ -105,7 +105,7 @@ class OvertimeController extends ChangeNotifier {
         throw Exception('Failed to post overtime. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error posting overtime: $error');
+      debugPrint('Error posting overtime: $error');
       rethrow;
     }
   }
@@ -134,7 +134,7 @@ class OvertimeController extends ChangeNotifier {
 
         if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
           if (responseData['status'] == 1) {
-            print('Overtime posted successfully');
+            debugPrint('Overtime posted successfully');
           } else {
             throw Exception('Failed to post overtime: ${responseData['message']}');
           }
@@ -145,7 +145,7 @@ class OvertimeController extends ChangeNotifier {
         throw Exception('Failed to post overtime. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error posting overtime: $error');
+      debugPrint('Error posting overtime: $error');
       rethrow;
     }
   }
@@ -171,7 +171,7 @@ class OvertimeController extends ChangeNotifier {
 
         if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
           if (responseData['status'] == 1) {
-            print('Overtime posted successfully');
+            debugPrint('Overtime posted successfully');
           } else {
             throw Exception('Failed to approve overtime: ${responseData['message']}');
           }
@@ -182,7 +182,7 @@ class OvertimeController extends ChangeNotifier {
         throw Exception('Failed to approve overtime. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error posting approve: $error');
+      debugPrint('Error posting approve: $error');
       rethrow;
     }
   }
@@ -208,7 +208,7 @@ class OvertimeController extends ChangeNotifier {
 
         if (responseData is Map<String, dynamic> && responseData.containsKey('status')) {
           if (responseData['status'] == 1) {
-            print('Overtime rejected successfully');
+            debugPrint('Overtime rejected successfully');
           } else {
             throw Exception('Failed to reject overtime: ${responseData['message']}');
           }
@@ -219,7 +219,7 @@ class OvertimeController extends ChangeNotifier {
         throw Exception('Failed to reject overtime. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error posting reject: $error');
+      debugPrint('Error posting reject: $error');
       rethrow;
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
@@ -65,7 +66,7 @@ class LeaveUrlController {
         );
 
         if (response.statusCode == 200) {
-          print('submit leave success');
+          debugPrint('submit leave success');
         } else {
           throw Exception('Failed to submit leave');
         }
@@ -73,7 +74,7 @@ class LeaveUrlController {
         throw Exception('Picked file is null');
       }
     } catch (error) {
-      print('Error submitting leave: $error');
+      debugPrint('Error submitting leave: $error');
       throw Exception('Failed to submit leave');
     }
   }
@@ -104,12 +105,12 @@ class LeaveUrlController {
       );
 
       if (response.statusCode == 200) {
-        print('submit leave success');
+        debugPrint('submit leave success');
       } else {
         throw Exception('Failed to submit leave');
       }
     } catch (error) {
-      print('Error submitting leave data: $error');
+      debugPrint('Error submitting leave data: $error');
       throw Exception('Failed to submit leave');
     }
   }
@@ -118,7 +119,7 @@ class LeaveUrlController {
 class LeaveListController {
   late final String? noAbsen;
 
-  LeaveListService() {
+  leaveListService() {
     noAbsen = SessionManager().getNoAbsen();
   }
 

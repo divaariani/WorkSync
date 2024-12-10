@@ -29,8 +29,8 @@ class AttendanceController extends ChangeNotifier {
         throw Exception('Failed to load data');
       }
     } catch (error) {
-      print('Error fetching data: $error');
-      throw error;
+      debugPrint('Error fetching data: $error');
+      rethrow;
     }
   }
 
@@ -122,7 +122,7 @@ class AttendanceController extends ChangeNotifier {
         final Map<String, dynamic> responseData = json.decode(response.body);
         
         if (responseData['status'] == 1) {
-          print('Attendance posted successfully');
+          debugPrint('Attendance posted successfully');
         } else {
           throw Exception('Failed to post attendance: ${responseData['message']}');
         }
@@ -130,12 +130,11 @@ class AttendanceController extends ChangeNotifier {
         throw Exception('Failed to post attendance');
       }
     } catch (error) {
-      print('Error posting attendance: $error');
-      throw error;
+      debugPrint('Error posting attendance: $error');
+      rethrow;
     }
   }
 }
-
 
 class AttendanceData {
   final String namaPegawai;

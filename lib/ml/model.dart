@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -10,15 +10,15 @@ Future<tfl.Interpreter?> loadModel() async {
   try {
     return await tfl.Interpreter.fromAsset('assets/mobilefacenet.tflite');
   } on FileSystemException {
-    print('Failed to load model: File does not exist.');
+    debugPrint('Failed to load model: File does not exist.');
     return null;
   } catch (e) {
-    print('Failed to load model: $e');
+    debugPrint('Failed to load model: $e');
     return null;
   }
 }
 
-imglib.Image convertCameraImage(CameraImage image, CameraLensDirection _dir) {
+imglib.Image convertCameraImage(CameraImage image, CameraLensDirection dir) {
   int width = image.width;
   int height = image.height;
   var img = imglib.Image(width, height); 
@@ -43,7 +43,7 @@ imglib.Image convertCameraImage(CameraImage image, CameraLensDirection _dir) {
       img.data[index] = hexFF | (b << 16) | (g << 8) | r;
     }
   }
-  var img1 = (_dir == CameraLensDirection.front)
+  var img1 = (dir == CameraLensDirection.front)
       ? imglib.copyRotate(img, -90)
       : imglib.copyRotate(img, 90);
   return img1;

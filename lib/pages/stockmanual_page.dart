@@ -39,21 +39,19 @@ class _StockManualPageState extends State<StockManualPage> {
   }
 
   Future<void> fetchUser() async {
-    userName = await sessionManager.getNamaUser() ?? "";
+    userName = sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const StockLokasiPage()
-          ),
+          MaterialPageRoute(builder: (context) => const StockLokasiPage()),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
           appBar: AppBar(
@@ -62,25 +60,23 @@ class _StockManualPageState extends State<StockManualPage> {
               AppLocalizations(globalLanguage).translate("stockform"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
-                  ? AppColors.deepGreen
-                  : Colors.white,
+                    ? AppColors.deepGreen
+                    : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+            backgroundColor:
+                globalTheme == 'Light Theme' ? Colors.white : Colors.black,
             leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: globalTheme == 'Light Theme'
-                  ? AppColors.deepGreen
-                  : Colors.white
-              ),
+              icon: Icon(Icons.arrow_back,
+                  color: globalTheme == 'Light Theme'
+                      ? AppColors.deepGreen
+                      : Colors.white),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const StockLokasiPage()
-                  ),
+                      builder: (context) => const StockLokasiPage()),
                 );
               },
             ),
@@ -102,7 +98,7 @@ class _StockManualPageState extends State<StockManualPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                     Text(
+                      Text(
                         AppLocalizations(globalLanguage).translate("auditby"),
                         style: const TextStyle(
                           color: Colors.white,
@@ -120,11 +116,14 @@ class _StockManualPageState extends State<StockManualPage> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Image.asset('assets/useradd.png', height: 24, width: 24),
+                              Image.asset('assets/useradd.png',
+                                  height: 24, width: 24),
                               const SizedBox(width: 10),
                               Text(
                                 userName,
-                                style: const TextStyle(color: AppColors.deepGreen),
+                                //"diva",
+                                style:
+                                    const TextStyle(color: AppColors.deepGreen),
                               ),
                             ],
                           ),
@@ -149,7 +148,8 @@ class _StockManualPageState extends State<StockManualPage> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Image.asset('assets/stocklokasi.png', height: 24, width: 24),
+                              Image.asset('assets/stocklokasi.png',
+                                  height: 24, width: 24),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
@@ -157,7 +157,8 @@ class _StockManualPageState extends State<StockManualPage> {
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: const TextStyle(color: AppColors.deepGreen),
+                                  style: const TextStyle(
+                                      color: AppColors.deepGreen),
                                 ),
                               ),
                             ],
@@ -182,7 +183,8 @@ class _StockManualPageState extends State<StockManualPage> {
                           return Column(
                             children: [
                               buildLotNumberCard(lotNumber),
-                              if (index < listLength - 1) const SizedBox(height: 8),
+                              if (index < listLength - 1)
+                                const SizedBox(height: 8),
                               if (index == listLength - 1)
                                 const SizedBox(height: 16),
                             ],
@@ -217,7 +219,8 @@ class _StockManualPageState extends State<StockManualPage> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 6, horizontal: 30),
                                 child: Text(
-                                  AppLocalizations(globalLanguage).translate("+"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("+"),
                                   style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontSize: 16,
@@ -247,19 +250,23 @@ class _StockManualPageState extends State<StockManualPage> {
                             ),
                             child: InkWell(
                               onTap: () async {
-                                globalBarcodeBarangResults.addAll(lotNumbers.where((lot) => lot.isNotEmpty));
+                                globalBarcodeBarangResults.addAll(
+                                    lotNumbers.where((lot) => lot.isNotEmpty));
 
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const StockLokasiPage(),
+                                    builder: (context) =>
+                                        const StockLokasiPage(),
                                   ),
                                 );
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 30),
                                 child: Text(
-                                  AppLocalizations(globalLanguage).translate("save"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("save"),
                                   style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontSize: 16,
@@ -277,8 +284,7 @@ class _StockManualPageState extends State<StockManualPage> {
                 ),
               ),
             ],
-          )
-        ),
+          )),
     );
   }
 

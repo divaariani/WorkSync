@@ -21,14 +21,14 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
   final SessionManager sessionManager = SessionManager();
   late DateTime currentTime;
   List<MyData> mydata = [];
-  
+
   Future<void> fetchCurrentTime() async {
     try {
       setState(() {
         currentTime = DateTime.now();
       });
     } catch (error) {
-      print(error);
+      debugPrint('$error');
     }
   }
 
@@ -58,7 +58,7 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
         mydata = myDataList;
       });
     } catch (e) {
-      print('Error fetching data: $e');
+      debugPrint('Error fetching data: $e');
     }
   }
 
@@ -71,13 +71,13 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -85,13 +85,19 @@ class _MachineStatusPageState extends State<MachineStatusPage> {
           title: Text(
             AppLocalizations(globalLanguage).translate("machineStatus"),
             style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -238,7 +244,7 @@ class _CardTableState extends State<CardTable> {
       );
 
       final List<dynamic> nameDataList = response.data;
-      print('API Response: $nameDataList');
+      debugPrint('API Response: $nameDataList');
 
       final List<MyData> myDataList = nameDataList.map((data) {
         return MyData(
@@ -252,13 +258,17 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return data.mesin.toLowerCase().contains(searchResult.toLowerCase()) ||
-              data.operator.toLowerCase().contains(searchResult.toLowerCase()) ||
+          return data.mesin
+                  .toLowerCase()
+                  .contains(searchResult.toLowerCase()) ||
+              data.operator
+                  .toLowerCase()
+                  .contains(searchResult.toLowerCase()) ||
               data.status.toLowerCase().contains(searchResult.toLowerCase());
         }).toList();
       });
     } catch (e) {
-      print('Error fetching data: $e');
+      debugPrint('Error fetching data: $e');
     }
   }
 
@@ -288,14 +298,25 @@ class _CardTableState extends State<CardTable> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ListTile(
-              leading: Icon(Icons.search, color: globalTheme == 'Light Theme' ? Colors.black : Colors.white),
+              leading: Icon(Icons.search,
+                  color: globalTheme == 'Light Theme'
+                      ? Colors.black
+                      : Colors.white),
               title: TextField(
-                style: TextStyle(color: globalTheme == 'Light Theme' ? Colors.black : Colors.white),
-                cursorColor: globalTheme == 'Light Theme' ? Colors.black : Colors.white,
+                style: TextStyle(
+                    color: globalTheme == 'Light Theme'
+                        ? Colors.black
+                        : Colors.white),
+                cursorColor:
+                    globalTheme == 'Light Theme' ? Colors.black : Colors.white,
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: '${AppLocalizations(globalLanguage).translate("search")}...',
-                  hintStyle: TextStyle(color: globalTheme == 'Light Theme' ? Colors.black : Colors.white),
+                  hintText:
+                      '${AppLocalizations(globalLanguage).translate("search")}...',
+                  hintStyle: TextStyle(
+                      color: globalTheme == 'Light Theme'
+                          ? Colors.black
+                          : Colors.white),
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
@@ -306,7 +327,10 @@ class _CardTableState extends State<CardTable> {
                 },
               ),
               trailing: IconButton(
-                icon: Icon(Icons.cancel, color: globalTheme == 'Light Theme' ? Colors.black : Colors.white),
+                icon: Icon(Icons.cancel,
+                    color: globalTheme == 'Light Theme'
+                        ? Colors.black
+                        : Colors.white),
                 onPressed: () {
                   setState(() {
                     controller.clear();
@@ -388,7 +412,9 @@ class _CardTableState extends State<CardTable> {
 class AksiCellWidget extends StatefulWidget {
   final BuildContext parentContext;
   final MyData entry;
-  const AksiCellWidget({Key? key, required this.parentContext, required this.entry}) : super(key: key);
+  const AksiCellWidget(
+      {Key? key, required this.parentContext, required this.entry})
+      : super(key: key);
 
   @override
   State<AksiCellWidget> createState() => _AksiCellWidgetState();
@@ -403,8 +429,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
   String userName = '';
 
   Future<void> fetchUserId() async {
-    userIdLogin = await sessionManager.getUserId() ?? "";
-    userName = await sessionManager.getNamaUser() ?? "";
+    userIdLogin = sessionManager.getUserId() ?? "";
+    userName = sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
@@ -414,7 +440,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
         currentTime = DateTime.now();
       });
     } catch (error) {
-      print(error);
+      debugPrint('$error');
     }
   }
 
@@ -442,43 +468,63 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
         final machineName = widget.entry.mesin;
 
         if (state == "Start") {
-          NotificationManager().showNotification(title: 'Started !', body: 'Mesin $machineName');
+          NotificationManager()
+              .showNotification(title: 'Started !', body: 'Mesin $machineName');
         } else if (state == "Pause (Naik WIP)") {
-          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik WIP)');
+          NotificationManager().showNotification(
+              title: 'Paused !', body: 'Mesin $machineName (Naik WIP)');
         } else if (state == "Pause (Naik Bobin)") {
-          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Naik Bobin)');
+          NotificationManager().showNotification(
+              title: 'Paused !', body: 'Mesin $machineName (Naik Bobin)');
         } else if (state == "Pause (Setup Mesin)") {
-          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Setup Mesin)');
+          NotificationManager().showNotification(
+              title: 'Paused !', body: 'Mesin $machineName (Setup Mesin)');
         } else if (state == "Pause (Pergi/Istirahat)") {
-          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Pergi/Istirahat)');
+          NotificationManager().showNotification(
+              title: 'Paused !', body: 'Mesin $machineName (Pergi/Istirahat)');
         } else if (state == "Pause (Lingkungan)") {
-          NotificationManager().showNotification(title: 'Paused !', body: 'Mesin $machineName (Lingkungan)');
+          NotificationManager().showNotification(
+              title: 'Paused !', body: 'Mesin $machineName (Lingkungan)');
         } else if (state == "Block (Material Availability)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Material Availability)');
+          NotificationManager().showNotification(
+              title: 'Blocked !',
+              body: 'Mesin $machineName (Material Availability)');
         } else if (state == "Block (Equiment Failure)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Equiment Failure)');
+          NotificationManager().showNotification(
+              title: 'Blocked !',
+              body: 'Mesin $machineName (Equiment Failure)');
         } else if (state == "Block (Setup Adjustments)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Setup Adjustments)');
+          NotificationManager().showNotification(
+              title: 'Blocked !',
+              body: 'Mesin $machineName (Setup Adjustments)');
         } else if (state == "Block (Reduced Speed)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Speed)');
+          NotificationManager().showNotification(
+              title: 'Blocked !', body: 'Mesin $machineName (Reduced Speed)');
         } else if (state == "Block (Process Defect)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Process Defect)');
+          NotificationManager().showNotification(
+              title: 'Blocked !', body: 'Mesin $machineName (Process Defect)');
         } else if (state == "Block (Reduced Yield)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Reduced Yield)');
+          NotificationManager().showNotification(
+              title: 'Blocked !', body: 'Mesin $machineName (Reduced Yield)');
         } else if (state == "Block (Fully Productive Time)") {
-          NotificationManager().showNotification(title: 'Blocked !', body: 'Mesin $machineName (Fully Productive Time)');
+          NotificationManager().showNotification(
+              title: 'Blocked !',
+              body: 'Mesin $machineName (Fully Productive Time)');
         } else if (state == "End") {
-          NotificationManager().showNotification(title: 'Ended !', body: 'Mesin $machineName');
+          NotificationManager()
+              .showNotification(title: 'Ended !', body: 'Mesin $machineName');
         }
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const MachineStatusPage()
-          )
-        );
-      } else if (response.status == 0) {
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const MachineStatusPage(),
+            ),
+          );
+        }
+      } else if (response.status == 0 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Gagal mengubah status mesin !'),
           ),
         );
@@ -502,7 +548,9 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
               idController.text = id;
               stateController.text = "Start";
 
-              if(widget.entry.operator.isEmpty || widget.entry.operator != userName) {
+              //if(widget.entry.operator.isEmpty || widget.entry.operator != "diva") {
+              if (widget.entry.operator.isEmpty ||
+                  widget.entry.operator != userName) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -511,14 +559,17 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       content: Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 10, left: 16, right: 16),
+                        padding: const EdgeInsets.only(
+                            top: 20, bottom: 10, left: 16, right: 16),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              AppLocalizations(globalLanguage).translate("machineCodeRequire"),
+                              AppLocalizations(globalLanguage)
+                                  .translate("machineCodeRequire"),
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(fontSize: 12, color: AppColors.mainGreen),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: AppColors.mainGreen),
                             ),
                             const SizedBox(height: 10),
                             Row(
@@ -527,18 +578,20 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    _submitState(); 
+                                    _submitState();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:AppColors.grey,
+                                    backgroundColor: AppColors.grey,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                   child: Text(
-                                    AppLocalizations(globalLanguage).translate("startAnyway"),
-                                    style: const TextStyle(color: AppColors.mainGreen),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("startAnyway"),
+                                    style: const TextStyle(
+                                        color: AppColors.mainGreen),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -546,7 +599,9 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const MachineOperatorScanPage()),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MachineOperatorScanPage()),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -557,7 +612,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                     ),
                                   ),
                                   child: Text(
-                                    AppLocalizations(globalLanguage).translate("scan"),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("scan"),
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -681,7 +737,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Pause (Pergi/Istirahat)";
+                                  stateController.text =
+                                      "Pause (Pergi/Istirahat)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -722,7 +779,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                 },
               ).then((value) {
                 if (value != null) {
-                  print(value);
+                  debugPrint(value);
                 }
               });
             },
@@ -768,7 +825,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Material Availability)";
+                                  stateController.text =
+                                      "Block (Material Availability)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -790,7 +848,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Equiment Failure)";
+                                  stateController.text =
+                                      "Block (Equiment Failure)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -812,7 +871,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Setup Adjustments)";
+                                  stateController.text =
+                                      "Block (Setup Adjustments)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -834,7 +894,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Reduced Speed)";
+                                  stateController.text =
+                                      "Block (Reduced Speed)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -856,7 +917,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Process Defect)";
+                                  stateController.text =
+                                      "Block (Process Defect)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -878,7 +940,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Reduced Yield)";
+                                  stateController.text =
+                                      "Block (Reduced Yield)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -900,7 +963,8 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                                 onPressed: () {
                                   final id = widget.entry.id;
                                   idController.text = id;
-                                  stateController.text = "Block (Fully Productive Time)";
+                                  stateController.text =
+                                      "Block (Fully Productive Time)";
                                   _submitState();
                                 },
                                 child: const Text(
@@ -919,7 +983,7 @@ class _AksiCellWidgetState extends State<AksiCellWidget> {
                 },
               ).then((value) {
                 if (value != null) {
-                  print(value);
+                  debugPrint(value);
                 }
               });
             },

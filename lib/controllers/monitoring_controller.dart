@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/globals.dart';
@@ -17,15 +18,15 @@ class MonitoringController {
           final List<Map<String, dynamic>> overtimeList = List.from(data['data']);
           return overtimeList;
         } else {
-          print('API Error: ${data['message']}');
+          debugPrint('API Error: ${data['message']}');
           return [];
         }
       } else {
-        print('HTTP Error: ${response.statusCode}');
+        debugPrint('HTTP Error: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
+      debugPrint('Exception: $e');
       return [];
     }
   }

@@ -14,7 +14,8 @@ import '../controllers/machine_controller.dart';
 class MachineOperatorPage extends StatefulWidget {
   final String barcodeMachineResult;
 
-  const MachineOperatorPage({Key? key, required this.barcodeMachineResult}) : super(key: key);
+  const MachineOperatorPage({Key? key, required this.barcodeMachineResult})
+      : super(key: key);
 
   @override
   State<MachineOperatorPage> createState() => _MachineOperatorPageState();
@@ -31,8 +32,8 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
   String machineName = '';
 
   Future<void> fetchUserId() async {
-    userIdLogin = await sessionManager.getUserId() ?? "";
-    userName = await sessionManager.getNamaUser() ?? "";
+    userIdLogin = sessionManager.getUserId() ?? "";
+    userName = sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
@@ -48,15 +49,16 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
 
   Future<void> fetchMachineData() async {
     try {
-      final Map<String, dynamic> apiData = await MachineController.getWorkcenterList();
+      final Map<String, dynamic> apiData =
+          await MachineController.getWorkcenterList();
       final List<dynamic> dataList = apiData['data'];
 
-      bool machineFound = false; 
+      bool machineFound = false;
 
       for (var item in dataList) {
         if (item['id'] == barcodeMachineResult.toString()) {
           machineName = item['name'];
-          machineFound = true; 
+          machineFound = true;
           break;
         }
       }
@@ -68,7 +70,6 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
       setState(() {
         machineName;
       });
-
     } catch (e) {
       debugPrint('Error: $e');
     }
@@ -80,7 +81,8 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
     fetchUserId();
     fetchMachineData();
     fetchCurrentTime();
-    currentTime = DateTime.parse(DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()));
+    currentTime =
+        DateTime.parse(DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()));
     idwcController.text = barcodeMachineResult;
   }
 
@@ -111,19 +113,21 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
               contentType: ContentType.success,
             ),
           );
-          
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return MachineStatusPage();
-              },
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const MachineStatusPage();
+                },
+              ),
+            );
+          }
         } else if (tap == "O") {
           final snackBar = SnackBar(
             elevation: 0,
@@ -135,26 +139,31 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
               contentType: ContentType.success,
             ),
           );
-          
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return HomePage();
-              },
+          if (mounted) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const HomePage();
+                },
+              ),
+            );
+          }
+        }
+      } else if (response.status == 0) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations(globalLanguage)
+                  .translate("machineAttendanceFailed")),
             ),
           );
         }
-      } else if (response.status == 0) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations(globalLanguage).translate("machineAttendanceFailed")),
-          ),
-        );
       } else {
         debugPrint('Terjadi kesalahan: Response tidak valid.');
       }
@@ -165,35 +174,42 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
-        return false;
+
+        return Future.sync(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          AppLocalizations(globalLanguage).translate("operatorAttendance"),
-          style: TextStyle(
-            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
-            fontWeight: FontWeight.bold,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations(globalLanguage).translate("operatorAttendance"),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
           ),
         ),
-        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          },
-        ),
-      ),
         backgroundColor: Colors.transparent,
         body: Stack(
           fit: StackFit.expand,
@@ -238,7 +254,8 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                 ),
                                 const SizedBox(height: 30),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -248,9 +265,11 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                         width: 80,
                                         decoration: BoxDecoration(
                                           image: const DecorationImage(
-                                            image: AssetImage('assets/avatar.jpg'),
+                                            image:
+                                                AssetImage('assets/avatar.jpg'),
                                           ),
-                                          borderRadius: BorderRadius.circular(40),
+                                          borderRadius:
+                                              BorderRadius.circular(40),
                                           border: Border.all(
                                             color: AppColors.mainGreen,
                                             style: BorderStyle.solid,
@@ -261,10 +280,12 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                       const SizedBox(width: 20),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               userName,
+                                              //"diva",
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 color: AppColors.mainGreen,
@@ -272,7 +293,8 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                             ),
                                             const SizedBox(height: 5),
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   '${AppLocalizations(globalLanguage).translate("machine")}: ',
@@ -285,12 +307,15 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                 Flexible(
                                                   child: Text(
                                                     machineName,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 2,
                                                     style: const TextStyle(
                                                       fontSize: 14,
-                                                      fontWeight: FontWeight.normal,
-                                                      color: AppColors.mainGreen,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color:
+                                                          AppColors.mainGreen,
                                                     ),
                                                   ),
                                                 ),
@@ -323,11 +348,12 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                 _submitForm();
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white,
+                                backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                               ),
                               child: Align(
                                 alignment: Alignment.center,
@@ -365,12 +391,14 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       content: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.only(top: 10),
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
                                               child: Image.asset(
                                                 'assets/icon.warning.png',
                                                 width: 70,
@@ -389,23 +417,32 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                             const SizedBox(height: 10),
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                   },
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor: AppColors.grey,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppColors.grey,
                                                     elevation: 0,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
                                                   ),
                                                   child: Text(
-                                                    AppLocalizations(globalLanguage).translate("cancel"),
+                                                    AppLocalizations(
+                                                            globalLanguage)
+                                                        .translate("cancel"),
                                                     style: const TextStyle(
-                                                      color: AppColors.mainGreen,
+                                                      color:
+                                                          AppColors.mainGreen,
                                                     ),
                                                   ),
                                                 ),
@@ -415,15 +452,22 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                                     tapController.text = "O";
                                                     _submitForm();
                                                   },
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor: AppColors.mainGreen,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppColors.mainGreen,
                                                     elevation: 0,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
                                                   ),
                                                   child: Text(
-                                                    AppLocalizations(globalLanguage).translate("yes"),
+                                                    AppLocalizations(
+                                                            globalLanguage)
+                                                        .translate("yes"),
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                     ),
@@ -439,11 +483,12 @@ class _MachineOperatorPageState extends State<MachineOperatorPage> {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white,
+                                backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                               ),
                               child: Align(
                                 alignment: Alignment.center,

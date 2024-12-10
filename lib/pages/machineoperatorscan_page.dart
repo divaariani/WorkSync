@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
-import 'machineoperator_page.dart'; 
+import 'machineoperator_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 
@@ -10,7 +10,8 @@ class MachineOperatorScanPage extends StatefulWidget {
   const MachineOperatorScanPage({Key? key}) : super(key: key);
 
   @override
-  State<MachineOperatorScanPage> createState() => _MachineOperatorScanPageState();
+  State<MachineOperatorScanPage> createState() =>
+      _MachineOperatorScanPageState();
 }
 
 class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
@@ -24,13 +25,15 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
 
     setGlobalBarcodeResult(barcodeMachineResult);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            MachineOperatorPage(barcodeMachineResult: barcodeMachineResult),
-      ),
-    );
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              MachineOperatorPage(barcodeMachineResult: barcodeMachineResult),
+        ),
+      );
+    }
   }
 
   @override
@@ -41,13 +44,19 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
         title: Text(
           AppLocalizations(globalLanguage).translate("machine"),
           style: TextStyle(
-            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+            color: globalTheme == 'Light Theme'
+                ? AppColors.deepGreen
+                : Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        backgroundColor:
+            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+          icon: Icon(Icons.arrow_back,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -82,12 +91,14 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
                           const SizedBox(height: 50),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.5,
-                            child: const Image(image: AssetImage("assets/qrcode.png")),
+                            child: const Image(
+                                image: AssetImage("assets/qrcode.png")),
                           ),
                           const SizedBox(height: 50),
                           Text(
                             textAlign: TextAlign.center,
-                            AppLocalizations(globalLanguage).translate("machineScan"),
+                            AppLocalizations(globalLanguage)
+                                .translate("machineScan"),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
@@ -125,7 +136,8 @@ class _MachineOperatorScanPageState extends State<MachineOperatorScanPage> {
                                     horizontal: 50,
                                   ),
                                   child: Text(
-                                    AppLocalizations(globalLanguage).translate("scan"),
+                                    AppLocalizations(globalLanguage)
+                                        .translate("scan"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 16,

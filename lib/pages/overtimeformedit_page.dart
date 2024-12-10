@@ -10,7 +10,8 @@ import '../controllers/overtime_controller.dart';
 class OvertimeEditFormPage extends StatefulWidget {
   final Map<String, dynamic> overtimeData;
 
-  const OvertimeEditFormPage({Key? key, required this.overtimeData}) : super(key: key);
+  const OvertimeEditFormPage({Key? key, required this.overtimeData})
+      : super(key: key);
 
   @override
   State<OvertimeEditFormPage> createState() => _OvertimeEditFormPageState();
@@ -24,9 +25,12 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
   @override
   void initState() {
     super.initState();
-    startDateController = TextEditingController(text: widget.overtimeData['Ovt_Date_Start'].substring(0, 16));
-    endDateController = TextEditingController(text: widget.overtimeData['Ovt_Date_End'].substring(0, 16));
-    noteController = TextEditingController(text: widget.overtimeData['Ovt_Noted']);
+    startDateController = TextEditingController(
+        text: widget.overtimeData['Ovt_Date_Start'].substring(0, 16));
+    endDateController = TextEditingController(
+        text: widget.overtimeData['Ovt_Date_End'].substring(0, 16));
+    noteController =
+        TextEditingController(text: widget.overtimeData['Ovt_Noted']);
   }
 
   @override
@@ -36,11 +40,19 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
           centerTitle: true,
           title: Text(
             AppLocalizations(globalLanguage).translate("editOvertime"),
-            style: TextStyle(color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,),
+            style: TextStyle(
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
+            ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -77,7 +89,9 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                     const SizedBox(height: 5),
                     Container(
                       margin: EdgeInsets.zero,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
@@ -91,7 +105,8 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Image.asset('assets/fill.png', height: 24, width: 24),
+                            Image.asset('assets/fill.png',
+                                height: 24, width: 24),
                           ],
                         ),
                       ),
@@ -107,7 +122,9 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                     const SizedBox(height: 5),
                     Container(
                       margin: EdgeInsets.zero,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
@@ -121,7 +138,8 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Image.asset('assets/fill.png', height: 24, width: 24),
+                            Image.asset('assets/fill.png',
+                                height: 24, width: 24),
                           ],
                         ),
                       ),
@@ -137,7 +155,9 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                     const SizedBox(height: 5),
                     Container(
                       margin: EdgeInsets.zero,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
@@ -151,7 +171,8 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Image.asset('assets/fill.png', height: 24, width: 24),
+                            Image.asset('assets/fill.png',
+                                height: 24, width: 24),
                           ],
                         ),
                       ),
@@ -180,9 +201,11 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
                             updateOvertime();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 50),
                             child: Text(
-                              AppLocalizations(globalLanguage).translate("save"),
+                              AppLocalizations(globalLanguage)
+                                  .translate("save"),
                               style: const TextStyle(
                                 color: AppColors.deepGreen,
                                 fontSize: 16,
@@ -198,8 +221,7 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
               ),
             ),
           ],
-        )
-      );
+        ));
   }
 
   void updateOvertime() async {
@@ -222,22 +244,25 @@ class _OvertimeEditFormPageState extends State<OvertimeEditFormPage> {
         backgroundColor: Colors.transparent,
         content: AwesomeSnackbarContent(
           title: AppLocalizations(globalLanguage).translate("overtimeEdit"),
-          message: AppLocalizations(globalLanguage).translate("overtimeEditDesc"),
+          message:
+              AppLocalizations(globalLanguage).translate("overtimeEditDesc"),
           contentType: ContentType.success,
         ),
       );
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const OvertimeListPage(),
-        ),
-      );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const OvertimeListPage(),
+          ),
+        );
+      }
     } catch (error) {
-      print('Error updating overtime: $error');
+      debugPrint('Error updating overtime: $error');
     }
   }
 }

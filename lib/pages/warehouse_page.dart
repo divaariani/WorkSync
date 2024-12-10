@@ -30,35 +30,42 @@ class _WarehousePageState extends State<WarehousePage> {
   void initState() {
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 1)),
+          MaterialPageRoute(
+              builder: (context) => const HomePage(initialIndex: 1)),
         );
-        return false;
+        return Future.sync(() => false);
       },
-      
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("doPicking"),
+            AppLocalizations(globalLanguage).translate("DO Picking"),
             style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+          backgroundColor:
+              globalTheme == 'Light Theme' ? Colors.white : Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+            icon: Icon(Icons.arrow_back,
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage(initialIndex: 1)),
+                MaterialPageRoute(
+                    builder: (context) => const HomePage(initialIndex: 1)),
               );
             },
           ),
@@ -83,7 +90,7 @@ class _WarehousePageState extends State<WarehousePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    CardTable(searchText),
+                    CardTable(searchText: searchText),
                   ],
                 ),
               ),
@@ -106,17 +113,16 @@ class MyData {
   final String status;
   final String aksi;
 
-  MyData({
-    required this.mobil,
-    required this.lotnumber,
-    required this.name,
-    required this.merk,
-    required this.pack,
-    required this.stock,
-    required this.unit,
-    required this.status,
-    required this.aksi
-  });
+  MyData(
+      {required this.mobil,
+      required this.lotnumber,
+      required this.name,
+      required this.merk,
+      required this.pack,
+      required this.stock,
+      required this.unit,
+      required this.status,
+      required this.aksi});
 }
 
 class MyDataTableSource extends DataTableSource {
@@ -139,8 +145,9 @@ class MyDataTableSource extends DataTableSource {
             onTap: () async {
               globalBarcodeMobilResult = entry.mobil;
               Navigator.push(
-                context, MaterialPageRoute(
-                  builder: (context) => const WarehouseBarcodesPage()),
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const WarehouseBarcodesPage()),
               );
             },
             child: Container(
@@ -255,9 +262,8 @@ class MyDataTableSource extends DataTableSource {
 
 class CardTable extends StatefulWidget {
   final String searchText;
-  TextEditingController controller = TextEditingController();
-  
-  CardTable(this.searchText);
+
+  const CardTable({Key? key, required this.searchText}) : super(key: key);
 
   @override
   State<CardTable> createState() => _CardTableState();
@@ -289,15 +295,14 @@ class _CardTableState extends State<CardTable> {
       });
 
       final response = await WarehouseController.viewGudangOut(
-        mobil: '',
-        noLot: '',
-        namaBarang: '',
-        merk: '',
-        pack: '',
-        stock: '',
-        unit: '',
-        status: ''
-      );
+          mobil: '',
+          noLot: '',
+          namaBarang: '',
+          merk: '',
+          pack: '',
+          stock: '',
+          unit: '',
+          status: '');
 
       final List<dynamic> nameDataList = response.data;
 
@@ -328,15 +333,18 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.name.toLowerCase()).contains(_searchResult.toLowerCase()) ||
-              (data.lotnumber.toLowerCase()).contains(_searchResult.toLowerCase()) ||
-              (data.mobil.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+          return (data.name.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.lotnumber.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.mobil.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
               (data.status.toLowerCase()).contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
     } catch (e) {
-      print('Error fetching data: $e');
+      debugPrint('Error fetching data: $e');
       setState(() {
         _isLoading = false;
       });
@@ -356,8 +364,9 @@ class _CardTableState extends State<CardTable> {
     final excel = Excel.createExcel();
     final sheet = excel['Sheet1'];
 
-    sheet.appendRow(['Truck', 'Product Name', 'Lot Number', 'Quantity', 'Status']);
-    
+    sheet.appendRow(
+        ['Truck', 'Product Name', 'Lot Number', 'Quantity', 'Status']);
+
     for (MyData data in _fetchedData) {
       sheet.appendRow([
         data.mobil,
@@ -376,18 +385,19 @@ class _CardTableState extends State<CardTable> {
       }
     }
 
-    final excelFile = File('${(await getTemporaryDirectory()).path}/DOpicking.xlsx');
+    final excelFile =
+        File('${(await getTemporaryDirectory()).path}/DOpicking.xlsx');
     final excelData = excel.encode()!;
 
     await excelFile.writeAsBytes(excelData);
 
     if (excelFile.existsSync()) {
-      Share.shareFiles(
-        [excelFile.path],
+      Share.shareXFiles(
+        [XFile(excelFile.path)],
         text: 'Exported Excel',
       );
     } else {
-      print('File Excel not found.');
+      debugPrint('File Excel not found.');
     }
   }
 
@@ -412,7 +422,8 @@ class _CardTableState extends State<CardTable> {
                     title: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                        hintText: AppLocalizations(globalLanguage).translate("search"),
+                        hintText: AppLocalizations(globalLanguage)
+                            .translate("search"),
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
@@ -422,16 +433,16 @@ class _CardTableState extends State<CardTable> {
                         });
                       },
                     ),
-                    // trailing: IconButton(
-                    //   icon: const Icon(Icons.cancel),
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       controller.clear();
-                    //       _searchResult = '';
-                    //       fetchDataFromAPI();
-                    //     });
-                    //   },
-                    // ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.cancel),
+                      onPressed: () {
+                        setState(() {
+                          controller.clear();
+                          _searchResult = '';
+                          fetchDataFromAPI();
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -440,110 +451,126 @@ class _CardTableState extends State<CardTable> {
                 onTap: () async {
                   if (globalBarcodeGudangResults.isEmpty) {
                     showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(30),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
-                                              blurRadius: 5,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 3),
-                                            ),
-                                          ],
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context, MaterialPageRoute(
-                                                  builder: (context) => const WarehouseScanPage()),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  AppLocalizations(globalLanguage).translate("scanbarcode"),
-                                                  style: const TextStyle(
-                                                    color: AppColors.deepGreen,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          gradient: const LinearGradient(
-                                            colors: [Colors.white, AppColors.lightGreen],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.2),
-                                              blurRadius: 5,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 3),
-                                            ),
-                                          ],
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context, MaterialPageRoute(
-                                                  builder: (context) => const MobilManualPage()),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  AppLocalizations(globalLanguage).translate("entermanually"),
-                                                  style: const TextStyle(
-                                                    color: AppColors.deepGreen,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          contentPadding: const EdgeInsets.all(30),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Colors.white,
+                                      AppColors.lightGreen
                                     ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
                                   ),
-                                );
-                              },
-                            );
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const WarehouseScanPage()),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 30),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("scanbarcode"),
+                                          style: const TextStyle(
+                                            color: AppColors.deepGreen,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Colors.white,
+                                      AppColors.lightGreen
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MobilManualPage()),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 30),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          AppLocalizations(globalLanguage)
+                                              .translate("entermanually"),
+                                          style: const TextStyle(
+                                            color: AppColors.deepGreen,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   } else {
                     Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WarehouseBarcodesPage(),
-                            ),
-                          );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WarehouseBarcodesPage(),
+                      ),
+                    );
                   }
                 },
                 child: Container(
@@ -567,7 +594,6 @@ class _CardTableState extends State<CardTable> {
             ],
           ),
         ),
-        
         const SizedBox(height: 10),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 26),
@@ -582,12 +608,13 @@ class _CardTableState extends State<CardTable> {
               _isLoading
                   ? const CircularProgressIndicator()
                   : _data.isEmpty
-                      ? EmptyData()
+                      ? const EmptyData()
                       : PaginatedDataTable(
                           columns: [
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("truck"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("truck"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -596,7 +623,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("lotnumber"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("lotnumber"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -605,7 +633,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("namabarang"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("namabarang"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -614,7 +643,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("merk"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("merk"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -623,7 +653,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("pack"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("pack"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -632,7 +663,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("stock"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("stock"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -641,7 +673,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("unit"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("unit"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -650,7 +683,8 @@ class _CardTableState extends State<CardTable> {
                             ),
                             DataColumn(
                               label: Text(
-                                AppLocalizations(globalLanguage).translate("status"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("status"),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -669,63 +703,65 @@ class _CardTableState extends State<CardTable> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: const LinearGradient(
-                            colors: [Colors.white, AppColors.lightGreen],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            createAndExportExcel(_data.map((data) => data.toString()).toList());
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: const LinearGradient(
-                                colors: [Colors.white, AppColors.lightGreen],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    AppLocalizations(globalLanguage).translate("exportexcel"),
-                                    style: const TextStyle(
-                                      color: AppColors.deepGreen,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: const LinearGradient(
+                    colors: [Colors.white, AppColors.lightGreen],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    createAndExportExcel(
+                        _data.map((data) => data.toString()).toList());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                        colors: [Colors.white, AppColors.lightGreen],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 3),
+                        ),
                       ],
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6, horizontal: 30),
+                      child: Row(
+                        children: [
+                          Text(
+                            AppLocalizations(globalLanguage)
+                                .translate("exportexcel"),
+                            style: const TextStyle(
+                              color: AppColors.deepGreen,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+          ],
+        ),
         const SizedBox(height: 20),
       ],
     );

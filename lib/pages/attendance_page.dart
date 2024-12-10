@@ -24,48 +24,56 @@ class _AttendancePageState extends State<AttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("attendanceList"),
-            style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
-              fontWeight: FontWeight.bold,
+    return PopScope(
+        onPopInvoked: (bool _) async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+          return Future.sync(() => false);
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(
+              AppLocalizations(globalLanguage).translate("attendanceList"),
+              style: TextStyle(
+                color: globalTheme == 'Light Theme'
+                    ? AppColors.deepGreen
+                    : Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor:
+                globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back,
+                  color: globalTheme == 'Light Theme'
+                      ? AppColors.deepGreen
+                      : Colors.white),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
             ),
           ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
+          body: FutureBuilder<List<AttendanceData>>(
+            future: controller.futureData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return buildAttendanceList(snapshot.data!);
+              } else if (snapshot.hasError) {
+                return Text(
+                  AppLocalizations(globalLanguage).translate("noDataa"),
+                );
+              }
+              return const CircularProgressIndicator(
+                  color: AppColors.mainGreen);
             },
           ),
-        ),
-        body: FutureBuilder<List<AttendanceData>>(
-          future: controller.futureData,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return buildAttendanceList(snapshot.data!);
-            } else if (snapshot.hasError) {
-              return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
-            }
-            return const CircularProgressIndicator(color: AppColors.mainGreen);
-          },
-        ),
-      )
-    );
+        ));
   }
 
   Widget buildAttendanceList(List<AttendanceData> data) {
@@ -101,7 +109,8 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget buildAttendanceCard(AttendanceData data, int index, int listLength) {
     bool hasTimeData = data.jamMasuk != null || data.jamPulang != null;
 
-    Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
+    Color cardColor =
+        hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
     return Column(children: [
       if (index == 0) const SizedBox(height: 16),
@@ -153,7 +162,8 @@ class _AttendancePageState extends State<AttendancePage> {
 
   String formatLanguageDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final String formattedDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
+    final String formattedDate =
+        DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
     return formattedDate;
   }
 }

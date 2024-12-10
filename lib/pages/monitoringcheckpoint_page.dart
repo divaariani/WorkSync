@@ -40,17 +40,16 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
 
   Future<void> fetchData({int? searchYear}) async {
     try {
-      if (searchYear == null) {
-        searchYear = DateTime.now().year;
-      }
+      searchYear ??= DateTime.now().year;
 
-      List<Map<String, dynamic>> data = await MonitoringController().fetchMonitoringData(searchYear: searchYear);
+      List<Map<String, dynamic>> data = await MonitoringController()
+          .fetchMonitoringData(searchYear: searchYear);
 
       setState(() {
         _data = data;
       });
     } catch (error) {
-      print('Error fetching data: $error');
+      debugPrint('Error fetching data: $error');
     }
   }
 
@@ -114,13 +113,13 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
     if (excelFile.existsSync()) {
       shareExcelFile(excelFile);
     } else {
-      print('File Excel not found.');
+      debugPrint('File Excel not found.');
     }
   }
 
   void shareExcelFile(File excelFile) {
-    Share.shareFiles(
-      [excelFile.path],
+    Share.shareXFiles(
+      [XFile(excelFile.path)],
       text: 'Exported Excel',
     );
   }
@@ -129,25 +128,31 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            AppLocalizations(globalLanguage).translate("monitoring"),
-            style: TextStyle(
-              color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            },
+        centerTitle: true,
+        title: Text(
+          AppLocalizations(globalLanguage).translate("monitoring"),
+          style: TextStyle(
+            color: globalTheme == 'Light Theme'
+                ? AppColors.deepGreen
+                : Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor:
+            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -267,7 +272,8 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                         } else {
                           return Center(
                             child: Text(
-                              AppLocalizations(globalLanguage).translate("noDataa"),
+                              AppLocalizations(globalLanguage)
+                                  .translate("noDataa"),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -311,7 +317,8 @@ class _MonitoringCpPageState extends State<MonitoringCpPage> {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 50),
                     child: Text(
                       AppLocalizations(globalLanguage).translate("exportexcel"),
                       style: const TextStyle(

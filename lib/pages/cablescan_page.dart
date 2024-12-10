@@ -1,46 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'stockopname_page.dart';
-import 'stocklokasi_page.dart';
-import '../utils/globals.dart';
 import 'app_colors.dart';
-import '../utils/localizations.dart';
 import 'home_page.dart';
+import '../utils/globals.dart';
+import '../utils/localizations.dart';
 
-class StockLokasiScan extends StatefulWidget {
-  const StockLokasiScan({Key? key}) : super(key: key);
+class CableScanPage extends StatefulWidget {
+  const CableScanPage({Key? key}) : super(key: key);
 
   @override
-  State<StockLokasiScan> createState() => _StockLokasiScanState();
+  State<CableScanPage> createState() => _CableScanPageState();
 }
 
-class _StockLokasiScanState extends State<StockLokasiScan> {
+class _CableScanPageState extends State<CableScanPage> {
   Future<void> _scanBarcode() async {
-    String barcodeLokasiResult = await FlutterBarcodeScanner.scanBarcode(
-      '#FF0000',
-      'Cancel',
-      true,
-      ScanMode.BARCODE,
+    bool finishScanning = false;
+
+    while (!finishScanning) {
+      String barcodeKabelResult = await FlutterBarcodeScanner.scanBarcode(
+        '#FF0000',
+        AppLocalizations(globalLanguage).translate("finish"),
+        true,
+        ScanMode.BARCODE,
+      );
+
+      if (barcodeKabelResult == '-1') {
+        navigateBack();
+        return;
+      }
+
+      if (barcodeKabelResult.isNotEmpty) {
+        setState(() {
+          globalBarcodeKabelResults.add(barcodeKabelResult);
+        });
+      }
+
+      dialogHasil(barcodeKabelResult);
+
+      if (!finishScanning) {
+        await Future.delayed(const Duration(seconds: 1));
+      }
+    }
+  }
+
+  void navigateBack() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CableScanPage(),
+      ),
     );
+  }
 
-    if (barcodeLokasiResult == '-1' && mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const StockOpnamePage()),
+  void dialogHasil(String barcodeBarang) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(16),
+            title: const Center(
+              child: CircularProgressIndicator(color: AppColors.mainGreen)
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  barcodeBarang,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),        
+              ],
+            ),
+          );
+        },
       );
-      return;
-    }
-
-    setGlobalBarcodeLokasiResult(barcodeLokasiResult);
-
-    if (mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const StockLokasiPage(),
-        ),
-      );
-    }
   }
 
   @override
@@ -49,21 +83,15 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          AppLocalizations(globalLanguage).translate("chooselocation"),
+          AppLocalizations(globalLanguage).translate("Scan Stock"),
           style: TextStyle(
-            color: globalTheme == 'Light Theme'
-                ? AppColors.deepGreen
-                : Colors.white,
+            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor:
-            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: globalTheme == 'Light Theme'
-                  ? AppColors.deepGreen
-                  : Colors.white),
+          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -98,14 +126,12 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
                           const SizedBox(height: 50),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.5,
-                            child: const Image(
-                                image: AssetImage("assets/qrcode.png")),
+                            child: const Image(image: AssetImage("assets/qrcode.png")),
                           ),
                           const SizedBox(height: 50),
                           Text(
                             textAlign: TextAlign.center,
-                            AppLocalizations(globalLanguage)
-                                .translate("scanlocation"),
+                            AppLocalizations(globalLanguage).translate("scanlocation"),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
@@ -143,8 +169,7 @@ class _StockLokasiScanState extends State<StockLokasiScan> {
                                     horizontal: 50,
                                   ),
                                   child: Text(
-                                    AppLocalizations(globalLanguage)
-                                        .translate("scan"),
+                                    AppLocalizations(globalLanguage).translate("scan"),
                                     style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 16,

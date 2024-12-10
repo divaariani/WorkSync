@@ -34,9 +34,10 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
           scannedData = barcodeCheckpointResult;
         });
 
-        await CheckPointController.fetchDataScan(cp_barcode: scannedData);
+        await CheckPointController.fetchDataScan(
+            cpBarcode: scannedData, cpNote: '-');
       } catch (e) {
-        print('Error: $e');
+        debugPrint('Error: $e');
         final snackBar = SnackBar(
           elevation: 0,
           behavior: SnackBarBehavior.floating,
@@ -48,21 +49,25 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
           ),
         );
 
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
       }
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CheckPointPage(
-          result: '',
-          resultCheckpoint: globalBarcodeCheckpointResults,
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CheckPointPage(
+            result: '',
+            resultCheckpoint: globalBarcodeCheckpointResults,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -73,13 +78,19 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
         title: Text(
           AppLocalizations(globalLanguage).translate("chooseSite"),
           style: TextStyle(
-            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white,
+            color: globalTheme == 'Light Theme'
+                ? AppColors.deepGreen
+                : Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+        backgroundColor:
+            globalTheme == 'Light Theme' ? Colors.white : Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+          icon: Icon(Icons.arrow_back,
+              color: globalTheme == 'Light Theme'
+                  ? AppColors.deepGreen
+                  : Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -114,13 +125,15 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
                           const SizedBox(height: 50),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.5,
-                            child: const Image(image: AssetImage("assets/qrcode.png")),
+                            child: const Image(
+                                image: AssetImage("assets/qrcode.png")),
                           ),
                           const SizedBox(height: 50),
                           Text(
                             textAlign: TextAlign.center,
-                            AppLocalizations(globalLanguage).translate("scanpatroll"),
-                            style: TextStyle(
+                            AppLocalizations(globalLanguage)
+                                .translate("scanpatroll"),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
                             ),
@@ -152,13 +165,14 @@ class _CheckPointScanPageState extends State<CheckPointScanPage> {
                                   ],
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 6,
                                     horizontal: 50,
                                   ),
                                   child: Text(
-                                    AppLocalizations(globalLanguage).translate("scan"),
-                                    style: TextStyle(
+                                    AppLocalizations(globalLanguage)
+                                        .translate("scan"),
+                                    style: const TextStyle(
                                       color: AppColors.deepGreen,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

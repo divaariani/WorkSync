@@ -16,7 +16,6 @@ import '../utils/session_manager.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 
-
 class GudanginPage extends StatefulWidget {
   const GudanginPage({Key? key}) : super(key: key);
 
@@ -27,7 +26,6 @@ class GudanginPage extends StatefulWidget {
 class _GudanginPageState extends State<GudanginPage> {
   final SessionManager sessionManager = SessionManager();
   String searchText = "";
-  
 
   @override
   void initState() {
@@ -35,7 +33,6 @@ class _GudanginPageState extends State<GudanginPage> {
   }
 
   Future<void> _scanBarcode() async {
-    
     String barcodeGudangBarangResult = await FlutterBarcodeScanner.scanBarcode(
       '#FF0000',
       'Cancel',
@@ -50,16 +47,18 @@ class _GudanginPageState extends State<GudanginPage> {
 
     if (barcodeGudangBarangResult.isNotEmpty) {
       try {
-        await GudangInController.updateWarehouseInScan(lotnumber: barcodeGudangBarangResult);
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const RefreshGudangStatusTable()),
-        );
-      
+        await GudangInController.updateWarehouseInScan(
+            lotnumber: barcodeGudangBarangResult);
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const RefreshGudangStatusTable()),
+          );
+        }
       } catch (e) {
-        print('Error: $e');
+        debugPrint('Error: $e');
       }
     }
   }
@@ -69,13 +68,13 @@ class _GudanginPageState extends State<GudanginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Please Re-Scan Barcode"),
+          title: const Text("Please Re-Scan Barcode"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -87,24 +86,22 @@ class _GudanginPageState extends State<GudanginPage> {
     _scanBarcode();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => const HomePage(initialIndex: 1)),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            AppLocalizations(globalLanguage).translate("warehouse"),
+            AppLocalizations(globalLanguage).translate("warehousein"),
             style: TextStyle(
               color: globalTheme == 'Light Theme'
                   ? AppColors.deepGreen
@@ -164,7 +161,7 @@ class _GudanginPageState extends State<GudanginPage> {
 class MyData {
   final String checked;
   final int id;
-  final String tgl_kp;
+  final String tglKp;
   final String lotnumber;
   final String namabarang;
   final int qty;
@@ -173,7 +170,7 @@ class MyData {
   MyData({
     required this.checked,
     required this.id,
-    required this.tgl_kp,
+    required this.tglKp,
     required this.lotnumber,
     required this.namabarang,
     required this.qty,
@@ -192,12 +189,12 @@ class MyDataTableSource extends DataTableSource {
       return null;
     }
     final entry = data[index];
-    Color textColor = Colors.black; 
+    Color textColor = Colors.black;
 
     if (entry.checked.toLowerCase() == 'draft') {
-      textColor = Colors.orange; 
+      textColor = Colors.orange;
     } else if (entry.checked.toLowerCase() == 'checked') {
-      textColor = Colors.green; 
+      textColor = Colors.green;
     }
 
     return DataRow.byIndex(
@@ -209,7 +206,7 @@ class MyDataTableSource extends DataTableSource {
             child: Text(
               entry.checked,
               style: TextStyle(
-                color: textColor, 
+                color: textColor,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
@@ -232,7 +229,7 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.tgl_kp,
+              entry.tglKp,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -304,10 +301,11 @@ class MyDataTableSource extends DataTableSource {
 
 class CardTable extends StatefulWidget {
   final String searchText;
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
   final ui.VoidCallback onScanButtonPressed;
 
-  CardTable(this.searchText, {required this.onScanButtonPressed});
+  CardTable(this.searchText, {Key? key, required this.onScanButtonPressed})
+      : super(key: key);
 
   @override
   State<CardTable> createState() => _CardTableState();
@@ -341,7 +339,66 @@ class _CardTableState extends State<CardTable> {
         currentTime = DateTime.now();
       });
     } catch (error) {
-      print(error);
+      debugPrint('$error');
+    }
+  }
+
+  Future<void> submitStock() async {
+    try {
+      await _fetchCurrentTime();
+      final response = await _gudangUploadController.uploadDataToGudang();
+      if (response['status'] == 1) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: "Berhasil !",
+            message: "Data berhasil diunggah",
+            contentType: ContentType.success,
+          ),
+        );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
+      } else {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: "Gagal !",
+            message: "Data gagal diunggah",
+            contentType: ContentType.failure,
+          ),
+        );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
+      }
+    } catch (error) {
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: "Gagal !",
+          message: "Data gagal diunggah",
+          contentType: ContentType.failure,
+        ),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
     }
   }
 
@@ -350,11 +407,11 @@ class _CardTableState extends State<CardTable> {
       setState(() {
         _isLoading = true;
       });
-      final DateTime tgl_kp = DateTime.now();
+      final DateTime tglKp = DateTime.now();
       final response = await GudangInController.viewGudangIn(
         checked: '',
         id: 1,
-        tgl_kp: tgl_kp,
+        tglKp: tglKp,
         lotnumber: '',
         namabarang: '',
         qty: 1,
@@ -366,7 +423,7 @@ class _CardTableState extends State<CardTable> {
       final List<MyData> myDataList = nameDataList.map((data) {
         String checked = data['checked'] ?? "";
         int id = int.tryParse(data['id'].toString()) ?? 0;
-        String tgl_kp = data['tgl_kp'] ?? "";
+        String tglKp = data['tgl_kp'] ?? "";
         String lotnumber = data['lotnumber'] ?? "";
         String namabarang = data['namabarang'] ?? "";
         int qty = int.tryParse(data['qty'].toString()) ?? 0;
@@ -375,7 +432,7 @@ class _CardTableState extends State<CardTable> {
         return MyData(
           checked: checked,
           id: id,
-          tgl_kp: tgl_kp,
+          tglKp: tglKp,
           lotnumber: lotnumber,
           namabarang: namabarang,
           qty: qty,
@@ -387,18 +444,22 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.checked.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+          return (data.checked.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
               (data.id.toString()).contains(_searchResult.toLowerCase()) ||
               (data.qty.toString()).contains(_searchResult.toLowerCase()) ||
-              (data.namabarang.toLowerCase()).contains(_searchResult.toLowerCase()) ||
-              (data.lotnumber.toLowerCase()).contains(_searchResult.toLowerCase()) ||
+              (data.namabarang.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.lotnumber.toLowerCase())
+                  .contains(_searchResult.toLowerCase()) ||
               (data.uom.toLowerCase()).contains(_searchResult.toLowerCase()) ||
-              (data.namabarang.toLowerCase()).contains(_searchResult.toLowerCase());
+              (data.namabarang.toLowerCase())
+                  .contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
     } catch (e) {
-      print('Error fetching data: $e');
+      debugPrint('Error fetching data: $e');
       setState(() {
         _isLoading = false;
       });
@@ -432,7 +493,7 @@ class _CardTableState extends State<CardTable> {
       sheet.appendRow([
         data.checked,
         data.id,
-        data.tgl_kp,
+        data.tglKp,
         data.lotnumber,
         data.namabarang,
         data.qty,
@@ -449,18 +510,18 @@ class _CardTableState extends State<CardTable> {
     }
 
     final excelFile =
-        io.File('${(await getTemporaryDirectory()).path}/Warehouse.xlsx');
+        io.File('${(await getTemporaryDirectory()).path}/WarehouseIn.xlsx');
     final excelData = excel.encode()!;
 
     await excelFile.writeAsBytes(excelData);
 
     if (excelFile.existsSync()) {
-      Share.shareFiles(
-        [excelFile.path],
+      Share.shareXFiles(
+        [XFile(excelFile.path)],
         text: 'Exported Excel',
       );
     } else {
-      print('File Excel not found.');
+      debugPrint('File Excel not found.');
     }
   }
 
@@ -483,7 +544,7 @@ class _CardTableState extends State<CardTable> {
                     ),
                     child: TextField(
                       controller: controller,
-                       onChanged: (value) {
+                      onChanged: (value) {
                         setState(() {
                           _searchResult = value;
                           fetchDataFromAPI();
@@ -516,14 +577,14 @@ class _CardTableState extends State<CardTable> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Center(
-                    child: Text(
-                      '+',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: AppColors.mainGreen),
+                      child: Text(
+                        '+',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: AppColors.mainGreen),
+                      ),
                     ),
-                  ),
                   ),
                 ),
               )
@@ -544,7 +605,7 @@ class _CardTableState extends State<CardTable> {
               _isLoading
                   ? const CircularProgressIndicator()
                   : _data.isEmpty
-                      ? EmptyData()
+                      ? const EmptyData()
                       : PaginatedDataTable(
                           columns: [
                             DataColumn(
@@ -570,7 +631,7 @@ class _CardTableState extends State<CardTable> {
                             DataColumn(
                               label: Text(
                                 AppLocalizations(globalLanguage)
-                                    .translate('date'),
+                                    .translate('Tanggal Kp'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -600,7 +661,7 @@ class _CardTableState extends State<CardTable> {
                             DataColumn(
                               label: Text(
                                 AppLocalizations(globalLanguage)
-                                    .translate('quantity'),
+                                    .translate('Quantity'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -630,7 +691,7 @@ class _CardTableState extends State<CardTable> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                              Column(
+                Column(
                   children: [
                     Container(
                         decoration: BoxDecoration(
@@ -696,6 +757,32 @@ class _CardTableState extends State<CardTable> {
                 Column(
                   children: [
                     Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: const LinearGradient(
+                          colors: [Colors.white, AppColors.lightGreen],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          submitStock();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RefreshGudangStatusTable()),
+                          );
+                        },
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             gradient: const LinearGradient(
@@ -705,100 +792,37 @@ class _CardTableState extends State<CardTable> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 3),
-                                ),
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 3),
+                              ),
                             ],
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: AppColors.mainGrey,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 30),
+                            child: Row(
+                              children: [
+                                Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("upload"),
+                                  style: const TextStyle(
+                                    color: AppColors.deepGreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  content: Text(AppLocalizations(globalLanguage).translate("surestock")),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                          AppLocalizations(globalLanguage).translate("cancel"),
-                                          style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        try {
-                                          await _fetchCurrentTime();
-                                          final response = await _gudangUploadController.uploadDataToGudang();
-                                          if (response['status'] == 1) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RefreshGudangStatusTable()),
-                                            );
-
-                                            final snackBar = SnackBar(
-                                              elevation: 0,
-                                              behavior: SnackBarBehavior.floating,
-                                              backgroundColor: Colors.transparent,
-                                              content: AwesomeSnackbarContent(
-                                                title:
-                                                    AppLocalizations(globalLanguage).translate("uploaded"),
-                                                message:
-                                                    AppLocalizations(globalLanguage).translate("succesupload"),
-                                                contentType: ContentType.success,
-                                              ),
-                                            );
-
-                                            ScaffoldMessenger.of(context)
-                                              ..hideCurrentSnackBar()
-                                              ..showSnackBar(snackBar);
-
-                                            print('Draft posted successfully');
-                                          } else {
-                                            print('Failed to upload: ${response}');
-                                          }
-                                        } catch (e) {
-                                          print('Error upload: $e ');
-                                        }
-                                      },
-                                      child: Text(
-                                          AppLocalizations(globalLanguage).translate("confirm"),
-                                          style: const TextStyle(
-                                              color: AppColors.mainGreen,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
                                 ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                              child: Text(
-                                AppLocalizations(globalLanguage).translate("upload"),
-                                style: const TextStyle(
-                                  color: AppColors.deepGreen,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
-            
           ],
         ),
         const SizedBox(height: 20),

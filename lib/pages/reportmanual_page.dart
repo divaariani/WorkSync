@@ -1,9 +1,9 @@
-import 'package:worksync/pages/reportadd_page.dart';
+import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'reportadd_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
-import 'package:flutter/material.dart';
 
 class ReportManualPage extends StatefulWidget {
   final String? auditorData;
@@ -40,21 +40,24 @@ class _ReportManualPageState extends State<ReportManualPage> {
   }
 
   Future<void> _fetchUser() async {
-    userName = await sessionManager.getNamaUser() ?? "";
+    userName = sessionManager.getNamaUser() ?? "";
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ReportAddPage(result: '', resultBarangQc: globalBarcodeBarangQcResults)),
+            builder: (context) => ReportAddPage(
+              result: '',
+              resultBarangQc: globalBarcodeBarangQcResults,
+            ),
+          ),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
           appBar: AppBar(
@@ -79,7 +82,9 @@ class _ReportManualPageState extends State<ReportManualPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ReportAddPage(result: '', resultBarangQc: globalBarcodeBarangQcResults)),
+                      builder: (context) => ReportAddPage(
+                          result: '',
+                          resultBarangQc: globalBarcodeBarangQcResults)),
                 );
               },
             ),
@@ -101,7 +106,7 @@ class _ReportManualPageState extends State<ReportManualPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                     Text(
+                      Text(
                         AppLocalizations(globalLanguage).translate("username"),
                         style: const TextStyle(
                           color: Colors.white,
@@ -123,13 +128,13 @@ class _ReportManualPageState extends State<ReportManualPage> {
                                   height: 24, width: 24),
                               const SizedBox(width: 10),
                               Text(
-                                '$userName',
-                                style: TextStyle(color: AppColors.deepGreen),
+                                userName,
+                                style: const TextStyle(color: AppColors.deepGreen),
                               ),
                             ],
                           ),
                         ),
-                      ), 
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         AppLocalizations(globalLanguage).translate("lotnumber"),
@@ -148,7 +153,8 @@ class _ReportManualPageState extends State<ReportManualPage> {
                           return Column(
                             children: [
                               buildLotNumberCard(lotNumber),
-                              if (index < listLength - 1) const SizedBox(height: 8),
+                              if (index < listLength - 1)
+                                const SizedBox(height: 8),
                               if (index == listLength - 1)
                                 const SizedBox(height: 16),
                             ],
@@ -183,7 +189,8 @@ class _ReportManualPageState extends State<ReportManualPage> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 6, horizontal: 30),
                                 child: Text(
-                                  AppLocalizations(globalLanguage).translate("+"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("+"),
                                   style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontSize: 16,
@@ -213,19 +220,25 @@ class _ReportManualPageState extends State<ReportManualPage> {
                             ),
                             child: InkWell(
                               onTap: () async {
-                                globalBarcodeBarangQcResults.addAll(lotNumbers.where((lot) => lot.isNotEmpty));
+                                globalBarcodeBarangQcResults.addAll(
+                                    lotNumbers.where((lot) => lot.isNotEmpty));
 
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ReportAddPage(result: '', resultBarangQc: globalBarcodeBarangQcResults),
+                                    builder: (context) => ReportAddPage(
+                                        result: '',
+                                        resultBarangQc:
+                                            globalBarcodeBarangQcResults),
                                   ),
                                 );
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 30),
                                 child: Text(
-                                  AppLocalizations(globalLanguage).translate("save"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("save"),
                                   style: const TextStyle(
                                     color: AppColors.deepGreen,
                                     fontSize: 16,
@@ -243,8 +256,7 @@ class _ReportManualPageState extends State<ReportManualPage> {
                 ),
               ),
             ],
-          )
-        ),
+          )),
     );
   }
 

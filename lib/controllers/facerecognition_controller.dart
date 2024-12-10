@@ -25,12 +25,12 @@ class FaceRecognitionController extends ChangeNotifier {
       String message = responseBody['message'];
 
       if (status == 1) {
-        print('API request successful: $message');
+        debugPrint('API request successful: $message');
       } else {
-        print('API request failed: $message');
+        debugPrint('API request failed: $message');
       }
     } else {
-      print('API request failed with status code: ${response.statusCode}');
+      debugPrint('API request failed with status code: ${response.statusCode}');
     }
   }
 

@@ -27,19 +27,20 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
   @override
   void initState() {
     super.initState();
-    currentDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(DateTime.now());
+    currentDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag())
+        .format(DateTime.now());
     userId = SessionManager().getUserId() ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
-        return false;
+        return Future.sync(() => false);
       },
       child: Scaffold(
           appBar: AppBar(
@@ -48,14 +49,18 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
               AppLocalizations(globalLanguage).translate("stockopname"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
-                  ? AppColors.deepGreen
-                  : Colors.white,
+                    ? AppColors.deepGreen
+                    : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor: globalTheme == 'Light Theme' ? Colors.white : Colors.black,
+            backgroundColor:
+                globalTheme == 'Light Theme' ? Colors.white : Colors.black,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white),
+              icon: Icon(Icons.arrow_back,
+                  color: globalTheme == 'Light Theme'
+                      ? AppColors.deepGreen
+                      : Colors.white),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
@@ -78,110 +83,125 @@ class _StockOpnamePageState extends State<StockOpnamePage> {
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      const CardTable(),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: const LinearGradient(
-                              colors: [Colors.white, AppColors.lightGreen],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
+                  child: Column(children: [
+                    const CardTable(),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            colors: [Colors.white, AppColors.lightGreen],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: AppColors.mainGrey,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: AppColors.mainGrey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                content: Text(AppLocalizations(globalLanguage)
+                                    .translate("surestock")),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                        AppLocalizations(globalLanguage)
+                                            .translate("cancel"),
+                                        style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold)),
                                   ),
-                                  content: Text(AppLocalizations(globalLanguage).translate("surestock")),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        AppLocalizations(globalLanguage).translate("cancel"),
-                                        style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        try {
-                                          ResponseModel response = await StockOpnameController.postConfirmStock();
+                                  TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        ResponseModel response =
+                                            await StockOpnameController
+                                                .postConfirmStock();
 
-                                          if (response.status == 1) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => RefreshStockTable()
-                                              ),
-                                            );
+                                        if (response.status == 1) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const RefreshStockTable(),
+                                            ),
+                                          );
 
-                                            final snackBar = SnackBar(
-                                              elevation: 0,
-                                              behavior: SnackBarBehavior.floating,
-                                              backgroundColor: Colors.transparent,
-                                              content: AwesomeSnackbarContent(
-                                                title: AppLocalizations(globalLanguage).translate("uploaded"),
-                                                message: AppLocalizations(globalLanguage).translate("succesupload"),
-                                                contentType: ContentType.success,
-                                              ),
-                                            );
+                                          final snackBar = SnackBar(
+                                            elevation: 0,
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.transparent,
+                                            content: AwesomeSnackbarContent(
+                                              title: AppLocalizations(
+                                                      globalLanguage)
+                                                  .translate("uploaded"),
+                                              message: AppLocalizations(
+                                                      globalLanguage)
+                                                  .translate("succesupload"),
+                                              contentType: ContentType.success,
+                                            ),
+                                          );
 
-                                            ScaffoldMessenger.of(context)
-                                              ..hideCurrentSnackBar()
-                                              ..showSnackBar(snackBar);
+                                          ScaffoldMessenger.of(context)
+                                            ..hideCurrentSnackBar()
+                                            ..showSnackBar(snackBar);
 
-                                            print('Confirm data posted successfully');
-                                          } else {
-                                            print('Failed to confirm the draft: ${response.message}');
-                                          }
-                                        } catch (e) {
-                                          print('Error posting: $e userid nya $userId');
+                                          debugPrint(
+                                              'Confirm data posted successfully');
+                                        } else {
+                                          debugPrint(
+                                              'Failed to confirm the draft: ${response.message}');
                                         }
-                                      },
-                                      child: Text(
-                                        AppLocalizations(globalLanguage).translate("confirm"),
-                                        style: const TextStyle(color: AppColors.mainGreen, fontWeight: FontWeight.bold)
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                              child: Text(
-                                AppLocalizations(globalLanguage).translate("postdraft"),
-                                style: const TextStyle(
-                                  color: AppColors.deepGreen,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                      } catch (e) {
+                                        debugPrint(
+                                            'Error posting: $e userid nya $userId');
+                                      }
+                                    },
+                                    child: Text(
+                                        AppLocalizations(globalLanguage)
+                                            .translate("confirm"),
+                                        style: const TextStyle(
+                                            color: AppColors.mainGreen,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 30),
+                            child: Text(
+                              AppLocalizations(globalLanguage)
+                                  .translate("postdraft"),
+                              style: const TextStyle(
+                                color: AppColors.deepGreen,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30),
-                    ]
-                  ),
+                    ),
+                    const SizedBox(height: 30),
+                  ]),
                 ),
               ),
             ],
@@ -199,8 +219,14 @@ class MyData {
   final String? unit;
   final String? status;
 
-
-  MyData({required this.lokasi, required this.noLot, required this.namaBarang, required this.merk, required this.stock, required this.unit, required this.status});
+  MyData(
+      {required this.lokasi,
+      required this.noLot,
+      required this.namaBarang,
+      required this.merk,
+      required this.stock,
+      required this.unit,
+      required this.status});
 }
 
 class MyDataTableSource extends DataTableSource {
@@ -294,15 +320,17 @@ class MyDataTableSource extends DataTableSource {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              entry.status == AppLocalizations(globalLanguage).translate("posted")
-                ? AppLocalizations(globalLanguage).translate("confirm")
-                : AppLocalizations(globalLanguage).translate("draft"),
+              entry.status ==
+                      AppLocalizations(globalLanguage).translate("posted")
+                  ? AppLocalizations(globalLanguage).translate("confirm")
+                  : AppLocalizations(globalLanguage).translate("draft"),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: entry.status == AppLocalizations(globalLanguage).translate("posted")
-                  ? Colors.green
-                  : Colors.orange,
+                color: entry.status ==
+                        AppLocalizations(globalLanguage).translate("posted")
+                    ? Colors.green
+                    : Colors.orange,
               ),
             ),
           ),
@@ -333,11 +361,61 @@ class _CardTableState extends State<CardTable> {
   String _searchResult = '';
   List<MyData> _data = [];
   bool _isLoading = false;
+  // List<MyData> getFakeData() {
+  //   return [
+  //     MyData(
+  //       lokasi: "1A03001000",
+  //       noLot: "2304806",
+  //       namaBarang: "NA2XSEYBY",
+  //       merk: "Bobin",
+  //       stock: "150",
+  //       unit: "mtr",
+  //       status: "draft"
+  //     ),
+  //     MyData(
+  //       lokasi: "1A03001000",
+  //       noLot: "2304812",
+  //       namaBarang: "NFA2X",
+  //       merk: "Bobin",
+  //       stock: "85",
+  //       unit: "mtr",
+  //       status: "draft"
+  //     ),
+  //     MyData(
+  //       lokasi: "1A03001000",
+  //       noLot: "2305796",
+  //       namaBarang: "NYA Cu/PVC",
+  //       merk: "Bobin",
+  //       stock: "85",
+  //       unit: "mtr",
+  //       status: "draft"
+  //     ),
+  //     MyData(
+  //       lokasi: "1A03001000",
+  //       noLot: "2304807",
+  //       namaBarang: "NA4XSEYBY",
+  //       merk: "Bobin",
+  //       stock: "85",
+  //       unit: "mtr",
+  //       status: "draft"
+  //     ),
+  //     MyData(
+  //       lokasi: "1A03001000",
+  //       noLot: "2304813",
+  //       namaBarang: "NYM Cu/PVC/PVC",
+  //       merk: "Bobin",
+  //       stock: "85",
+  //       unit: "mtr",
+  //       status: "draft"
+  //     ),
+  //   ];
+  // }
 
   @override
   void initState() {
     super.initState();
     fetchDataFromAPI();
+    //_data = getFakeData();
   }
 
   @override
@@ -352,7 +430,14 @@ class _CardTableState extends State<CardTable> {
         _isLoading = true;
       });
 
-      final response = await StockOpnameController.viewData(lokasi: '', noLot: '', namaBarang: '', merk: '', stock: '', unit: '', status:'');
+      final response = await StockOpnameController.viewData(
+          lokasi: '',
+          noLot: '',
+          namaBarang: '',
+          merk: '',
+          stock: '',
+          unit: '',
+          status: '');
 
       final List<dynamic> nameDataList = response.data;
 
@@ -378,9 +463,12 @@ class _CardTableState extends State<CardTable> {
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.lokasi?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
-            (data.noLot?.toLowerCase() ?? "").contains(_searchResult.toLowerCase()) ||
-            (data.merk?.toLowerCase() ?? "").contains(_searchResult.toLowerCase());
+          return (data.lokasi?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.noLot?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.merk?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
@@ -412,7 +500,8 @@ class _CardTableState extends State<CardTable> {
                     title: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                        hintText: '${AppLocalizations(globalLanguage).translate("search")}...',
+                        hintText:
+                            '${AppLocalizations(globalLanguage).translate("search")}...',
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
@@ -464,7 +553,10 @@ class _CardTableState extends State<CardTable> {
                   child: const Center(
                     child: Text(
                       '+',
-                      style: TextStyle( fontWeight: FontWeight.bold, fontSize: 30, color: AppColors.mainGreen),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: AppColors.mainGreen),
                     ),
                   ),
                 ),
@@ -492,7 +584,8 @@ class _CardTableState extends State<CardTable> {
                             columns: [
                               DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("location"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("location"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
@@ -501,7 +594,8 @@ class _CardTableState extends State<CardTable> {
                               ),
                               DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("lotnumber"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("lotnumber"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
@@ -510,34 +604,8 @@ class _CardTableState extends State<CardTable> {
                               ),
                               DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("namabarang"),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.deepGreen,
-                                  ),
-                                ),
-                              ),
-                               DataColumn(
-                                label: Text(
-                                  AppLocalizations(globalLanguage).translate("merk"),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.deepGreen,
-                                  ),
-                                ),
-                              ),
-                               DataColumn(
-                                label: Text(
-                                  AppLocalizations(globalLanguage).translate("stock"),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.deepGreen,
-                                  ),
-                                ),
-                              ),
-                               DataColumn(
-                                label: Text(
-                                  AppLocalizations(globalLanguage).translate("unit"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("namabarang"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
@@ -546,7 +614,38 @@ class _CardTableState extends State<CardTable> {
                               ),
                               DataColumn(
                                 label: Text(
-                                  AppLocalizations(globalLanguage).translate("status"),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("merk"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("stock"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("unit"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("status"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,

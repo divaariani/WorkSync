@@ -135,9 +135,9 @@ class _LeaveFormPageState extends State<LeaveFormPage> {
       final snapshot = await uploadTask.whenComplete(() {});
 
       final urlDownload = await snapshot.ref.getDownloadURL();
-      print('Direct Image Link: $urlDownload');
+      debugPrint('Direct Image Link: $urlDownload');
     } else {
-      print('No file selected');
+      debugPrint('No file selected');
     }
   }
 
@@ -197,6 +197,7 @@ class _LeaveFormPageState extends State<LeaveFormPage> {
                               height: 24, width: 24),
                           const SizedBox(width: 10),
                           Text(
+                            //"diva", 
                             SessionManager().getNamaUser() ?? 'Unknown',
                             style: const TextStyle(color: AppColors.deepGreen),
                           ),
@@ -446,10 +447,10 @@ class _LeaveFormPageState extends State<LeaveFormPage> {
                             ),
                           );
                         } catch (error) {
-                          print('Error posting leave: $noAbsen $error');
+                          debugPrint('Error posting leave: $noAbsen $error');
                         }
                       } else {
-                        print('No noAbsen or pickedFile available');
+                        debugPrint('No noAbsen or pickedFile available');
                       }
                     },
                     child: Center(

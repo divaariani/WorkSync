@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
-import 'app_colors.dart';
 import 'dashboard_page.dart';
 import 'features_page.dart';
 import 'profile_page.dart';
+import 'app_colors.dart';
 
 class HomePage extends StatefulWidget {
   final int initialIndex;
@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  late int _currentIndex = 0;
   _HomePageState(this._currentIndex);
   DateTime? currentBackPressTime;
 
@@ -33,42 +33,47 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        DateTime now = DateTime.now();
-        if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
-          currentBackPressTime = now;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Press back again to exit the app'),
+    return PopScope(
+        onPopInvoked: (bool _) async {
+          DateTime now = DateTime.now();
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime!) >
+                  const Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Press back again to exit the app'),
+              ),
+            );
+            return Future.sync(() => false);
+          }
+          return Future.sync(() => true);
+        },
+        child: Scaffold(
+          body: _tabs[_currentIndex],
+          bottomNavigationBar: Container(
+            // 20 for ios, 6 for android
+            padding: const EdgeInsets.only(bottom: 6),
+            color: AppColors.deepGreen,
+            child: MoltenBottomNavigationBar(
+              domeCircleColor: Colors.white,
+              barColor: AppColors.deepGreen,
+              selectedIndex: _currentIndex,
+              onTabChange: (clickedIndex) {
+                setState(() {
+                  _currentIndex = clickedIndex;
+                });
+              },
+              tabs: [
+                MoltenTab(
+                    icon: const Icon(Icons.home, color: AppColors.mainGreen)),
+                MoltenTab(
+                    icon: const Icon(Icons.window, color: AppColors.mainGreen)),
+                MoltenTab(
+                    icon: const Icon(Icons.person, color: AppColors.mainGreen)),
+              ],
             ),
-          );
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
-        body: _tabs[_currentIndex],
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(bottom: 16),
-          color: AppColors.deepGreen,
-          child: MoltenBottomNavigationBar(
-            domeCircleColor: Colors.white,
-            barColor: AppColors.deepGreen,
-            selectedIndex: _currentIndex,
-            onTabChange: (clickedIndex) {
-              setState(() {
-                _currentIndex = clickedIndex;
-              });
-            },
-            tabs: [
-              MoltenTab(icon: const Icon(Icons.home, color: AppColors.mainGreen)),
-              MoltenTab(icon: const Icon(Icons.window, color: AppColors.mainGreen)),
-              MoltenTab(icon: const Icon(Icons.person, color: AppColors.mainGreen)),
-            ],
           ),
-        ),
-      )
-    );
+        ));
   }
 }

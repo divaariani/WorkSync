@@ -1,16 +1,17 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'pages/app_colors.dart';
 import 'pages/home_page.dart';
+import 'pages/login_page.dart';
 import 'pages/nointernet_page.dart';
 import 'utils/session_manager.dart';
 import 'utils/globals.dart';
 import 'utils/firebase_options.dart';
 import 'utils/notifications.dart';
-import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,10 +49,9 @@ class WorkSyncApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en', 'US'),
         Locale('id', 'ID'),
-        Locale('ko', 'KR'),
       ],
       debugShowCheckedModeBanner: false,
-      title: 'WorkSync',
+      title: 'sisap',
       theme: ThemeData(
         useMaterial3: false,
         primaryColor: AppColors.lightGreen,
@@ -92,5 +92,52 @@ class WorkSyncApp extends StatelessWidget {
   Future<bool> isConnectedToInternet() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.deepGreen,
+              AppColors.lightGreen,
+            ],
+            stops: [0.1, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Image.asset(
+            'assets/logo.png', 
+            width: 200, 
+            height: 200, 
+          ),
+        ),
+      ),
+    );
   }
 }

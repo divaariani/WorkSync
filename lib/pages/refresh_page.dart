@@ -9,6 +9,8 @@ import 'attendanceform_page.dart';
 import 'attendance_page.dart';
 import 'stockopname_page.dart';
 import 'warehouse_page.dart';
+import 'report_page.dart';
+import 'gudangin_page.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 

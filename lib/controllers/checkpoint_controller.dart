@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/globals.dart';
@@ -20,20 +21,20 @@ class CheckPointController {
           final List<Map<String, dynamic>> overtimeList = List.from(data['data']);
           return overtimeList;
         } else {
-          print('API Error: ${data['message']}');
+          debugPrint('API Error: ${data['message']}');
           return [];
         }
       } else {
-        print('HTTP Error: ${response.statusCode}');
+        debugPrint('HTTP Error: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
+      debugPrint('Exception: $e');
       return [];
     }
   }
 
-   static Future<ResponseModel> fetchDataScan({required String cp_barcode}) async {
+   static Future<ResponseModel> fetchDataScan({required String cpBarcode, required String cpNote}) async {
     SessionManager sessionManager = SessionManager();
     String? userIdString = sessionManager.getUserId();
 
@@ -47,11 +48,12 @@ class CheckPointController {
       Uri.parse('$apiBaseUrl?function=post_checkpoint_tour'), 
       body: {
         'userid': userId.toString(),
-        'cp_barcode': cp_barcode,
+        'cp_barcode': cpBarcode,
+        'cp_whattodo': cpNote
       },
     );
 
-    print('${response.body}');
+    debugPrint(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       return ResponseModel.fromJson(responseData);

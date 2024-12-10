@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'response_model.dart';
@@ -57,10 +58,10 @@ class WarehouseController{
       },
     );
     
-    print('${response.body}');
+    debugPrint(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body); 
-      print("=======================");
+      debugPrint("=======================");
       return ResponseModel.fromJson(responseData);
     } else {
       throw Exception('Failed to view gudang data');

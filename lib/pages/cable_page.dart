@@ -2,26 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'app_colors.dart';
 import 'home_page.dart';
-import 'reportadd_page.dart';
+import 'cablescan_page.dart';
 import '../utils/localizations.dart';
 import '../utils/globals.dart';
 import '../utils/session_manager.dart';
-import '../controllers/report_controller.dart';
+import '../utils/empty_data.dart';
+import '../controllers/cable_controller.dart';
+import '../models/cable_model.dart';
 
-class ReportPage extends StatefulWidget {
-  final String? auditorData;
-
-  const ReportPage({Key? key, this.auditorData}) : super(key: key);
+class CablePage extends StatefulWidget {
+  const CablePage({Key? key}) : super(key: key);
 
   @override
-  State<ReportPage> createState() => _ReportPageState();
+  State<CablePage> createState() => _CablePageState();
 }
 
-class _ReportPageState extends State<ReportPage> {
+class _CablePageState extends State<CablePage> {
   final TextEditingController searchController = TextEditingController();
   String currentDate = "";
   String userId = '';
-  String? userText;
 
   @override
   void initState() {
@@ -29,7 +28,6 @@ class _ReportPageState extends State<ReportPage> {
     currentDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag())
         .format(DateTime.now());
     userId = SessionManager().getUserId() ?? '';
-    userText = widget.auditorData;
   }
 
   @override
@@ -46,7 +44,7 @@ class _ReportPageState extends State<ReportPage> {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations(globalLanguage).translate("Product Report"),
+              AppLocalizations(globalLanguage).translate("Cable Picking"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
                     ? AppColors.deepGreen
@@ -82,10 +80,9 @@ class _ReportPageState extends State<ReportPage> {
               ),
               const SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8),
                   child: Column(children: [
                     CardTable(),
-                    SizedBox(height: 20),
                   ]),
                 ),
               ),
@@ -93,103 +90,6 @@ class _ReportPageState extends State<ReportPage> {
           )),
     );
   }
-}
-
-class MyData {
-  final int? nomorKp;
-  final DateTime? tglKp;
-  final int? userid;
-  final String? dibuatoleh;
-  final DateTime? dibuattgl;
-
-  MyData({
-    required this.nomorKp,
-    required this.tglKp,
-    required this.userid,
-    required this.dibuatoleh,
-    required this.dibuattgl,
-  });
-}
-
-class MyDataTableSource extends DataTableSource {
-  final List<MyData> data;
-
-  MyDataTableSource(this.data);
-
-  @override
-  DataRow? getRow(int index) {
-    if (index >= data.length) {
-      return null;
-    }
-    final entry = data[index];
-
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        DataCell(
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              entry.nomorKp?.toString() ?? "",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        DataCell(
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              (entry.tglKp != null)
-                  ? DateFormat('yyyy-MM-dd').format(entry.tglKp!)
-                  : "",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        // DataCell(
-        //   Container(
-        //     alignment: Alignment.centerLeft,
-        //     child: Text(
-        //       entry.dibuatoleh ?? "",
-        //       style: const TextStyle(
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        DataCell(
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              entry.dibuattgl != null
-                  ? DateFormat('yyyy-MM-dd HH:mm').format(entry.dibuattgl!)
-                  : "",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class CardTable extends StatefulWidget {
@@ -202,7 +102,7 @@ class CardTable extends StatefulWidget {
 class _CardTableState extends State<CardTable> {
   TextEditingController controller = TextEditingController();
   String _searchResult = '';
-  List<MyData> _data = [];
+  List<CableData> _data = [];
   bool _isLoading = false;
 
   @override
@@ -223,36 +123,33 @@ class _CardTableState extends State<CardTable> {
         _isLoading = true;
       });
 
-      final response = await ReportController.postFormData(
-        nomorKp: 1,
-        tglKp: DateTime.now(),
-        userid: 1,
-        dibuatoleh: '',
-        dibuattgl: DateTime.now(),
-      );
+      final response = await CableController.viewData();
 
       final List<dynamic> nameDataList = response.data;
 
-      final List<MyData> myDataList = nameDataList.map((data) {
-        int nomorKp = int.tryParse(data['nomor_kp'].toString()) ?? 0;
-        DateTime tglKp = DateTime.parse(data['tgl_kp']);
-        int userid = int.tryParse(data['userid'].toString()) ?? 0;
-        String dibuatoleh = data['dibuatoleh'];
-        DateTime dibuattgl = DateTime.parse(data['dibuattgl']);
-
-        return MyData(
-          nomorKp: nomorKp,
-          tglKp: tglKp,
-          userid: userid,
-          dibuatoleh: dibuatoleh,
-          dibuattgl: dibuattgl,
-        );
+      final List<CableData> myDataList = nameDataList.map((data) {
+        return CableData(
+            noKP: data['KP_No'] ?? "",
+            dateKP: data['KP_Date'] ?? "",
+            noLot: data['No_Lot'] ?? "",
+            itemBarangProduksi: data['Item_Barang_Produksi'] ?? "",
+            satuanPaking: data['SatuanPaking'],
+            qty: data['Qty'],
+            satuanStock: data['SatuanStock'],
+            scanChecked: data['ScanChecked'],
+            userScanChecked: data['UserScanChecked']);
       }).toList();
 
       setState(() {
         _data = myDataList.where((data) {
-          return (data.nomorKp?.toString() ?? "")
-              .contains(_searchResult.toLowerCase());
+          return (data.noLot?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.dateKP?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.itemBarangProduksi?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase()) ||
+              (data.satuanPaking?.toLowerCase() ?? "")
+                  .contains(_searchResult.toLowerCase());
         }).toList();
         _isLoading = false;
       });
@@ -295,30 +192,37 @@ class _CardTableState extends State<CardTable> {
                         });
                       },
                     ),
-                    // trailing: IconButton(
-                    //   icon: const Icon(Icons.cancel),
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       controller.clear();
-                    //       _searchResult = '';
-                    //       fetchDataFromAPI();
-                    //     });
-                    //   },
-                    // ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.cancel),
+                      onPressed: () {
+                        setState(() {
+                          controller.clear();
+                          _searchResult = '';
+                          fetchDataFromAPI();
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReportAddPage(
-                          result: '',
-                          resultBarangQc: globalBarcodeBarangResults),
-                    ),
-                  );
+                  if (globalBarcodeBarangResults.isEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CableScanPage(),
+                      ),
+                    );
+                  } else {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const StockLokasiPage(),
+                    //   ),
+                    // );
+                  }
                 },
                 child: Container(
                   height: 60,
@@ -362,7 +266,7 @@ class _CardTableState extends State<CardTable> {
                               DataColumn(
                                 label: Text(
                                   AppLocalizations(globalLanguage)
-                                      .translate("Nomor KP"),
+                                      .translate("lotnumber"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
@@ -372,26 +276,47 @@ class _CardTableState extends State<CardTable> {
                               DataColumn(
                                 label: Text(
                                   AppLocalizations(globalLanguage)
-                                      .translate("Tanggal KP"),
+                                      .translate("KP Date"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
                                   ),
                                 ),
                               ),
-                              // DataColumn(
-                              //   label: Text(
-                              //     AppLocalizations(globalLanguage).translate("Pembuat"),
-                              //     style: const TextStyle(
-                              //       fontSize: 12,
-                              //       color: AppColors.deepGreen,
-                              //     ),
-                              //   ),
-                              // ),
                               DataColumn(
                                 label: Text(
                                   AppLocalizations(globalLanguage)
-                                      .translate("Tanggal"),
+                                      .translate("namabarang"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("stock"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("unit"),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.deepGreen,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  AppLocalizations(globalLanguage)
+                                      .translate("status"),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.deepGreen,
@@ -399,8 +324,8 @@ class _CardTableState extends State<CardTable> {
                                 ),
                               ),
                             ],
-                            source: MyDataTableSource(_data),
-                            rowsPerPage: 5,
+                            source: CableTableSource(_data),
+                            rowsPerPage: 10,
                           ),
               ],
             ),
@@ -411,43 +336,106 @@ class _CardTableState extends State<CardTable> {
   }
 }
 
-class EmptyData extends StatelessWidget {
-  const EmptyData({Key? key}) : super(key: key);
+class CableTableSource extends DataTableSource {
+  final List<CableData> data;
+
+  CableTableSource(this.data);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 26),
-      child: Container(
-        width: 1 * MediaQuery.of(context).size.width,
-        height: 350,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/monitoring.png',
-                  width: 30,
-                  height: 30,
-                  color: AppColors.deepGreen,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    AppLocalizations(globalLanguage).translate("noDataa"),
-                  ),
-                ),
-              ],
+  DataRow? getRow(int index) {
+    if (index >= data.length) {
+      return null;
+    }
+    final entry = data[index];
+
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.noLot ?? "",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ],
+          ),
         ),
-      ),
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.dateKP ?? "",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.itemBarangProduksi ?? "",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.qty ?? "",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.satuanPaking ?? "",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              entry.scanChecked == "*"
+                  ? AppLocalizations(globalLanguage).translate("draft")
+                  : AppLocalizations(globalLanguage).translate("confirm"),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: entry.scanChecked == "*" ? Colors.orange : Colors.green,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

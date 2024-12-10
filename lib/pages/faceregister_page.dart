@@ -11,9 +11,9 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'home_page.dart';
 import 'app_colors.dart';
-import '../modules/detector.dart';
-import '../modules/utils.dart';
-import '../modules/model.dart';
+import '../ml/detector.dart';
+import '../ml/utils.dart';
+import '../ml/model.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
@@ -26,7 +26,8 @@ class FaceRegisterPage extends StatefulWidget {
   State<FaceRegisterPage> createState() => _FaceRegisterPageState();
 }
 
-class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBindingObserver {
+class _FaceRegisterPageState extends State<FaceRegisterPage>
+    with WidgetsBindingObserver {
   String username = '';
   late FaceRecognitionController controller;
 
@@ -36,7 +37,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
     username = SessionManager().getNamaUser() ?? '';
     controller = FaceRecognitionController();
     WidgetsBinding.instance.addObserver(this);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _start();
   }
 
@@ -49,9 +51,10 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
     try {
       await controller.sendFaceRecognition(e1);
 
-      List<FaceRecognitionData> faceRecognitionList = await controller.getFaceRecognition();
+      List<FaceRecognitionData> faceRecognitionList =
+          await controller.getFaceRecognition();
 
-      if (faceRecognitionList.length == 1) {
+      if (faceRecognitionList.length == 1 && mounted) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const FaceRegisterPage(),
@@ -63,15 +66,15 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("registerAgain"),
-            message: AppLocalizations(globalLanguage).translate("register2More"),
+            message:
+                AppLocalizations(globalLanguage).translate("register2More"),
             contentType: ContentType.warning,
           ),
         );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
-
-      } else if (faceRecognitionList.length == 2) {
+      } else if (faceRecognitionList.length == 2 && mounted) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const FaceRegisterPage(),
@@ -83,15 +86,15 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("registerAgain"),
-            message: AppLocalizations(globalLanguage).translate("register1More"),
+            message:
+                AppLocalizations(globalLanguage).translate("register1More"),
             contentType: ContentType.warning,
           ),
         );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
-
-      } else if (faceRecognitionList.length == 3) {
+      } else if (faceRecognitionList.length == 3 && mounted) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const HomePage(),
@@ -103,7 +106,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("registered"),
-            message: AppLocalizations(globalLanguage).translate("registerFaceSuccess"),
+            message: AppLocalizations(globalLanguage)
+                .translate("registerFaceSuccess"),
             contentType: ContentType.success,
           ),
         );
@@ -114,9 +118,9 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
         await _camera!.dispose();
       }
 
-      print('API request successful');
+      debugPrint('API request successful');
     } catch (error) {
-      print('API request failed: $error');
+      debugPrint('API request failed: $error');
     }
   }
 
@@ -142,7 +146,7 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
   String _predRes = '';
   bool isStream = true;
   Directory? tempDir;
-  bool _faceFound = false;
+  bool faceFound = false;
   bool _verify = false;
   List? e1;
   bool loading = true;
@@ -159,8 +163,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
     await Future.delayed(const Duration(milliseconds: 500));
     loading = false;
     tempDir = await getApplicationDocumentsDirectory();
-    String _embPath = tempDir!.path + '/emb.json';
-    jsonFile = File(_embPath);
+    String embPath = '${tempDir!.path}/emb.json';
+    jsonFile = File(embPath);
     if (jsonFile.existsSync()) {
       data = json.decode(jsonFile.readAsStringSync());
     }
@@ -175,27 +179,30 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
 
         detect(image, getDetectionMethod()).then((dynamic result) async {
           if (result.length == 0 || result == null) {
-            _faceFound = false;
-            _predRes = AppLocalizations(globalLanguage).translate("notRecognized");
+            faceFound = false;
+            _predRes =
+                AppLocalizations(globalLanguage).translate("notRecognized");
           } else {
-            _faceFound = true;
+            faceFound = true;
           }
 
           String res;
-          Face _face;
+          Face face;
 
-          imglib.Image convertedImage = convertCameraImage(image, CameraLensDirection.front);
+          imglib.Image convertedImage =
+              convertCameraImage(image, CameraLensDirection.front);
 
-          for (_face in result) {
+          for (face in result) {
             double x, y, w, h;
-            x = (_face.boundingBox.left - 10);
-            y = (_face.boundingBox.top - 10);
-            w = (_face.boundingBox.width + 10);
-            h = (_face.boundingBox.height + 10);
-            imglib.Image croppedImage = imglib.copyCrop(convertedImage, x.round(), y.round(), w.round(), h.round());
+            x = (face.boundingBox.left - 10);
+            y = (face.boundingBox.top - 10);
+            w = (face.boundingBox.width + 10);
+            h = (face.boundingBox.height + 10);
+            imglib.Image croppedImage = imglib.copyCrop(
+                convertedImage, x.round(), y.round(), w.round(), h.round());
             croppedImage = imglib.copyResizeCropSquare(croppedImage, 112);
             res = recog(croppedImage);
-            finalResult.add(res, _face);
+            finalResult.add(res, face);
           }
 
           _scanResults = finalResult;
@@ -203,7 +210,7 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
           setState(() {});
         }).catchError(
           (_) async {
-            print({'error': _.toString()});
+            debugPrint('error: $_');
             _isDetecting = false;
             if (_camera != null) {
               await _camera!.stopImageStream();
@@ -212,7 +219,10 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
               await Future.delayed(const Duration(milliseconds: 400));
               _camera = null;
             }
-            Navigator.pop(context);
+
+            if (mounted) {
+              Navigator.pop(context);
+            }
           },
         );
       }
@@ -256,7 +266,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
             constraints: const BoxConstraints.expand(),
             padding: const EdgeInsets.only(top: 0, bottom: 0),
             child: Builder(builder: (context) {
-              if ((_camera == null || !_camera!.value.isInitialized) || loading) {
+              if ((_camera == null || !_camera!.value.isInitialized) ||
+                  loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -280,8 +291,10 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
-                  style: const TextStyle(fontSize: 24, color: Colors.white)),
+                Text(
+                    AppLocalizations(globalLanguage)
+                        .translate("faceRecognition"),
+                    style: const TextStyle(fontSize: 24, color: Colors.white)),
               ],
             ),
           ),
@@ -300,7 +313,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
                       onPressed: () async {
                         sendDataToApi();
                       },
-                      child: Text(AppLocalizations(globalLanguage).translate("save")),
+                      child: Text(
+                          AppLocalizations(globalLanguage).translate("save")),
                     )
                   ],
                 ),
@@ -315,7 +329,8 @@ class _FaceRegisterPageState extends State<FaceRegisterPage> with WidgetsBinding
 
   Widget _buildResults() {
     Center noResultsText = Center(
-        child: Text('${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
+        child: Text(
+            '${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
             style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,

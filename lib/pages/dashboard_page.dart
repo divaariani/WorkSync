@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:worksync/pages/facerecognition_page.dart';
+import 'package:worksync/pages/faceregister_page.dart';
 import 'app_colors.dart';
-import 'facerecognition_page.dart';
-import 'faceregister_page.dart';
 import 'refresh_page.dart';
 import 'home_page.dart';
 import '../utils/localizations.dart';
@@ -32,20 +32,23 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void checkFaceCode() async {
     try {
-      List<FaceRecognitionData> faceRecognitionList = await faceRecognitionController.getFaceRecognition();
+      List<FaceRecognitionData> faceRecognitionList =
+          await faceRecognitionController.getFaceRecognition();
 
-      bool faceCodeNotFound = faceRecognitionList.any((data) => data.kodeFace == "Face Code Not Found");
+      bool faceCodeNotFound = faceRecognitionList
+          .any((data) => data.kodeFace == "Face Code Not Found");
       bool faceCodeTwoRegistered = faceRecognitionList.length == 2;
       bool faceCodeOneRegistered = faceRecognitionList.length == 1;
 
-      if (faceCodeNotFound) {
+      if (faceCodeNotFound && mounted) {
         final snackBar = SnackBar(
           elevation: 0,
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("notRegistered"),
-            message: AppLocalizations(globalLanguage).translate("notRegistered3More"),
+            message: AppLocalizations(globalLanguage)
+                .translate("notRegistered3More"),
             contentType: ContentType.warning,
           ),
         );
@@ -56,17 +59,18 @@ class _DashboardPageState extends State<DashboardPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
+            builder: (context) => const FaceRegisterPage(),
           ),
         );
-      } else if (faceCodeOneRegistered) {
+      } else if (faceCodeOneRegistered && mounted) {
         final snackBar = SnackBar(
           elevation: 0,
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("registerAgain"),
-            message: AppLocalizations(globalLanguage).translate("register2More"),
+            message:
+                AppLocalizations(globalLanguage).translate("register2More"),
             contentType: ContentType.warning,
           ),
         );
@@ -77,17 +81,18 @@ class _DashboardPageState extends State<DashboardPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
+            builder: (context) => const FaceRegisterPage(),
           ),
         );
-      } else if (faceCodeTwoRegistered) {
+      } else if (faceCodeTwoRegistered && mounted) {
         final snackBar = SnackBar(
           elevation: 0,
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("registerAgain"),
-            message: AppLocalizations(globalLanguage).translate("register1More"),
+            message:
+                AppLocalizations(globalLanguage).translate("register1More"),
             contentType: ContentType.warning,
           ),
         );
@@ -98,84 +103,90 @@ class _DashboardPageState extends State<DashboardPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FaceRegisterPage(),
+            builder: (context) => const FaceRegisterPage(),
           ),
         );
       } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              content: Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      AppLocalizations(globalLanguage).translate("attention"),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.deepGreen,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("makeSureLocation"),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      AppLocalizations(globalLanguage).translate("makeSureCamera"),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                      AppLocalizations(globalLanguage).translate("cancel"),
-                      style: const TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.bold)),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FaceRecognitionPage(),
+                content: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20, bottom: 10, left: 10, right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        AppLocalizations(globalLanguage).translate("attention"),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepGreen,
+                        ),
                       ),
-                    );
-                  },
-                  child: Text(AppLocalizations(globalLanguage).translate("yes"),
-                      style: const TextStyle(
-                          color: AppColors.mainGreen,
-                          fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20),
+                      Text(
+                        AppLocalizations(globalLanguage)
+                            .translate("makeSureLocation"),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        AppLocalizations(globalLanguage)
+                            .translate("makeSureCamera"),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            );
-          },
-        );
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                        AppLocalizations(globalLanguage).translate("cancel"),
+                        style: const TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.bold)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FaceRecognitionPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                        AppLocalizations(globalLanguage).translate("yes"),
+                        style: const TextStyle(
+                            color: AppColors.mainGreen,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     } catch (error) {
-      print('Error: $error');
+      debugPrint('Error: $error');
     }
   }
 
@@ -188,7 +199,8 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
+            padding:
+                const EdgeInsets.only(top: 70, bottom: 30, left: 30, right: 30),
             child: Column(
               children: [
                 Row(
@@ -202,16 +214,20 @@ class _DashboardPageState extends State<DashboardPage> {
                           AppLocalizations(globalLanguage).translate("welcome"),
                           style: TextStyle(
                             fontSize: 14,
-                            color: globalTheme == 'Light Theme' ? Colors.black : Colors.white,
+                            color: globalTheme == 'Light Theme'
+                                ? Colors.black
+                                : Colors.white,
                           ),
                         ),
                         Text(
                           SessionManager().getNamaUser() ?? 'Unknown',
+                          //"diva",
                           style: TextStyle(
-                            fontSize: 14, 
-                            fontWeight: FontWeight.bold,
-                            color: globalTheme == 'Light Theme' ? AppColors.deepGreen : AppColors.lightGreen
-                          ),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: globalTheme == 'Light Theme'
+                                  ? AppColors.deepGreen
+                                  : AppColors.lightGreen),
                         ),
                       ],
                     ),
@@ -219,7 +235,8 @@ class _DashboardPageState extends State<DashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ClipOval(
-                          child: Image.asset('assets/avatar.jpg', width: 50, height: 50),
+                          child: Image.asset('assets/avatar.jpg',
+                              width: 50, height: 50),
                         ),
                       ],
                     ),
@@ -244,14 +261,16 @@ class _DashboardPageState extends State<DashboardPage> {
                           Row(
                             children: [
                               const SizedBox(width: 20),
-                              Container(
+                              SizedBox(
                                 width: 40,
                                 height: 40,
-                                child: Image.asset('assets/facerecognition.png'),
+                                child:
+                                    Image.asset('assets/facerecognition.png'),
                               ),
                               const Spacer(),
                               Text(
-                                AppLocalizations(globalLanguage).translate("scanAttendance"),
+                                AppLocalizations(globalLanguage)
+                                    .translate("scanAttendance"),
                                 style: const TextStyle(
                                     color: AppColors.mainGreen,
                                     fontWeight: FontWeight.bold),
@@ -268,27 +287,34 @@ class _DashboardPageState extends State<DashboardPage> {
                   future: controller.futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator(color: AppColors.mainGreen);
+                      return const CircularProgressIndicator(
+                          color: AppColors.mainGreen);
                     } else if (snapshot.hasError) {
                       return TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const HomePage()),
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.refresh, color: AppColors.mainGreen),
-                                const SizedBox(width: 8), 
-                                Text(
-                                  AppLocalizations(globalLanguage).translate("refreshData"),
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.mainGreen),
-                                ),
-                              ],
-                            ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
                           );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.refresh,
+                                color: AppColors.mainGreen),
+                            const SizedBox(width: 8),
+                            Text(
+                              AppLocalizations(globalLanguage)
+                                  .translate("refreshData"),
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mainGreen),
+                            ),
+                          ],
+                        ),
+                      );
                     }
 
                     return Row(
@@ -314,7 +340,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ),
                                       const SizedBox(width: 10),
                                       Text(
-                                        AppLocalizations(globalLanguage).translate("checkIn"),
+                                        AppLocalizations(globalLanguage)
+                                            .translate("checkIn"),
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -325,7 +352,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    controller.getTodayIn(snapshot.data!), 
+                                    controller.getTodayIn(snapshot.data!),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -366,7 +393,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ),
                                       const SizedBox(width: 10),
                                       Text(
-                                        AppLocalizations(globalLanguage).translate("checkOut"),
+                                        AppLocalizations(globalLanguage)
+                                            .translate("checkOut"),
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -377,7 +405,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    controller.getTodayOut(snapshot.data!), 
+                                    controller.getTodayOut(snapshot.data!),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -401,18 +429,24 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
                 const SizedBox(height: 30),
-              FutureBuilder<List<AttendanceData>>(
-                future: controller.futureData,
+                FutureBuilder<List<AttendanceData>>(
+                  future: controller.futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator(color: AppColors.mainGreen);
+                      return const CircularProgressIndicator(
+                          color: AppColors.mainGreen);
                     } else if (snapshot.hasError) {
-                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
+                      return Text(
+                        AppLocalizations(globalLanguage).translate("noDataa"),
+                      );
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text(AppLocalizations(globalLanguage).translate("noDataa"),);
+                      return Text(
+                        AppLocalizations(globalLanguage).translate("noDataa"),
+                      );
                     }
 
-                    int itemCount = snapshot.data!.length > 5 ? 5 : snapshot.data!.length;
+                    int itemCount =
+                        snapshot.data!.length > 5 ? 5 : snapshot.data!.length;
 
                     return Column(
                       children: [
@@ -420,27 +454,35 @@ class _DashboardPageState extends State<DashboardPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppLocalizations(globalLanguage).translate("attendance"), 
-                              style: TextStyle(
-                                fontSize: 18, 
-                                fontWeight: FontWeight.bold,
-                                color: globalTheme == 'Light Theme' ? Colors.black : Colors.white
-                              )
-                            ),
+                                AppLocalizations(globalLanguage)
+                                    .translate("attendance"),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: globalTheme == 'Light Theme'
+                                        ? Colors.black
+                                        : Colors.white)),
                             const Spacer(),
                             InkWell(
                               child: Text(
-                                AppLocalizations(globalLanguage).translate("seeAll"), 
-                                style: TextStyle(
-                                  fontSize: 12, 
-                                  color: globalTheme == 'Light Theme' ? AppColors.deepGreen : Colors.white, 
-                                  shadows: const [Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 3)]
-                                )
-                              ),
+                                  AppLocalizations(globalLanguage)
+                                      .translate("seeAll"),
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: globalTheme == 'Light Theme'
+                                          ? AppColors.deepGreen
+                                          : Colors.white,
+                                      shadows: const [
+                                        Shadow(
+                                            color: Colors.black,
+                                            offset: Offset(1, 1),
+                                            blurRadius: 3)
+                                      ])),
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => const RefreshAttendanceList(),
+                                    builder: (context) =>
+                                        const RefreshAttendanceList(),
                                   ),
                                 );
                               },
@@ -462,7 +504,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         )
                       ],
                     );
-
                   },
                 ),
               ],
@@ -475,9 +516,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget buildAttendanceCard(AttendanceData data) {
     bool hasTimeData = data.jamMasuk != null || data.jamPulang != null;
-    
 
-    Color cardColor = hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
+    Color cardColor =
+        hasTimeData ? AppColors.mainGreen : const Color(0xFFBC5757);
 
     return Card(
       color: cardColor,
@@ -525,7 +566,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   String formatLanguageDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final String formattedDate = DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
+    final String formattedDate =
+        DateFormat.yMMMMd(globalLanguage.toLanguageTag()).format(dateTime);
     return formattedDate;
   }
 }

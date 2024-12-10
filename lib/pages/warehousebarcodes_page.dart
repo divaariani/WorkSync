@@ -61,13 +61,13 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       }
 
       if (barcodeGudangResult.isNotEmpty) {
-        if (globalBarcodeGudangResults.contains(barcodeGudangResult)) {
+        if (globalBarcodeGudangResults.contains(barcodeGudangResult) && mounted) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                contentPadding: EdgeInsets.all(16),
-                title: Center(
+                contentPadding: const EdgeInsets.all(16),
+                title: const Center(
                   child: CircularProgressIndicator(color: AppColors.deepGreen),
                 ),
                 content: Column(
@@ -161,11 +161,11 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
       }
 
       if (success) {
-        print('Gudang out berhasil diupload');
+        debugPrint('Gudang out berhasil diupload');
       } else {
-        print('Gagal mengupload gudang out. Kesalahan:');
+        debugPrint('Gagal mengupload gudang out. Kesalahan:');
         for (String errorMessage in errorMessages) {
-          print('- $errorMessage');
+          debugPrint('- $errorMessage');
         }
       }
 
@@ -184,7 +184,7 @@ class _WarehouseBarcodesPageState extends State<WarehouseBarcodesPage> {
         globalBarcodeGudangResults = [];
       });
     } catch (e) {
-      print('Terjadi kesalahan: $e');
+      debugPrint('Terjadi kesalahan: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Terjadi kesalahan: $e'),

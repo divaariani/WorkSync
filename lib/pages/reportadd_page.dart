@@ -14,10 +14,12 @@ import '../controllers/report_controller.dart';
 import '../controllers/response_model.dart';
 
 class ReportAddPage extends StatefulWidget {
-  String result;
-  List<String> resultBarangQc;
+  final String result;
+  final List<String> resultBarangQc;
 
-  ReportAddPage({required this.result, required this.resultBarangQc, Key? key}) : super(key: key);
+  const ReportAddPage(
+      {Key? key, required this.result, required this.resultBarangQc})
+      : super(key: key);
 
   @override
   State<ReportAddPage> createState() => _ReportAddPageState();
@@ -56,7 +58,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
       _selectedDay = DateTime.now();
     }
 
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _updateCreateTgl();
     });
   }
@@ -77,7 +79,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
       );
 
       if (barcodeQcBarangResult == '-1') {
-       //_showReScanDialog();
+        //_showReScanDialog();
         _navigateToreportAddPage();
         return;
       }
@@ -94,33 +96,54 @@ class _ReportAddPageState extends State<ReportAddPage> {
         _createTglController.text = previousCreateTgl;
       });
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(16),
-            title: Center(
-                child: CircularProgressIndicator(color: AppColors.mainGreen)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$barcodeQcBarangResult',
-                  style: TextStyle(
-                    fontSize: 16,
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: const EdgeInsets.all(16),
+              title: const Center(
+                  child: CircularProgressIndicator(color: AppColors.mainGreen)),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    barcodeQcBarangResult,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
+                ],
+              ),
+            );
+          },
+        );
+      }
 
       if (!finishScanning) {
         await Future.delayed(const Duration(seconds: 1));
       }
     }
   }
+
+  // void _showReScanDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text("Please Re-Scan Barcode"),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void _navigateToreportAddPage() {
     Navigator.push(
@@ -152,8 +175,8 @@ class _ReportAddPageState extends State<ReportAddPage> {
   }
 
   Future<void> _fetchUserId() async {
-    userIdLogin = await _sessionManager.getUserId() ?? "";
-    final username = await _sessionManager.getNamaUser();
+    userIdLogin = _sessionManager.getUserId() ?? "";
+    final username = _sessionManager.getNamaUser();
 
     if (username != null) {
       setState(() {
@@ -174,7 +197,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
         currentTime = DateTime.now();
       });
     } catch (error) {
-      print(error);
+      debugPrint('$error');
     }
   }
 
@@ -200,28 +223,28 @@ class _ReportAddPageState extends State<ReportAddPage> {
 
       if (inventoryDetails.isEmpty) {
         final snackBar = SnackBar(
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: "Peringatan !",
-              message: "Tidak ada data yang ingin disubmit.",
-              contentType: ContentType.warning,
-            ),
-          );
-          
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: "Peringatan !",
+            message: "Tidak ada data yang ingin disubmit.",
+            contentType: ContentType.warning,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
         return;
       }
 
       ResponseModel response = await ReportController.postFormDataLaporanTambah(
-        p_tgl_kp: tglkp,
-        p_userid: userId,
-        p_uid: uid,
-        p_createdate: createdate,
-        p_inventory_details: inventoryDetails,
+        ptglkp: tglkp,
+        puserid: userId,
+        puid: uid,
+        pcreatedate: createdate,
+        pinventorydetails: inventoryDetails,
       );
 
       if (response.status == 0) {
@@ -230,7 +253,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
         errorMessages.add('Terjadi kesalahan: Respon tidak valid.');
       }
 
-      if (errorMessages.isNotEmpty) {
+      if (errorMessages.isNotEmpty && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessages.join('\n')),
@@ -238,19 +261,21 @@ class _ReportAddPageState extends State<ReportAddPage> {
         );
       } else {
         final snackBar = SnackBar(
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: "Berhasil !",
-              message: "Stok berhasil diunggah.",
-              contentType: ContentType.success,
-            ),
-          );
-          
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: "Berhasil !",
+            message: "Stok berhasil diunggah.",
+            contentType: ContentType.success,
+          ),
+        );
+
+        if (mounted) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(snackBar);
+        }
       }
 
       widget.resultBarangQc.clear();
@@ -258,28 +283,29 @@ class _ReportAddPageState extends State<ReportAddPage> {
       _createTglController.clear();
 
       setState(() {
-        widget.resultBarangQc = [];
+        widget.resultBarangQc.clear();
       });
     } catch (e) {
-      print('Terjadi kesalahan: $e');
+      debugPrint('Terjadi kesalahan: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool _) async {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
-        return false;
+
+        return Future.sync(() => false);
       },
       child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations(globalLanguage).translate("addProduct"),
+              AppLocalizations(globalLanguage).translate("Add Product Report"),
               style: TextStyle(
                 color: globalTheme == 'Light Theme'
                     ? AppColors.deepGreen
@@ -317,8 +343,49 @@ class _ReportAddPageState extends State<ReportAddPage> {
                 child: SafeArea(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [                
+                    children: [
                       const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Tanggal Kp',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontSize,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: TextField(
+                                readOnly: true,
+                                controller: _dateController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 19),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
@@ -341,7 +408,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                               ],
                             ),
                             const Spacer(),
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: TextField(
                                 readOnly: true,
@@ -378,7 +445,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                               ],
                             ),
                             const Spacer(),
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: TextField(
                                 controller: _createTglController,
@@ -422,7 +489,8 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        contentPadding: EdgeInsets.all(16),
+                                        contentPadding:
+                                            const EdgeInsets.all(16),
                                         content: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -475,14 +543,14 @@ class _ReportAddPageState extends State<ReportAddPage> {
                       ),
                       const SizedBox(height: 50),
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                AppLocalizations(globalLanguage).translate("detailProduct"),
+                                'Detail Laporan Hasil Produksi',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: fontSize,
@@ -515,10 +583,10 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        AppLocalizations(globalLanguage).translate("lotnumber"),
+                                        'Lot Number',
                                         style: TextStyle(
                                           fontSize: fontSize,
-                                          color: Color.fromARGB(
+                                          color: const Color.fromARGB(
                                               255, 255, 255, 255),
                                         ),
                                       ),
@@ -559,7 +627,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                   children: [
                                     Expanded(
                                       flex: 2,
-                                      child: Container(
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.2,
@@ -585,7 +653,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                     const SizedBox(width: 5),
                                     Expanded(
                                       flex: 3,
-                                      child: Container(
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.3,
@@ -618,18 +686,16 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                             context: context,
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text("Warning"),
-                                                content: Text(
-                                                    AppLocalizations(globalLanguage)
-                                            .translate("suredelete")),
+                                                title: const Text("Warning"),
+                                                content: const Text(
+                                                    "Are you sure you want to delete this item?"),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
-                                                    child: Text(AppLocalizations(globalLanguage)
-                                            .translate("cancel")),
+                                                    child: const Text("No"),
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
@@ -637,8 +703,7 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
-                                                    child: Text(AppLocalizations(globalLanguage)
-                                            .translate("yes")),
+                                                    child: const Text("Yes"),
                                                   ),
                                                 ],
                                               );
@@ -697,8 +762,9 @@ class _ReportAddPageState extends State<ReportAddPage> {
                                 _submitStock();
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          RefreshLaporanTable()),
+                                    builder: (context) =>
+                                        const RefreshLaporanTable(),
+                                  ),
                                 );
                               },
                               child: Container(

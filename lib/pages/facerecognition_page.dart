@@ -12,9 +12,9 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'app_colors.dart';
 import 'refresh_page.dart';
 import 'home_page.dart';
-import '../modules/detector.dart';
-import '../modules/utils.dart';
-import '../modules/model.dart';
+import '../ml/detector.dart';
+import '../ml/utils.dart';
+import '../ml/model.dart';
 import '../utils/globals.dart';
 import '../utils/localizations.dart';
 import '../utils/session_manager.dart';
@@ -27,7 +27,8 @@ class FaceRecognitionPage extends StatefulWidget {
   State<FaceRecognitionPage> createState() => _FaceRecognitionPageState();
 }
 
-class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsBindingObserver {
+class _FaceRecognitionPageState extends State<FaceRecognitionPage>
+    with WidgetsBindingObserver {
   String username = '';
   late FaceRecognitionController controller;
 
@@ -37,7 +38,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     username = SessionManager().getNamaUser() ?? '';
     controller = FaceRecognitionController();
     WidgetsBinding.instance.addObserver(this);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _start();
   }
 
@@ -48,8 +50,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
 
   void getDataFace() async {
     try {
-
-      List<FaceRecognitionData> faceRecognitionList = await controller.getFaceRecognition();
+      List<FaceRecognitionData> faceRecognitionList =
+          await controller.getFaceRecognition();
       bool matchFound = false;
       String matchingUsername = "";
 
@@ -64,7 +66,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
         }
       }
 
-      if (matchFound) {
+      if (matchFound && mounted) {
         setState(() {
           globalFaceDetection = matchingUsername;
         });
@@ -75,21 +77,24 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
             title: AppLocalizations(globalLanguage).translate("recognized"),
-            message: '${AppLocalizations(globalLanguage).translate("youAre")} $matchingUsername',
+            message:
+                '${AppLocalizations(globalLanguage).translate("youAre")} $matchingUsername',
             contentType: ContentType.success,
           ),
         );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
-        
+
         await Future.delayed(const Duration(seconds: 2));
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const RefreshAttendance(),
-          ),
-        );
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const RefreshAttendance(),
+            ),
+          );
+        }
 
         await _camera!.stopImageStream();
 
@@ -107,12 +112,15 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
             contentType: ContentType.warning,
           ),
         );
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
       }
     } catch (error) {
-      print('Error: $error');
+      debugPrint('Error: $error');
     }
   }
 
@@ -138,7 +146,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
   String _predRes = '';
   bool isStream = true;
   Directory? tempDir;
-  bool _faceFound = false;
+  bool faceFound = false;
   bool _verify = false;
   List? e1;
   bool loading = true;
@@ -155,8 +163,8 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
     await Future.delayed(const Duration(milliseconds: 500));
     loading = false;
     tempDir = await getApplicationDocumentsDirectory();
-    String _embPath = tempDir!.path + '/emb.json';
-    jsonFile = File(_embPath);
+    String embPath = '${tempDir!.path}/emb.json';
+    jsonFile = File(embPath);
     if (jsonFile.existsSync()) {
       data = json.decode(jsonFile.readAsStringSync());
     }
@@ -171,27 +179,30 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
 
         detect(image, getDetectionMethod()).then((dynamic result) async {
           if (result.length == 0 || result == null) {
-            _faceFound = false;
-            _predRes = AppLocalizations(globalLanguage).translate("notRecognized");
+            faceFound = false;
+            _predRes =
+                AppLocalizations(globalLanguage).translate("notRecognized");
           } else {
-            _faceFound = true;
+            faceFound = true;
           }
 
           String res;
-          Face _face;
+          Face face;
 
-          imglib.Image convertedImage = convertCameraImage(image, CameraLensDirection.front);
+          imglib.Image convertedImage =
+              convertCameraImage(image, CameraLensDirection.front);
 
-          for (_face in result) {
+          for (face in result) {
             double x, y, w, h;
-            x = (_face.boundingBox.left - 10);
-            y = (_face.boundingBox.top - 10);
-            w = (_face.boundingBox.width + 10);
-            h = (_face.boundingBox.height + 10);
-            imglib.Image croppedImage = imglib.copyCrop(convertedImage, x.round(), y.round(), w.round(), h.round());
+            x = (face.boundingBox.left - 10);
+            y = (face.boundingBox.top - 10);
+            w = (face.boundingBox.width + 10);
+            h = (face.boundingBox.height + 10);
+            imglib.Image croppedImage = imglib.copyCrop(
+                convertedImage, x.round(), y.round(), w.round(), h.round());
             croppedImage = imglib.copyResizeCropSquare(croppedImage, 112);
             res = recog(croppedImage);
-            finalResult.add(res, _face);
+            finalResult.add(res, face);
           }
 
           _scanResults = finalResult;
@@ -199,7 +210,7 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
           setState(() {});
         }).catchError(
           (_) async {
-            print({'error': _.toString()});
+            debugPrint('error: $_');
             _isDetecting = false;
             if (_camera != null) {
               await _camera!.stopImageStream();
@@ -208,7 +219,10 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
               await Future.delayed(const Duration(milliseconds: 400));
               _camera = null;
             }
-            Navigator.pop(context);
+
+            if (mounted) {
+              Navigator.pop(context);
+            }
           },
         );
       }
@@ -244,121 +258,126 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> with WidgetsB
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-        return false;
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Container(
-              constraints: const BoxConstraints.expand(),
-              padding: const EdgeInsets.only(top: 0, bottom: 0),
-              child: Builder(builder: (context) {
-                if ((_camera == null || !_camera!.value.isInitialized) || loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+    return PopScope(
+        onPopInvoked: (bool _) async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+          return Future.sync(() => false);
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              Container(
+                constraints: const BoxConstraints.expand(),
+                padding: const EdgeInsets.only(top: 0, bottom: 0),
+                child: Builder(builder: (context) {
+                  if ((_camera == null || !_camera!.value.isInitialized) ||
+                      loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                return _camera == null
-                    ? const Center(child: SizedBox())
-                    : Stack(
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          CameraPreview(_camera!),
-                          _buildResults(),
-                        ],
-                      );
-              }),
-            ),
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.cameraswitch, color: Colors.white),
-                    onPressed: () {
-                      // Camera switch
-                    },
-                  ),
-                  Text(AppLocalizations(globalLanguage).translate("faceRecognition"),
-                    style: const TextStyle(fontSize: 24, color: Colors.white)),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () async {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage(),
-                        ),
-                      );
-                      setState(() {
-                        globalFaceDetection = 'Not Recognized';
-                      });
-                      await _camera!.stopImageStream();
-                    },
-                  ),
-                ],
+                  return _camera == null
+                      ? const Center(child: SizedBox())
+                      : Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            CameraPreview(_camera!),
+                            _buildResults(),
+                          ],
+                        );
+                }),
               ),
-            ),
-            Positioned(
-              bottom: 16,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                      colors: [Colors.white, AppColors.lightGreen],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+              Positioned(
+                top: 20,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.cameraswitch, color: Colors.white),
+                      onPressed: () {
+                        // Camera switch
+                      },
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 3),
+                    Text(
+                        AppLocalizations(globalLanguage)
+                            .translate("faceRecognition"),
+                        style:
+                            const TextStyle(fontSize: 24, color: Colors.white)),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                        setState(() {
+                          globalFaceDetection = 'Not Recognized';
+                        });
+                        await _camera!.stopImageStream();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 16,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                        colors: [Colors.white, AppColors.lightGreen],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                    ],
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      getDataFace();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
-                      child: Text(
-                        AppLocalizations(globalLanguage).translate("detect"),
-                        style: const TextStyle(
-                          color: AppColors.deepGreen,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        getDataFace();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 30),
+                        child: Text(
+                          AppLocalizations(globalLanguage).translate("detect"),
+                          style: const TextStyle(
+                            color: AppColors.deepGreen,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      )
-    );
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _buildResults() {
     Center noResultsText = Center(
-        child: Text('${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
+        child: Text(
+            '${AppLocalizations(globalLanguage).translate("pleaseWait")}...',
             style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
